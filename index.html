@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PresuMetrick - Panel Principal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0F172A] text-gray-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-900">
+
+    <header class="sticky top-0 z-50 bg-[#1F2937] border-b border-gray-800 px-4 py-4 flex items-center justify-between shadow-lg">
+        <div class="flex items-center gap-2">
+            <div class="bg-emerald-500/10 border border-emerald-500/30 p-1.5 rounded-lg flex items-center justify-center">
+                <span class="text-emerald-500 font-black text-base tracking-tighter">P</span>
+            </div>
+            <h1 class="text-sm font-black tracking-wider text-gray-100 uppercase">PresuMetrick</h1>
+        </div>
+        <div class="bg-sky-600 px-3 py-1 rounded-full shadow-inner flex items-center gap-1.5 border border-sky-500/30">
+            <span id="tasaBCV" class="text-[10px] font-bold text-white tracking-wide">Cargando tasa...</span>
+
+
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-5 pb-24">
+        
+        <div class="space-y-1">
+            <h2 class="text-xl font-bold text-white tracking-tight">Bienvenido, Roque</h2>
+            <p class="text-xs text-gray-400 leading-relaxed">
+                    Elige el &aacute;rea para comenzar:
+
+
+            </p>
+        </div>
+
+                <div class="grid grid-cols-2 gap-3.5">
+            
+            <a href="electricidad.html" class="bg-[#1F2937] border-t-2 border-amber-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-amber-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-bolt text-amber-500 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Electricidad</span>
+            </a>
+
+            <a href="refrigeracion.html" class="bg-[#1F2937] border-t-2 border-sky-400 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-sky-300 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-snowflake text-sky-400 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Refrigeraci&oacute;n</span>
+            </a>
+
+            <a href="plomeria.html" class="bg-[#1F2937] border-t-2 border-blue-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-blue-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-faucet text-amber-600 text-lg mb-2"></i> 
+                <span class="text-sm font-bold text-gray-200">Plomer&iacute;a</span>
+            </a>
+
+            <a href="albanileria.html" class="bg-[#1F2937] border-t-2 border-orange-600 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-orange-500 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-hammer text-orange-500 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Alba&ntilde;iler&iacute;a</span>
+            </a>
+
+            <a href="pintura.html" class="bg-[#1F2937] border-t-2 border-pink-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-pink-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-paint-roller text-pink-400 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Pintura</span>
+            </a>
+
+            <a href="hierro-estructural.html" class="bg-[#1F2937] border-t-2 border-slate-400 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-slate-300 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-user-gear text-sky-400 text-lg mb-2"></i> 
+                <span class="text-sm font-bold text-gray-200">Hierro Estructural</span>
+            </a>
+
+        </div>
+
+
+       
+
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#1F2937] border-t border-gray-800 py-2.5 flex justify-around items-center shadow-2xl">
+        <a href="index.html" class="flex flex-col items-center gap-0.5 text-emerald-500 cursor-pointer">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] font-bold">Panel</span>
+        </a>
+        <a href="clientes.html" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-200 cursor-pointer">
+            <i class="fa-solid fa-users text-lg"></i>
+            <span class="text-[10px]">Clientes</span>
+        </a>
+        <a href="historial.html" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-200 cursor-pointer">
+            <i class="fa-solid fa-file-invoice text-lg"></i>
+            <span class="text-[10px]">Historial</span>
+        </a>
+        <a href="perfil.html" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-200 cursor-pointer">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span class="text-[10px]">Mi RIF / Config</span>
+        </a>
+    </nav>
+<script>
+    // Recupera la tasa guardada o pone 517,96 por defecto si aún no has guardado nada
+    const tasaGuardada = localStorage.getItem('tasaBCV') || "517.96";
+    const spanTasa = document.getElementById('tasaBCV');
+    
+    if (spanTasa) {
+        spanTasa.innerText = "BCV: " + tasaGuardada.replace('.', ',') + " Bs/$";
+    }
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
