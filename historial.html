@@ -73,25 +73,39 @@
         }
 
         function vaciarPresupuesto() {
-            if (confirm('�Seguro que quieres borrar todo el presupuesto?')) {
+            if (confirm('¿Seguro que quieres borrar todo el presupuesto?')) {
                 localStorage.setItem('presupuestoActual', JSON.stringify([]));
                 location.reload();
             }
         }
 
-        function enviarWhatsApp() {
-    const presupuesto = JSON.parse(localStorage.getItem('presupuesto') || '[]');
-    if (presupuesto.length === 0) return;
-    
-    // Recupera el tel�fono guardado o usa un n�mero por defecto
-    const telefono = localStorage.getItem('telefonoWhatsApp') || '';
-    
-    let mensaje = "Hola, aqui tienes mi presupuesto:\n";
-    presupuesto.forEach(p => mensaje += `* ${p.descripcion}: $${p.precio}\n`);
-    
-    const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    window.open(link, '_blank');
-}
+                function enviarWhatsApp() {
+            // Se corrigió a 'presupuestoActual' para coincidir con el resto del archivo
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            
+            if (presupuesto.length === 0) {
+                alert("No hay partidas para enviar.");
+                return;
+            }
+            
+            // Asegúrate que 'telefonoWhatsApp' sea la clave exacta usada en tu panel de configuración
+            const telefono = localStorage.getItem('telefonoWhatsApp') || '';
+            
+            if (!telefono) {
+                alert("Primero debes configurar el número de teléfono en Ajustes.");
+                return;
+            }
+            
+            let mensaje = "Hola, aquí tienes mi presupuesto:\n";
+            presupuesto.forEach(p => mensaje += `* ${p.trabajo}: $${p.totalUSD.toFixed(2)}\n`);
+            
+            // Se eliminan caracteres no numéricos para evitar error en el link de WhatsApp
+            const telefonoLimpio = telefono.replace(/\D/g, '');
+            const link = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+            
+            window.open(link, '_blank');
+        }
+
 
        
 
