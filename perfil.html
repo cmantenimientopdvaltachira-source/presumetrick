@@ -53,10 +53,10 @@
                     <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                 </label>
             </div>
-<div>
-    <label class="block text-xs font-bold text-gray-400 mb-1">Telefono de Contacto (WhatsApp)</label>
-    <input type="text" id="telefonoWhatsApp" placeholder="+58 412-1234567" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500">
-</div>
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-1">Telefono de Contacto (WhatsApp)</label>
+                <input type="text" id="telefonoWhatsApp" placeholder="+58 412-1234567" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500">
+            </div>
 
             <button onclick="guardarConfiguracion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-emerald-900/20">
                 GUARDAR CAMBIOS
@@ -65,12 +65,12 @@
     </main>
 
     <script>
-        // Carga inicial de datos
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
             document.getElementById('tasaBCV').value = localStorage.getItem('tasaBCV') || '517.96';
             document.getElementById('checkImpuesto').checked = localStorage.getItem('aplicarImpuesto') === 'true';
+            document.getElementById('telefonoWhatsApp').value = localStorage.getItem('telefonoWhatsApp') || '';
             
             const logoGuardado = localStorage.getItem('logoEmpresa');
             if (logoGuardado) {
@@ -78,23 +78,17 @@
             }
         });
 
-        // Guardado de configuracion
         function guardarConfiguracion() {
-    localStorage.setItem('nombreEmpresa', document.getElementById('nombreEmpresa').value);
-    localStorage.setItem('rifEmpresa', document.getElementById('rifEmpresa').value);
-    document.getElementById('telefonoWhatsApp').value = localStorage.getItem('telefonoWhatsApp') || '';
+            localStorage.setItem('nombreEmpresa', document.getElementById('nombreEmpresa').value);
+            localStorage.setItem('rifEmpresa', document.getElementById('rifEmpresa').value);
+            localStorage.setItem('tasaBCV', document.getElementById('tasaBCV').value);
+            localStorage.setItem('aplicarImpuesto', document.getElementById('checkImpuesto').checked);
+            localStorage.setItem('telefonoWhatsApp', document.getElementById('telefonoWhatsApp').value);
 
-    localStorage.setItem('tasaBCV', document.getElementById('tasaBCV').value);
-    localStorage.setItem('aplicarImpuesto', document.getElementById('checkImpuesto').checked);
-    localStorage.setItem('telefonoWhatsApp', document.getElementById('telefonoWhatsApp').value);
-
-    alert("Configuracion guardada exitosamente");
-    window.location.href = 'index.html';
-}
-
+            alert("Configuracion guardada exitosamente");
+            window.location.href = 'index.html';
         }
 
-        // Carga y previsualizacion de logo
         function cargarLogo(event) {
             const file = event.target.files[0];
             if (file) {
@@ -109,6 +103,7 @@
     </script>
 </body>
 </html>
+
 
 
 
