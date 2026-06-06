@@ -127,6 +127,7 @@
     const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
     const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
     const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+    const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || "";
     const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
     const logoBase64 = localStorage.getItem('logoEmpresa');
 
@@ -138,7 +139,7 @@
     const cliente = prompt("Nombre del cliente:");
     if (!cliente) return;
 
-    // 2. Encabezado y Logo
+    // 2. Encabezado
     let y = 20;
     if (logoBase64) {
         try {
@@ -150,7 +151,7 @@
     doc.text(nombreEmpresa.toUpperCase(), 45, 25);
     doc.setFontSize(10);
     doc.text("RIF: " + rifEmpresa, 45, 32);
-    doc.text("Contacto: " + telefonoEmpresa, 45, 37);        
+    doc.text("Contacto: " + telefonoEmpresa, 45, 37);
     doc.line(15, 45, 195, 45);
 
     // 3. Info del Cliente
@@ -189,6 +190,7 @@
     // 6. Descargar
     doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
 }
+
 
 
     </script>
