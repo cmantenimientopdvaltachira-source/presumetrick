@@ -80,31 +80,41 @@
         }
 
                 function enviarWhatsApp() {
-            // Se corrigió a 'presupuestoActual' para coincidir con el resto del archivo
-            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-            
-            if (presupuesto.length === 0) {
-                alert("No hay partidas para enviar.");
-                return;
-            }
-            
-            // Asegúrate que 'telefonoWhatsApp' sea la clave exacta usada en tu panel de configuración
-            const telefono = localStorage.getItem('telefonoWhatsApp') || '';
-            
-            if (!telefono) {
-                alert("Primero debes configurar el número de teléfono en Ajustes.");
-                return;
-            }
-            
-            let mensaje = "Hola, aquí tienes mi presupuesto:\n";
-            presupuesto.forEach(p => mensaje += `* ${p.trabajo}: $${p.totalUSD.toFixed(2)}\n`);
-            
-            // Se eliminan caracteres no numéricos para evitar error en el link de WhatsApp
-            const telefonoLimpio = telefono.replace(/\D/g, '');
-            const link = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
-            
-            window.open(link, '_blank');
-        }
+    const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV') || 517.96);
+    
+    if (presupuesto.length === 0) {
+        alert("No hay partidas para enviar.");
+        return;
+    }
+    
+    const telefono = localStorage.getItem('telefonoWhatsApp') || '';
+    if (!telefono) {
+        alert("Primero debes configurar el número de teléfono en Ajustes.");
+        return;
+    }
+
+    // 1. Calcular totales
+    let subtotal = 0;
+    let mensaje = "Hola, aquí tienes mi presupuesto:\n\n";
+    
+    presupuesto.forEach(p => {
+        subtotal += p.totalUSD;
+        mensaje += `* ${p.trabajo}: $${p.totalUSD.toFixed(2)}\n`;
+    });
+    
+    // 2. Agregar totales al mensaje
+    mensaje += `\n--------------------------\n`;
+    mensaje += `*Total USD:* $${subtotal.toFixed(2)}\n`;
+    mensaje += `*Total Bs:* Bs ${(subtotal * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    
+    // 3. Abrir WhatsApp
+    const telefonoLimpio = telefono.replace(/\D/g, '');
+    const link = `https://wa.me/${telefonoLimpio}?text=${encodeURIComponent(mensaje)}`;
+    
+    window.open(link, '_blank');
+}
+
 
 
        
