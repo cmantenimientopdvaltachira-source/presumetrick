@@ -128,6 +128,8 @@
     const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
     const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
     const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || "";
+    const direccionEmpresa = localStorage.getItem('direccionEmpresa') || '';
+        
     const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
     const logoBase64 = localStorage.getItem('logoEmpresa');
 
@@ -153,6 +155,9 @@
     doc.text("RIF: " + rifEmpresa, 45, 32);
     doc.text("Contacto: " + telefonoEmpresa, 45, 37);
     doc.line(15, 45, 195, 45);
+    doc.text("Contacto: " + telefonoEmpresa, 45, 38);
+    doc.text("Dirección: " + direccionEmpresa, 45, 44); // <-- Agrégala aquí
+    doc.line(15, 48, 195, 48); // Ajusta la línea divisoria a 48 o más para que no choque con el texto
 
     // 3. Info del Cliente
     y = 55;
