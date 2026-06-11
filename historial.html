@@ -149,15 +149,17 @@
         } catch (e) { console.warn("No se pudo cargar el logo"); }
     }
     
-    doc.setFontSize(18);
+        doc.setFontSize(18);
     doc.text(nombreEmpresa.toUpperCase(), 45, 25);
+    
     doc.setFontSize(10);
     doc.text("RIF: " + rifEmpresa, 45, 32);
-    doc.text("Contacto: " + telefonoEmpresa, 45, 37);
-    doc.line(15, 45, 195, 45);
     doc.text("Contacto: " + telefonoEmpresa, 45, 38);
-    doc.text("Dirección: " + direccionEmpresa, 45, 44); // <-- Agrégala aquí
-    doc.line(15, 48, 195, 48); // Ajusta la línea divisoria a 48 o más para que no choque con el texto
+    doc.text("Dirección: " + direccionEmpresa, 45, 44);
+    
+    // Línea divisoria única y bien ubicada al final del bloque
+    doc.line(15, 48, 195, 48);
+
 
     // 3. Info del Cliente
     y = 55;
