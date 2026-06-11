@@ -9,85 +9,86 @@
 
     <script>
         function generarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // 1. Obtener datos configurados
-            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-            const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
-            const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
-            const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || "";
-            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || '';
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-            const logoBase64 = localStorage.getItem('logoEmpresa');
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // 1. Obtener datos configurados
+    const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+    const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+    const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+    const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || "";
+    const direccionEmpresa = localStorage.getItem('direccionEmpresa') || '';
+    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+    const logoBase64 = localStorage.getItem('logoEmpresa');
 
-            if (presupuesto.length === 0) {
-                alert("No hay partidas para generar el PDF");
-                return;
-            }
+    if (presupuesto.length === 0) {
+        alert("No hay partidas para generar el PDF");
+        return;
+    }
 
-            const cliente = prompt("Nombre del cliente:");
-            if (!cliente) return;
+    const cliente = prompt("Nombre del cliente:");
+    if (!cliente) return;
 
-            // 2. Encabezado
-            if (logoBase64) {
-                try {
-                    doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
-                } catch (e) { console.warn("No se pudo cargar el logo"); }
-            }
+    // 2. Encabezado
+    if (logoBase64) {
+        try {
+            doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+        } catch (e) { console.warn("No se pudo cargar el logo"); }
+    }
 
-            doc.setFontSize(18);
-            doc.text(nombreEmpresa.toUpperCase(), 45, 25);
-            
-            doc.setFontSize(10);
-            doc.text("Dirección: " + direccionEmpresa, 45, 31);
-            doc.text("RIF: " + rifEmpresa, 45, 36);
-            doc.text("Contacto: " + telefonoEmpresa, 45, 41);
-            
-            // Raya divisoria única
-            doc.line(15, 45, 195, 45);
+    doc.setFontSize(18);
+    doc.text(nombreEmpresa.toUpperCase(), 45, 25);
+    
+    doc.setFontSize(10);
+    doc.text("Dirección: " + direccionEmpresa, 45, 31);
+    doc.text("RIF: " + rifEmpresa, 45, 36);
+    doc.text("Contacto: " + telefonoEmpresa, 45, 41);
+    
+    // Raya divisoria única
+    doc.line(15, 45, 195, 45);
 
-            // 3. Info del Cliente y Fecha con formato correcto
-            const fecha = new Date();
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const anio = fecha.getFullYear();
-            
-            let y = 58; 
-            doc.setFontSize(12);
-            doc.text("Presupuesto para: " + cliente, 15, y);
-            doc.text("Fecha: " + dia + "/" + mes + "/" + anio, 15, y + 8);
-            
-            // 4. Tabla de Partidas
-            y += 25;
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.text("Descripcion", 15, y);
-            doc.text("Total", 170, y);
-            doc.line(15, y + 2, 195, y + 2);
-            
-            doc.setFont("helvetica", "normal");
-            y += 10;
-            let granTotal = 0;
+    // 3. Info del Cliente y Fecha
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+    
+    let y = 58; 
+    doc.setFontSize(12);
+    doc.text("Presupuesto para: " + cliente, 15, y);
+    doc.text("Fecha: " + dia + "/" + mes + "/" + anio, 15, y + 8);
+    
+    // 4. Tabla de Partidas
+    y += 25;
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text("Descripcion", 15, y);
+    doc.text("Total", 170, y);
+    doc.line(15, y + 2, 195, y + 2);
+    
+    doc.setFont("helvetica", "normal");
+    y += 10;
+    let granTotal = 0;
 
-            presupuesto.forEach((p) => {
-                doc.text(p.trabajo.substring(0, 70), 15, y);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                granTotal += p.totalUSD;
-                y += 8;
-            });
+    presupuesto.forEach((p) => {
+        doc.text(p.trabajo.substring(0, 70), 15, y);
+        doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+        granTotal += p.totalUSD;
+        y += 8;
+    });
 
-            // 5. Totales
-            y += 5;
-            doc.line(15, y, 195, y);
-            y += 10;
-            doc.setFont("helvetica", "bold");
-            doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
-            doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y + 7);
+    // 5. Totales
+    y += 5;
+    doc.line(15, y, 195, y);
+    y += 10;
+    doc.setFont("helvetica", "bold");
+    doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
+    doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y + 7);
 
-            // 6. Descargar
-            doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
-        }
+    // 6. Descargar
+    doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+}
+
     </script>
 </body>
 </html>
