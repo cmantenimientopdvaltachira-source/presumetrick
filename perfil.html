@@ -3,74 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuracion - PresuMetrick</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Configuración</title>
 </head>
-<body class="bg-[#0F172A] text-gray-100 min-h-screen">
+<body class="bg-gray-900 text-white p-6">
 
-    <header class="sticky top-0 z-50 bg-[#1F2937] border-b border-gray-700 px-4 py-4 flex items-center gap-4">
-        <a href="index.html" class="text-gray-400 hover:text-white text-xl">
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <h1 class="font-bold text-sm uppercase tracking-widest">MI CONFIGURACION</h1>
-    </header>
+    <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-2xl shadow-xl">
+        <h2 class="text-xl font-bold mb-6 text-emerald-500">Configuración de Empresa</h2>
 
-    <main class="p-4 max-w-md mx-auto space-y-6">
-        
-        <label class="cursor-pointer block text-center group">
-            <input type="file" id="inputLogo" accept="image/*" class="hidden" onchange="cargarLogo(event)">
-            <div id="previewLogo" class="w-24 h-24 mx-auto bg-[#1F2937] border-2 border-dashed border-gray-600 rounded-full flex flex-col items-center justify-center overflow-hidden hover:border-emerald-500 transition-colors">
-                <i class="fa-solid fa-camera text-gray-500 mb-1"></i>
-                <span class="text-[10px] text-gray-400">Subir Logo</span>
+        <div class="mb-6 flex flex-col items-center">
+            <div id="previewLogo" class="w-32 h-32 bg-gray-700 rounded-full mb-2 overflow-hidden border-2 border-emerald-500 flex items-center justify-center">
+                <span class="text-xs text-gray-400">Logo</span>
             </div>
-            <p class="text-[10px] text-gray-500 mt-2">Pulsa para elegir de tu galeria</p>
-        </label>
+            <input type="file" id="inputLogo" accept="image/*" onchange="cargarLogo(event)" class="text-sm">
+        </div>
 
         <div class="space-y-4">
             <div>
-                <label class="block text-xs font-bold text-gray-400 mb-1">Nombre del Profesional o Razon Social</label>
-                <input type="text" id="nombreEmpresa" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <label class="block text-xs font-bold text-gray-400 mb-1">Nombre de la Empresa</label>
+                <input type="text" id="nombreEmpresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-gray-400 mb-1">Documento Fiscal (RIF / NIT / RUC)</label>
-                <input type="text" id="rifEmpresa" placeholder="Ej: J-12345678-0" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <label class="block text-xs font-bold text-gray-400 mb-1">RIF</label>
+                <input type="text" id="rifEmpresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-gray-400 mb-1">Tasa BCV (Bs/$)</label>
-                <input type="number" id="tasaBCV" step="0.01" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm text-white focus:border-emerald-500 outline-none">
+                <label class="block text-xs font-bold text-gray-400 mb-1">Tasa BCV</label>
+                <input type="number" id="tasaBCV" step="0.01" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
-
-            <div class="bg-[#1F2937] p-4 rounded-xl border border-gray-700 flex justify-between items-center">
-                <div>
-                    <span class="block text-sm font-bold text-gray-200">Cobrar Impuesto?</span>
-                    <span class="text-[10px] text-gray-400">Activa el calculo del IVA/Tax</span>
-                </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="checkImpuesto" class="sr-only peer">
-                    <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            <div>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="checkImpuesto" class="w-4 h-4 text-emerald-600">
+                    <span class="text-sm font-bold text-gray-400">Aplicar Impuesto (IVA)</span>
                 </label>
             </div>
             <div>
-                <label class="block text-xs font-bold text-gray-400 mb-1">Telefono de Contacto (WhatsApp)</label>
-                <input type="text" id="telefonoWhatsApp" placeholder="+58 412-1234567" class="w-full bg-[#1F2937] border border-gray-700 rounded-lg p-3 text-sm font-semibold text-white focus:outline-none focus:border-emerald-500">
+                <label class="block text-xs font-bold text-gray-400 mb-1">Telefono (WhatsApp)</label>
+                <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
-
-            <button onclick="guardarConfiguracion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-emerald-900/20">
-                GUARDAR CAMBIOS
-            </button>
+            <div>
+                <label class="block text-xs font-bold text-gray-400 mb-1">Dirección de la Empresa</label>
+                <textarea id="direccionEmpresa" rows="2" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500"></textarea>
+            </div>
         </div>
-    </main>
+
+        <button onclick="guardarConfiguracion()" class="w-full mt-6 bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-bold text-sm shadow-lg shadow-emerald-900/20">
+            GUARDAR CAMBIOS
+        </button>
+    </div>
 
     <script>
+        // Carga de datos al abrir
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
             document.getElementById('tasaBCV').value = localStorage.getItem('tasaBCV') || '517.96';
             document.getElementById('checkImpuesto').checked = localStorage.getItem('aplicarImpuesto') === 'true';
             document.getElementById('telefonoWhatsApp').value = localStorage.getItem('telefonoWhatsApp') || '';
+            document.getElementById('direccionEmpresa').value = localStorage.getItem('direccionEmpresa') || '';
             
             const logoGuardado = localStorage.getItem('logoEmpresa');
             if (logoGuardado) {
@@ -78,17 +68,20 @@
             }
         });
 
+        // Guardado de datos
         function guardarConfiguracion() {
             localStorage.setItem('nombreEmpresa', document.getElementById('nombreEmpresa').value);
             localStorage.setItem('rifEmpresa', document.getElementById('rifEmpresa').value);
             localStorage.setItem('tasaBCV', document.getElementById('tasaBCV').value);
             localStorage.setItem('aplicarImpuesto', document.getElementById('checkImpuesto').checked);
             localStorage.setItem('telefonoWhatsApp', document.getElementById('telefonoWhatsApp').value);
+            localStorage.setItem('direccionEmpresa', document.getElementById('direccionEmpresa').value);
 
-            alert("Configuracion guardada exitosamente");
+            alert("Configuración guardada exitosamente");
             window.location.href = 'index.html';
         }
 
+        // Función del logo que ya tenías
         function cargarLogo(event) {
             const file = event.target.files[0];
             if (file) {
@@ -103,6 +96,7 @@
     </script>
 </body>
 </html>
+
 
 
 
