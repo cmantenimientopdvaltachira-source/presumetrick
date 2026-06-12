@@ -12,11 +12,15 @@
         <h2 class="text-xl font-bold mb-6 text-emerald-500">Configuración de Empresa</h2>
 
         <div class="mb-6 flex flex-col items-center">
-            <div id="previewLogo" class="w-32 h-32 bg-gray-700 rounded-full mb-2 overflow-hidden border-2 border-emerald-500 flex items-center justify-center">
-                <span class="text-xs text-gray-400">Logo</span>
-            </div>
-            <input type="file" id="inputLogo" accept="image/*" onchange="cargarLogo(event)" class="text-sm">
-        </div>
+    <div id="previewLogo" class="w-32 h-32 bg-gray-700 rounded-full mb-3 overflow-hidden border-2 border-emerald-500 flex items-center justify-center shadow-md">
+        <span class="text-xs text-gray-400">Logo</span>
+    </div>
+    <label for="inputLogo" class="cursor-pointer bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all active:scale-95 shadow">
+        <i class="fa-solid fa-image mr-1.5 text-emerald-400"></i> CARGAR LOGOTIPO
+    </label>
+    <input type="file" id="inputLogo" accept="image/*" onchange="cargarLogo(event)" class="hidden">
+</div>
+
 
         <div class="space-y-4">
             <div>
@@ -32,12 +36,14 @@
                 <input type="number" id="tasaBCV" step="0.01" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
             
-            <div>
+                        <div>
                 <label class="block text-xs font-bold text-gray-400 mb-1">Porcentaje de Impuesto (IVA / IGV / Tax)</label>
-                <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500" placeholder="Ejemplo: 16">
+                <div class="relative flex items-center">
+                    <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 pr-10 text-sm focus:outline-none focus:border-emerald-500" placeholder="Ejemplo: 16">
+                    <span class="absolute right-4 text-sm font-bold text-gray-400 pointer-events-none">%</span>
+                </div>
             </div>
 
-            <div>
                 <label class="block text-xs font-bold text-gray-400 mb-1">Telefono (WhatsApp)</label>
                 <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
