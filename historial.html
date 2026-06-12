@@ -95,7 +95,7 @@
 
        
 
-        function generarPDF() {
+                function generarPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
@@ -103,6 +103,7 @@
     const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
     const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
     const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+    const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira"; // Recupera dirección
     const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
     const logoBase64 = localStorage.getItem('logoEmpresa');
 
@@ -128,14 +129,26 @@
     doc.text("RIF: " + rifEmpresa, 45, 32);
     doc.line(15, 45, 195, 45);
 
-    // 3. Info del Cliente
+    // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
+    const fechaActual = new Date();
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const anio = fechaActual.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
+
+    // 3. Info del Cliente y Dirección
     y = 55;
     doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
     doc.text("Presupuesto para: " + cliente, 15, y);
-    doc.text("Fecha: " + new Date().toLocaleDateString(), 15, y + 7);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Fecha: " + fechaFormateada, 15, y + 7);
+    doc.text("Dirección: " + direccionEmpresa, 15, y + 13);
     
     // 4. Tabla de Partidas
-    y += 20;
+    y += 25; // Aumentamos espacio para que no se monte con la dirección
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.text("Descripcion", 15, y);
@@ -164,6 +177,7 @@
     // 6. Descargar
     doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
 }
+
 
 
     </script>
