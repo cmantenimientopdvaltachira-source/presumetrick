@@ -109,13 +109,11 @@
         return;
     }
 
-        const cliente = prompt("Nombre del cliente:");
+    const cliente = prompt("Nombre del cliente:");
     if (!cliente) return;
 
-    // Lee de la pantalla azul el porcentaje guardado. Si no hay ninguno, usa 16 por defecto.
-    const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 16;
-    // Lee si el interruptor general de aplicar impuesto está encendido (true)
-    const aplicarImpuesto = localStorage.getItem('aplicarIVA') === 'true' || localStorage.getItem('ivaActivo') === 'true';
+    // Lee directamente el valor numérico de la casilla. Si está vacío o no es número, asume 0.
+    const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
 
     // 2. Encabezado y Logo
     if (logoBase64) {
@@ -138,7 +136,7 @@
     
     doc.line(15, 48, 195, 48);
 
-    // 2.1 Formatear Fecha a dos dígitos
+    // 2.1 Formatear Fecha
     const fechaActual = new Date();
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
@@ -174,14 +172,14 @@
         y += 8;
     });
 
-    // 5. Totales Estéticos desglosados con Impuesto Incluido en el Total
+    // 5. Totales Dinámicos Basados Únicamente en el Número Ingresado
     y += 10;
     doc.line(15, y, 195, y);
     y += 10;
     doc.setFont("helvetica", "bold");
 
-    if (aplicarImpuesto && porcentajeImpuesto > 0) {
-        // Operación matemática con el IVA/Impuesto configurado
+    if (porcentajeImpuesto > 0) {
+        // Realiza el desglose estético si hay un impuesto configurado
         const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
         const granTotalConImpuesto = subtotalUSD + montoImpuesto;
 
@@ -193,16 +191,16 @@
         y += 7;
         doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     } else {
-        // Si el interruptor está apagado, se muestra el neto directo sin desglosar
+        // Si ingresas 0%, se va directo y limpio
         doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
         y += 7;
         doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     }
 
-
     // 6. Descargar
     doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
 }
+
 
     </script>
 </body>
