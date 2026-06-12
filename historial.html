@@ -10,7 +10,7 @@
 <body class="bg-[#0F172A] text-gray-100 min-h-screen p-4">
 
     <header class="flex justify-between items-center mb-6">
-        <a href="index.html" class="text-emerald-500 font-bold text-sm"> Volver al Panel</a>
+        <a href="index.html" class="text-emerald-500 font-bold text-sm"> Volver al Panel</a>
         <h1 class="font-black">PRESUMETRICK</h1>
     </header>
 
@@ -80,119 +80,112 @@
         }
 
         function enviarWhatsApp() {
-    const presupuesto = JSON.parse(localStorage.getItem('presupuesto') || '[]');
-    if (presupuesto.length === 0) return;
-    
-    // Recupera el teléfono guardado o usa un número por defecto
-    const telefono = localStorage.getItem('telefonoWhatsApp') || '';
-    
-    let mensaje = "Hola, aqui tienes mi presupuesto:\n";
-    presupuesto.forEach(p => mensaje += `* ${p.descripcion}: $${p.precio}\n`);
-    
-    const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    window.open(link, '_blank');
-}
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            if (presupuesto.length === 0) return;
+            
+            const telefono = localStorage.getItem('telefonoWhatsApp') || '';
+            let mensaje = "Hola, aqui tienes mi presupuesto:\n";
+            presupuesto.forEach(p => mensaje += `* ${p.trabajo}: $${p.totalUSD.toFixed(2)}\n`);
+            
+            const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(link, '_blank');
+        }
 
-       
+        function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // 1. Obtener datos configurados de forma segura
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+            const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
+            const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || ""; 
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const logoBase64 = localStorage.getItem('logoEmpresa');
 
-                function generarPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // 1. Obtener datos configurados
-    const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-    const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
-    const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
-    const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira"; // Recupera dirección
-    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-    const logoBase64 = localStorage.getItem('logoEmpresa');
+            if (presupuesto.length === 0) {
+                alert("No hay partidas para generar el PDF");
+                return;
+            }
 
-    if (presupuesto.length === 0) {
-        alert("No hay partidas para generar el PDF");
-        return;
-    }
+            const cliente = prompt("Nombre del cliente:");
+            if (!cliente) return;
 
-    const cliente = prompt("Nombre del cliente:");
-    if (!cliente) return;
+            // 2. Encabezado y Logo
+            if (logoBase64) {
+                try {
+                    doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+                } catch (e) { console.warn("No se pudo cargar el logo"); }
+            }
+            
+            // Datos de la empresa ordenados: Nombre, Dirección, RIF, Teléfono
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.text("Dirección: " + direccionEmpresa, 45, 28); 
+            doc.text("RIF: " + rifEmpresa, 45, 33);             
+            if (telefonoEmpresa) {
+                doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
+            }
+            
+            // Línea divisoria principal con margen extra seguro para evitar colisiones
+            doc.line(15, 48, 195, 48);
 
-        // 2. Encabezado y Logo
-    if (logoBase64) {
-        try {
-            doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
-        } catch (e) { console.warn("No se pudo cargar el logo"); }
-    }
-    
-    // Datos de la empresa en el orden estricto solicitado
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "bold");
-    doc.text(nombreEmpresa.toUpperCase(), 45, 22); // 1. Nombre de la empresa
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(9);
-    doc.text("Dirección: " + direccionEmpresa, 45, 28); // 2. Dirección
-    doc.text("RIF: " + rifEmpresa, 45, 33);             // 3. RIF
-    if (telefonoEmpresa) {
-        doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  // 4. Número de teléfono
-    }
-    
-    // Bajamos la línea divisoria a 48 para dar más espacio y evitar colisiones
-    doc.line(15, 48, 195, 48);
+            // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
+            const fechaActual = new Date();
+            const dia = String(fechaActual.getDate()).padStart(2, '0');
+            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+            const anio = fechaActual.getFullYear();
+            const fechaFormateada = `${dia}/${mes}/${anio}`;
 
+            // 3. Info del Cliente (Inicia abajo de la línea de forma limpia)
+            let y = 56;
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("Presupuesto para: " + cliente, 15, y);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text("Fecha: " + fechaFormateada, 15, y + 7);
+            
+            // 4. Tabla de Partidas
+            y += 20; 
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("Descripcion", 15, y);
+            doc.text("Total", 170, y);
+            doc.line(15, y + 2, 195, y + 2);
+            
+            doc.setFont("helvetica", "normal");
+            y += 10;
+            let granTotal = 0;
 
-    // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
-    const fechaActual = new Date();
-    const dia = String(fechaActual.getDate()).padStart(2, '0');
-    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const anio = fechaActual.getFullYear();
-    const fechaFormateada = `${dia}/${mes}/${anio}`;
+            presupuesto.forEach((p) => {
+                doc.text(p.trabajo.substring(0, 70), 15, y);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                granTotal += p.totalUSD;
+                y += 8;
+            });
 
-    // 3. Info del Cliente y Dirección
-    y = 55;
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-    doc.text("Presupuesto para: " + cliente, 15, y);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    doc.text("Fecha: " + fechaFormateada, 15, y + 7);
-    doc.text("Dirección: " + direccionEmpresa, 15, y + 13);
-    
-    // 4. Tabla de Partidas
-    y += 25; // Aumentamos espacio para que no se monte con la dirección
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "bold");
-    doc.text("Descripcion", 15, y);
-    doc.text("Total", 170, y);
-    doc.line(15, y + 2, 195, y + 2);
-    
-    doc.setFont("helvetica", "normal");
-    y += 10;
-    let granTotal = 0;
+            // 5. Totales
+            y += 10;
+            doc.line(15, y, 195, y);
+            y += 10;
+            doc.setFont("helvetica", "bold");
+            doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
+            doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString()}`, 120, y + 7);
 
-    presupuesto.forEach((p) => {
-        doc.text(p.trabajo.substring(0, 70), 15, y);
-        doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-        granTotal += p.totalUSD;
-        y += 8;
-    });
-
-    // 5. Totales
-    y += 10;
-    doc.line(15, y, 195, y);
-    y += 10;
-    doc.setFont("helvetica", "bold");
-    doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
-    doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString()}`, 120, y + 7);
-
-    // 6. Descargar
-    doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
-}
-
-
-
+            // 6. Descargar
+            doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+        }
     </script>
 </body>
 </html>
+
 
 
 
