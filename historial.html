@@ -171,13 +171,34 @@
                 y += 8;
             });
 
-            // 5. Totales
-            y += 10;
-            doc.line(15, y, 195, y);
-            y += 10;
-            doc.setFont("helvetica", "bold");
-            doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
-            doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString()}`, 120, y + 7);
+                // 5. Totales e Impuesto (IVA)
+    // Lee directamente si el IVA está activo en tu panel
+    const aplicarIVA = localStorage.getItem('aplicarIVA') === 'true' || localStorage.getItem('ivaActivo') === 'true';
+
+    y += 10;
+    doc.line(15, y, 195, y);
+    y += 10;
+    doc.setFont("helvetica", "bold");
+
+    if (aplicarIVA) {
+        // Si el IVA está activo: Subtotal -> IVA (16%) -> Total General
+        const montoIVA = granTotal * 0.16;
+        const granTotalConIVA = granTotal + montoIVA;
+
+        doc.text(`SUBTOTAL: $${granTotal.toFixed(2)} USD`, 120, y);
+        y += 6;
+        doc.text(`IVA (16%): $${montoIVA.toFixed(2)} USD`, 120, y);
+        y += 6;
+        doc.text(`TOTAL GENERAL: $${granTotalConIVA.toFixed(2)} USD`, 120, y);
+        y += 7;
+        doc.text(`Equivalente BCV: Bs. ${(granTotalConIVA * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+    } else {
+        // Si el IVA está desactivado: Muestra el total directo como antes
+        doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
+        y += 7;
+        doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+    }
+
 
             // 6. Descargar
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
