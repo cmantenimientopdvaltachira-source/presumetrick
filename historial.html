@@ -109,12 +109,13 @@
         return;
     }
 
-    const cliente = prompt("Nombre del cliente:");
+        const cliente = prompt("Nombre del cliente:");
     if (!cliente) return;
 
-    // Pregunta internacionalizada y manual para el operador
-    const entradaImpuesto = prompt("Introduzca el porcentaje de Impuesto / IVA / IGV (Ejemplo: 16 o deje vacío para el 16%):", "16");
-    const porcentajeImpuesto = entradaImpuesto !== null && entradaImpuesto.trim() !== "" ? parseFloat(entradaImpuesto) : 16;
+    // Lee de la pantalla azul el porcentaje guardado. Si no hay ninguno, usa 16 por defecto.
+    const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 16;
+    // Lee si el interruptor general de aplicar impuesto está encendido (true)
+    const aplicarImpuesto = localStorage.getItem('aplicarIVA') === 'true' || localStorage.getItem('ivaActivo') === 'true';
 
     // 2. Encabezado y Logo
     if (logoBase64) {
@@ -123,7 +124,6 @@
         } catch (e) { console.warn("No se pudo cargar el logo"); }
     }
     
-    // Datos de la empresa en orden estricto
     doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
@@ -136,10 +136,9 @@
         doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
     }
     
-    // Línea divisoria de seguridad
     doc.line(15, 48, 195, 48);
 
-    // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
+    // 2.1 Formatear Fecha a dos dígitos
     const fechaActual = new Date();
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
@@ -175,13 +174,14 @@
         y += 8;
     });
 
-    // 5. Totales e Impuesto (Formato Estandarizado)
+    // 5. Totales Estéticos desglosados con Impuesto Incluido en el Total
     y += 10;
     doc.line(15, y, 195, y);
     y += 10;
     doc.setFont("helvetica", "bold");
 
-    if (porcentajeImpuesto > 0) {
+    if (aplicarImpuesto && porcentajeImpuesto > 0) {
+        // Operación matemática con el IVA/Impuesto configurado
         const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
         const granTotalConImpuesto = subtotalUSD + montoImpuesto;
 
@@ -193,11 +193,12 @@
         y += 7;
         doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     } else {
-        // Si ingresa 0%, se muestra el total directo sin desglosar
+        // Si el interruptor está apagado, se muestra el neto directo sin desglosar
         doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
         y += 7;
         doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     }
+
 
     // 6. Descargar
     doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
