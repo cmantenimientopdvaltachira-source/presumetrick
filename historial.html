@@ -48,28 +48,61 @@
                 `;
             });
 
+                        // 1. Cargar tasas e impuestos del almacenamiento local
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-            const totalBs = granTotal * tasaBCV;
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
 
+            let bloqueTotalesHtml = '';
+
+            // 2. Armar la tarjeta verde adaptativa
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = granTotal + montoImpuesto;
+                const totalBs = granTotalConImpuesto * tasaBCV;
+
+                bloqueTotalesHtml = `
+                    <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5 text-right">
+                        <div class="text-xs font-bold text-emerald-100 uppercase tracking-wider text-left border-b border-emerald-500/30 pb-1 mb-2">Resumen Financiero</div>
+                        <div class="text-xs text-white flex justify-between"><span>Subtotal:</span> <span class="font-bold">$${granTotal.toFixed(2)} USD</span></div>
+                        <div class="text-xs text-white flex justify-between"><span>Impuesto (${porcentajeImpuesto}%):</span> <span class="font-bold">+$${montoImpuesto.toFixed(2)} USD</span></div>
+                        <div class="border-t border-emerald-500/40 my-1"></div>
+                        <div class="text-base font-black text-white flex justify-between items-center"><span>TOTAL GENERAL:</span> <span class="text-xl">$${granTotalConImpuesto.toFixed(2)} USD</span></div>
+                        <div class="text-xs font-bold text-emerald-100 text-right pt-1">
+                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                    </div>
+                `;
+            } else {
+                const totalBs = granTotal * tasaBCV;
+
+                bloqueTotalesHtml = `
+                    <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5">
+                        <div class="flex justify-between items-center text-white">
+                            <span class="font-bold uppercase text-xs">Total General:</span>
+                            <span class="font-bold text-xl">$${granTotal.toFixed(2)} USD</span>
+                        </div>
+                        <div class="text-emerald-100 text-xs border-t border-emerald-500/40 pt-2 text-right font-bold">
+                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3. Renderizar todo el contenedor junto a los botones de acción
             tablaContainer.innerHTML = `
                 ${htmlContenido}
-                <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg">
-                    <div class="flex justify-between items-center text-white mb-2">
-                        <span class="font-bold uppercase">Total General:</span>
-                        <span class="font-bold text-xl">$${granTotal.toFixed(2)} USD</span>
-                    </div>
-                    <div class="text-emerald-100 text-sm border-t border-emerald-500 pt-2">
-                        Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                    </div>
-                </div>
+                
+                ${bloqueTotalesHtml}
+
                 <div class="flex gap-3 mt-6">
-                    <button onclick="enviarWhatsApp()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg text-sm">WhatsApp</button>
-                    <button onclick="generarPDF()" class="flex-1 bg-sky-700 text-white font-bold py-3 rounded-xl shadow-lg text-sm">PDF Formal</button>
+                    <button onclick="enviarWhatsApp()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">WhatsApp</button>
+                    <button onclick="generarPDF()" class="flex-1 bg-sky-700 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">PDF Formal</button>
                 </div>
                 <div class="text-center mt-6 mb-20">
                     <button onclick="vaciarPresupuesto()" class="text-rose-400 text-xs underline font-medium">Borrar todo</button>
                 </div>
             `;
+
         }
 
         function vaciarPresupuesto() {
