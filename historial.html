@@ -115,19 +115,29 @@
     const cliente = prompt("Nombre del cliente:");
     if (!cliente) return;
 
-    // 2. Encabezado y Logo
-    let y = 20;
+        // 2. Encabezado y Logo
     if (logoBase64) {
         try {
             doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
         } catch (e) { console.warn("No se pudo cargar el logo"); }
     }
     
-    doc.setFontSize(18);
-    doc.text(nombreEmpresa.toUpperCase(), 45, 25);
-    doc.setFontSize(10);
-    doc.text("RIF: " + rifEmpresa, 45, 32);
-    doc.line(15, 45, 195, 45);
+    // Datos de la empresa en el orden estricto solicitado
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(nombreEmpresa.toUpperCase(), 45, 22); // 1. Nombre de la empresa
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Dirección: " + direccionEmpresa, 45, 28); // 2. Dirección
+    doc.text("RIF: " + rifEmpresa, 45, 33);             // 3. RIF
+    if (telefonoEmpresa) {
+        doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  // 4. Número de teléfono
+    }
+    
+    // Bajamos la línea divisoria a 48 para dar más espacio y evitar colisiones
+    doc.line(15, 48, 195, 48);
+
 
     // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
     const fechaActual = new Date();
