@@ -38,12 +38,6 @@
             </div>
 
             <div>
-                <label class="flex items-center space-x-2">
-                    <input type="checkbox" id="checkImpuesto" class="w-4 h-4 text-emerald-600">
-                    <span class="text-sm font-bold text-gray-400">Aplicar Impuesto</span>
-                </label>
-            </div>
-            <div>
                 <label class="block text-xs font-bold text-gray-400 mb-1">Telefono (WhatsApp)</label>
                 <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
@@ -59,16 +53,11 @@
     </div>
 
     <script>
-        // Carga de datos al abrir
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
             document.getElementById('tasaBCV').value = localStorage.getItem('tasaBCV') || '517.96';
-            
-            // Carga el porcentaje de impuesto guardado (asume 16 por defecto si está vacío)
             document.getElementById('porcentajeImpuesto').value = localStorage.getItem('porcentajeImpuesto') || '16';
-            
-            document.getElementById('checkImpuesto').checked = localStorage.getItem('aplicarImpuesto') === 'true';
             document.getElementById('telefonoWhatsApp').value = localStorage.getItem('telefonoWhatsApp') || '';
             document.getElementById('direccionEmpresa').value = localStorage.getItem('direccionEmpresa') || '';
             
@@ -78,16 +67,11 @@
             }
         });
 
-        // Guardado de datos
         function guardarConfiguracion() {
             localStorage.setItem('nombreEmpresa', document.getElementById('nombreEmpresa').value);
             localStorage.setItem('rifEmpresa', document.getElementById('rifEmpresa').value);
             localStorage.setItem('tasaBCV', document.getElementById('tasaBCV').value);
-            
-            // Guarda el valor numérico escrito por el usuario
             localStorage.setItem('porcentajeImpuesto', document.getElementById('porcentajeImpuesto').value);
-            
-            localStorage.setItem('aplicarImpuesto', document.getElementById('checkImpuesto').checked);
             localStorage.setItem('telefonoWhatsApp', document.getElementById('telefonoWhatsApp').value);
             localStorage.setItem('direccionEmpresa', document.getElementById('direccionEmpresa').value);
 
@@ -95,7 +79,6 @@
             window.location.href = 'index.html';
         }
 
-        // Función del logo
         function cargarLogo(event) {
             const file = event.target.files[0];
             if (file) {
@@ -110,6 +93,7 @@
     </script>
 </body>
 </html>
+
 
 
 
