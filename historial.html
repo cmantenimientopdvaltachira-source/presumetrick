@@ -112,17 +112,53 @@
             }
         }
 
-        function enviarWhatsApp() {
+                function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-            if (presupuesto.length === 0) return;
+            if (presupuesto.length === 0) {
+                alert("No hay partidas en el presupuesto para enviar.");
+                return;
+            }
             
-            const telefono = localStorage.getItem('telefonoWhatsApp') || '';
-            let mensaje = "Hola, aqui tienes mi presupuesto:\n";
-            presupuesto.forEach(p => mensaje += `* ${p.trabajo}: $${p.totalUSD.toFixed(2)}\n`);
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
-            const link = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            // 1. Construir el cuerpo del mensaje de texto
+            let mensaje = "*PRESUPUESTO FORMAL*\n";
+            mensaje += "--------------------------------------\n\n";
+            
+            let granTotal = 0;
+            presupuesto.forEach(p => {
+                mensaje += `*• ${p.modulo.toUpperCase()}:* ${p.trabajo}\n`;
+                mensaje += `  Cant: ${p.cantidad} | P.U: $${p.precioUnitario.toFixed(2)} -> *Total: $${p.totalUSD.toFixed(2)}*\n\n`;
+                granTotal += p.totalUSD;
+            });
+            
+            mensaje += "--------------------------------------\n";
+            
+            // 2. Calcular e integrar los impuestos dinámicamente en el texto
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = granTotal + montoImpuesto;
+                const totalBs = granTotalConImpuesto * tasaBCV;
+                
+                mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Impuesto (${porcentajeImpuesto}%):* +$${montoImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            } else {
+                const totalBs = granTotal * tasaBCV;
+                
+                mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            }
+            
+            mensaje += "\n_Generado por PresuMetrick._";
+            
+            // 3. Crear el enlace universal SIN número de teléfono para forzar la selección de contactos
+            const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
+
 
                 function generarPDF() {
     const { jsPDF } = window.jspdf;
