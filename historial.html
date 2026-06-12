@@ -91,118 +91,118 @@
             window.open(link, '_blank');
         }
 
-        function generarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // 1. Obtener datos configurados de forma segura
-            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-            const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
-            const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
-            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
-            const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || ""; 
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-            const logoBase64 = localStorage.getItem('logoEmpresa');
+                function generarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // 1. Obtener datos configurados de forma segura
+    const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+    const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+    const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+    const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
+    const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || ""; 
+    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+    const logoBase64 = localStorage.getItem('logoEmpresa');
 
-            if (presupuesto.length === 0) {
-                alert("No hay partidas para generar el PDF");
-                return;
-            }
+    if (presupuesto.length === 0) {
+        alert("No hay partidas para generar el PDF");
+        return;
+    }
 
-            const cliente = prompt("Nombre del cliente:");
-            if (!cliente) return;
+    const cliente = prompt("Nombre del cliente:");
+    if (!cliente) return;
 
-            // 2. Encabezado y Logo
-            if (logoBase64) {
-                try {
-                    doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
-                } catch (e) { console.warn("No se pudo cargar el logo"); }
-            }
-            
-            // Datos de la empresa ordenados: Nombre, Dirección, RIF, Teléfono
-            doc.setFontSize(16);
-            doc.setFont("helvetica", "bold");
-            doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(9);
-            doc.text("Dirección: " + direccionEmpresa, 45, 28); 
-            doc.text("RIF: " + rifEmpresa, 45, 33);             
-            if (telefonoEmpresa) {
-                doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
-            }
-            
-            // Línea divisoria principal con margen extra seguro para evitar colisiones
-            doc.line(15, 48, 195, 48);
+    // Pregunta internacionalizada y manual para el operador
+    const entradaImpuesto = prompt("Introduzca el porcentaje de Impuesto / IVA / IGV (Ejemplo: 16 o deje vacío para el 16%):", "16");
+    const porcentajeImpuesto = entradaImpuesto !== null && entradaImpuesto.trim() !== "" ? parseFloat(entradaImpuesto) : 16;
 
-            // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
-            const fechaActual = new Date();
-            const dia = String(fechaActual.getDate()).padStart(2, '0');
-            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-            const anio = fechaActual.getFullYear();
-            const fechaFormateada = `${dia}/${mes}/${anio}`;
+    // 2. Encabezado y Logo
+    if (logoBase64) {
+        try {
+            doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+        } catch (e) { console.warn("No se pudo cargar el logo"); }
+    }
+    
+    // Datos de la empresa en orden estricto
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Dirección: " + direccionEmpresa, 45, 28); 
+    doc.text("RIF: " + rifEmpresa, 45, 33);             
+    if (telefonoEmpresa) {
+        doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
+    }
+    
+    // Línea divisoria de seguridad
+    doc.line(15, 48, 195, 48);
 
-            // 3. Info del Cliente (Inicia abajo de la línea de forma limpia)
-            let y = 56;
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.text("Presupuesto para: " + cliente, 15, y);
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.text("Fecha: " + fechaFormateada, 15, y + 7);
-            
-            // 4. Tabla de Partidas
-            y += 20; 
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.text("Descripcion", 15, y);
-            doc.text("Total", 170, y);
-            doc.line(15, y + 2, 195, y + 2);
-            
-            doc.setFont("helvetica", "normal");
-            y += 10;
-            let granTotal = 0;
+    // 2.1 Formatear Fecha a dos dígitos (DD/MM/AAAA)
+    const fechaActual = new Date();
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const anio = fechaActual.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
 
-            presupuesto.forEach((p) => {
-                doc.text(p.trabajo.substring(0, 70), 15, y);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                granTotal += p.totalUSD;
-                y += 8;
-            });
+    // 3. Info del Cliente
+    let y = 56;
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Presupuesto para: " + cliente, 15, y);
+    
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.text("Fecha: " + fechaFormateada, 15, y + 7);
+    
+    // 4. Tabla de Partidas
+    y += 20; 
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text("Descripcion", 15, y);
+    doc.text("Total", 170, y);
+    doc.line(15, y + 2, 195, y + 2);
+    
+    doc.setFont("helvetica", "normal");
+    y += 10;
+    let subtotalUSD = 0;
 
-                // 5. Totales e Impuesto (IVA)
-    // Lee directamente si el IVA está activo en tu panel
-    const aplicarIVA = localStorage.getItem('aplicarIVA') === 'true' || localStorage.getItem('ivaActivo') === 'true';
+    presupuesto.forEach((p) => {
+        doc.text(p.trabajo.substring(0, 70), 15, y);
+        doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+        subtotalUSD += p.totalUSD;
+        y += 8;
+    });
 
+    // 5. Totales e Impuesto (Formato Estandarizado)
     y += 10;
     doc.line(15, y, 195, y);
     y += 10;
     doc.setFont("helvetica", "bold");
 
-    if (aplicarIVA) {
-        // Si el IVA está activo: Subtotal -> IVA (16%) -> Total General
-        const montoIVA = granTotal * 0.16;
-        const granTotalConIVA = granTotal + montoIVA;
+    if (porcentajeImpuesto > 0) {
+        const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
+        const granTotalConImpuesto = subtotalUSD + montoImpuesto;
 
-        doc.text(`SUBTOTAL: $${granTotal.toFixed(2)} USD`, 120, y);
+        doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
         y += 6;
-        doc.text(`IVA (16%): $${montoIVA.toFixed(2)} USD`, 120, y);
+        doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y);
         y += 6;
-        doc.text(`TOTAL GENERAL: $${granTotalConIVA.toFixed(2)} USD`, 120, y);
+        doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y);
         y += 7;
-        doc.text(`Equivalente BCV: Bs. ${(granTotalConIVA * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+        doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     } else {
-        // Si el IVA está desactivado: Muestra el total directo como antes
-        doc.text(`TOTAL GENERAL: $${granTotal.toFixed(2)} USD`, 120, y);
+        // Si ingresa 0%, se muestra el total directo sin desglosar
+        doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
         y += 7;
-        doc.text(`Equivalente BCV: Bs. ${(granTotal * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+        doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
     }
 
+    // 6. Descargar
+    doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+}
 
-            // 6. Descargar
-            doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
-        }
     </script>
 </body>
 </html>
