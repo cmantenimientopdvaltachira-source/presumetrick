@@ -128,8 +128,9 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                mensaje += `*• ${p.modulo.toUpperCase()}:* ${p.trabajo}\n`;
-                mensaje += `  Cant: ${p.cantidad} | P.U: $${p.precioUnitario.toFixed(2)} -> *Total: $${p.totalUSD.toFixed(2)}*\n\n`;
+                mensaje += `• *${p.modulo.toUpperCase()}:* ${p.concepto}\n`;
+                mensaje += `  Cant: ${p.cantidad} ${p.unidad} x Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)} | Subtotal ítem: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+
                 granTotal += p.totalUSD;
             });
             
