@@ -113,7 +113,7 @@
         return;
     }
     
-    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 51.96;
     const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
     
     let mensaje = "*PRESUPUESTO FORMAL*\n";
@@ -129,9 +129,9 @@
         const unidadLimpia = (p.unidad || '').split('(')[0].trim();
         const unidadVisual = unidadLinter(unidadLimpia);
 
-        // 3. Controlar etiquetas para evitar textos desordenados o redundantes
+        // 3. Controlar etiquetas para evitar textos desordenados
         let etiquetaPrecio = `Precio por ${unidadVisual}`;
-        if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid' || unidadVisual.toLowerCase() === 'global') {
+        if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid') {
             etiquetaPrecio = 'Precio Unitario';
         }
 
@@ -143,15 +143,40 @@
 
         granTotal += p.totalUSD;
     });
+
+    mensaje += "--------------------------------------\n";
     
-    function unidadLinter(uni) {
-        const u = uni.toLowerCase();
-        if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-        if (u.includes('pto') || u.includes('pun')) return 'Pto';
-        if (u.includes('und') || u.includes('uni')) return 'Unid';
-        if (u.includes('glob')) return 'Global';
-        return uni;
+    if (porcentajeImpuesto > 0) {
+        const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
+        const granTotalConImpuesto = granTotal + montoImpuesto;
+        const totalBs = granTotalConImpuesto * tasaBCV;
+        
+        mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
+        mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
+        mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
+        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+    } else {
+        const totalBs = granTotal * tasaBCV;
+        
+        mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
+        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
     }
+    
+    mensaje += "\n_Generado por PresuMetrick._";
+    
+    const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+    window.open(link, '_blank');
+}
+
+function unidadLinter(uni) {
+    const u = uni.toLowerCase();
+    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
+    if (u.includes('pto') || u.includes('pun')) return 'Pto';
+    if (u.includes('und') || u.includes('uni')) return 'Unid';
+    if (u.includes('glob')) return 'Global';
+    return uni;
+}
+
 
     mensaje += "--------------------------------------\n";
     
