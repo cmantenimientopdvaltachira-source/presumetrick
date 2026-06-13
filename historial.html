@@ -106,140 +106,76 @@
             }
         }
 
-        function enviarWhatsApp() {
-    const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-    if (presupuesto.length === 0) {
-        alert("No hay partidas en el presupuesto para enviar.");
-        return;
-    }
-    
-    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 51.96;
-    const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-    
-    let mensaje = "*PRESUPUESTO FORMAL*\n";
-    mensaje += "--------------------------------------\n\n";
-    
-    let granTotal = 0;
-    presupuesto.forEach(p => {
-        // 1. Limpiar residuos de texto en el nombre del trabajo
-        const textoOriginal = p.trabajo || '';
-        const nombreLimpio = textoOriginal.split('(')[0].trim();
-
-        // 2. Extraer y formatear la unidad de medida
-        const unidadLimpia = (p.unidad || '').split('(')[0].trim();
-        const unidadVisual = unidadLinter(unidadLimpia);
-
-        // 3. Controlar etiquetas para evitar textos desordenados
-        let etiquetaPrecio = `Precio por ${unidadVisual}`;
-        if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid') {
-            etiquetaPrecio = 'Precio Unitario';
+        function unidadLinter(uni) {
+            const u = uni.toLowerCase();
+            if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
+            if (u.includes('pto') || u.includes('pun')) return 'Pto';
+            if (u.includes('und') || u.includes('uni')) return 'Unid';
+            if (u.includes('glob')) return 'Global';
+            return uni;
         }
 
-        // 4. Armar la estructura limpia en renglones verticales
-        mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
-        mensaje += `  Cantidad: ${p.cantidad} ${unidadVisual}\n`;
-        mensaje += `  ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
-        mensaje += `  Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+        function enviarWhatsApp() {
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            if (presupuesto.length === 0) {
+                alert("No hay partidas en el presupuesto para enviar.");
+                return;
+            }
+            
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
+            
+            let mensaje = "*PRESUPUESTO FORMAL*\n";
+            mensaje += "--------------------------------------\n\n";
+            
+            let granTotal = 0;
+            presupuesto.forEach(p => {
+                // 1. Limpiar residuos de texto en el nombre del trabajo
+                const textoOriginal = p.trabajo || '';
+                const nombreLimpio = textoOriginal.split('(')[0].trim();
 
-        granTotal += p.totalUSD;
-    });
+                // 2. Extraer y formatear la unidad de medida
+                const unidadLimpia = (p.unidad || '').split('(')[0].trim();
+                const unidadVisual = unidadLinter(unidadLimpia);
 
-    mensaje += "--------------------------------------\n";
-    
-    if (porcentajeImpuesto > 0) {
-        const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
-        const granTotalConImpuesto = granTotal + montoImpuesto;
-        const totalBs = granTotalConImpuesto * tasaBCV;
-        
-        mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    } else {
-        const totalBs = granTotal * tasaBCV;
-        
-        mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    }
-    
-    mensaje += "\n_Generado por PresuMetrick._";
-    
-    const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-    window.open(link, '_blank');
-}
+                // 3. Controlar etiquetas dinámicas para evitar textos desordenados
+                let etiquetaPrecio = `Precio por ${unidadVisual}`;
+                if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid') {
+                    etiquetaPrecio = 'Precio Unitario';
+                }
 
-function unidadLinter(uni) {
-    const u = uni.toLowerCase();
-    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-    if (u.includes('pto') || u.includes('pun')) return 'Pto';
-    if (u.includes('und') || u.includes('uni')) return 'Unid';
-    if (u.includes('glob')) return 'Global';
-    return uni;
-}
+                // 4. Armar la estructura limpia en renglones verticales
+                mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
+                mensaje += `  Cantidad: ${p.cantidad} ${unidadVisual}\n`;
+                mensaje += `  ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
+                mensaje += `  Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
 
+                granTotal += p.totalUSD;
+            });
 
-    mensaje += "--------------------------------------\n";
-    
-    if (porcentajeImpuesto > 0) {
-        const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
-        const granTotalConImpuesto = granTotal + montoImpuesto;
-        const totalBs = granTotalConImpuesto * tasaBCV;
-        
-        mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    } else {
-        const totalBs = granTotal * tasaBCV;
-        
-        mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    }
-    
-    mensaje += "\n_Generado por PresuMetrick._";
-    
-    const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-    window.open(link, '_blank');
-}
-
-
-
-
-    
-    // Función interna para estandarizar el texto visual de la unidad
-    function unidadLinter(uni) {
-        const u = uni.toLowerCase();
-        if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-        if (u.includes('pto') || u.includes('pun')) return 'Pto';
-        if (u.includes('und') || u.includes('uni')) return 'Unid';
-        if (u.includes('glob')) return 'Global';
-        return uni;
-    }
-
-    mensaje += "--------------------------------------\n";
-    
-    if (porcentajeImpuesto > 0) {
-        const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
-        const granTotalConImpuesto = granTotal + montoImpuesto;
-        const totalBs = granTotalConImpuesto * tasaBCV;
-        
-        mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    } else {
-        const totalBs = granTotal * tasaBCV;
-        
-        mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
-        mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
-    }
-    
-    mensaje += "\n_Generado por PresuMetrick._";
-    
-    const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-    window.open(link, '_blank');
-}
-
+            mensaje += "--------------------------------------\n";
+            
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = granTotal + montoImpuesto;
+                const totalBs = granTotalConImpuesto * tasaBCV;
+                
+                mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            } else {
+                const totalBs = granTotal * tasaBCV;
+                
+                mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            }
+            
+            mensaje += "\n_Generado por PresuMetrick._";
+            
+            const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            window.open(link, '_blank');
+        }
 
         function generarPDF() {
             const { jsPDF } = window.jspdf;
@@ -283,11 +219,10 @@ function unidadLinter(uni) {
             
             doc.line(15, 48, 195, 48);
 
-            // CORRECCIÓN DE FECHA: Formato con año de dos dígitos (DD/MM/AA)
             const fechaActual = new Date();
             const dia = String(fechaActual.getDate()).padStart(2, '0');
             const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-            const anioCorto = String(fechaActual.getFullYear()).slice(-2); // Extrae solo los últimos dos dígitos
+            const anioCorto = String(fechaActual.getFullYear()).slice(-2); 
             const fechaFormateada = `${dia}/${mes}/${anioCorto}`;
 
             let y = 56;
@@ -344,6 +279,7 @@ function unidadLinter(uni) {
     </script>
 </body>
 </html>
+
 
 
 
