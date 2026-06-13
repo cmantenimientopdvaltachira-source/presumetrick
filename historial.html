@@ -106,16 +106,16 @@
             }
         }
 
-        function unidadLinter(uni) {
+                function unidadLinter(uni) {
             const u = uni.toLowerCase().trim();
+            if (u.includes('glob')) return 'Global';
             if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
             if (u.includes('pto') || u.includes('pun')) return 'Pto';
             if (u.includes('und') || u.includes('uni')) return 'Unid';
-            if (u.includes('glob')) return 'Global';
+            if (u.includes('kg') || u.includes('kil')) return 'KG';
             
-            // Si la unidad es un texto largo idéntico al trabajo, asumimos que es una Unidad
-            if (u.length > 10) return 'Unid';
-            return uni;
+            // Si el texto de la unidad es largo o idéntico al trabajo, asumimos Global por defecto
+            return 'Global';
         }
 
         function enviarWhatsApp() {
@@ -133,21 +133,23 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                // 1. Limpiar el nombre del trabajo para remover paréntesis duplicados
+                // 1. Nombre limpio del trabajo
                 const textoOriginal = p.trabajo || '';
                 const nombreLimpio = textoOriginal.split('(')[0].trim();
 
-                // 2. Extraer y corregir la unidad de medida
+                // 2. Identificación precisa de la unidad
                 const unidadOriginal = (p.unidad || '').split('(')[0].trim();
                 const unidadVisual = unidadLinter(unidadOriginal);
 
-                // 3. Controlar etiquetas limpias de precios
+                // 3. Control de etiquetas dinámicas acopladas
                 let etiquetaPrecio = `Precio por ${unidadVisual}`;
-                if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid') {
+                if (unidadVisual === 'Global') {
+                    etiquetaPrecio = 'Precio Global';
+                } else if (unidadVisual === 'Unid') {
                     etiquetaPrecio = 'Precio Unitario';
                 }
 
-                // 4. Construcción del bloque de texto perfectamente ordenado
+                // 4. Estructura con saltos de línea explícitos para alineación en WhatsApp
                 mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
                 mensaje += `  Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `  ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
@@ -179,6 +181,7 @@
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
+
 
         function generarPDF() {
             const { jsPDF } = window.jspdf;
