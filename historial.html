@@ -107,11 +107,14 @@
         }
 
         function unidadLinter(uni) {
-            const u = uni.toLowerCase();
+            const u = uni.toLowerCase().trim();
             if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
             if (u.includes('pto') || u.includes('pun')) return 'Pto';
             if (u.includes('und') || u.includes('uni')) return 'Unid';
             if (u.includes('glob')) return 'Global';
+            
+            // Si la unidad es un texto largo idéntico al trabajo, asumimos que es una Unidad
+            if (u.length > 10) return 'Unid';
             return uni;
         }
 
@@ -130,21 +133,21 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                // 1. Limpiar residuos de texto en el nombre del trabajo
+                // 1. Limpiar el nombre del trabajo para remover paréntesis duplicados
                 const textoOriginal = p.trabajo || '';
                 const nombreLimpio = textoOriginal.split('(')[0].trim();
 
-                // 2. Extraer y formatear la unidad de medida
-                const unidadLimpia = (p.unidad || '').split('(')[0].trim();
-                const unidadVisual = unidadLinter(unidadLimpia);
+                // 2. Extraer y corregir la unidad de medida
+                const unidadOriginal = (p.unidad || '').split('(')[0].trim();
+                const unidadVisual = unidadLinter(unidadOriginal);
 
-                // 3. Controlar etiquetas dinámicas para evitar textos desordenados
+                // 3. Controlar etiquetas limpias de precios
                 let etiquetaPrecio = `Precio por ${unidadVisual}`;
                 if (unidadVisual.toLowerCase() === 'global' || unidadVisual.toLowerCase() === 'unid') {
                     etiquetaPrecio = 'Precio Unitario';
                 }
 
-                // 4. Armar la estructura limpia en renglones verticales
+                // 4. Construcción del bloque de texto perfectamente ordenado
                 mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
                 mensaje += `  Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `  ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
@@ -279,6 +282,7 @@
     </script>
 </body>
 </html>
+
 
 
 
