@@ -119,21 +119,25 @@
     let mensaje = "*PRESUPUESTO FORMAL*\n";
     mensaje += "--------------------------------------\n\n";
     
-    let granTotal = 0;
+        let granTotal = 0;
     presupuesto.forEach(p => {
-        // 1. Limpia cualquier residuo de paréntesis en el nombre
+        // 1. Nombre limpio del servicio
         const textoOriginal = p.trabajo || '';
         const nombreLimpio = textoOriginal.split('(')[0].trim();
 
-        // 2. Extrae solo las siglas de la unidad (ej: "Pto (Punto)" -> "Pto")
+        // 2. Unidad de medida estandarizada
         const unidadLimpia = (p.unidad || '').split('(')[0].trim();
+        const unidadVisual = unidadLinter(unidadLimpia);
 
-        // 3. Estructura compacta, ordenada y sin repeticiones
+        // 3. Diseño en bloques verticales para alineación matemática perfecta
         mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
-        mensaje += `  Cant: ${p.cantidad} ${unidadLinter(unidadLimpia)} | P.U: $${parseFloat(p.precioUnitario).toFixed(2)} | Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+        mensaje += `  Detalle: ${p.cantidad} ${unidadVisual}\n`;
+        mensaje += `  Precio U.: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
+        mensaje += `  Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
 
         granTotal += p.totalUSD;
     });
+
     
     // Función interna para estandarizar el texto visual de la unidad
     function unidadLinter(uni) {
