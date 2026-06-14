@@ -118,7 +118,7 @@
             return 'Global';
         }
 
-                function enviarWhatsApp() {
+                        function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             if (presupuesto.length === 0) {
                 alert("No hay partidas en el presupuesto para enviar.");
@@ -148,9 +148,16 @@
                     etiquetaPrecio = 'Precio Unitario';
                 }
 
-                // 3. Estructura protegida contra textos largos
+                // 3. Estructura protegida contra textos largos (Mantenida exactamente igual)
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
-                mensaje += `_${nombreLimpio}_\n`; // El nombre largo va aquí abajo, libre para usar varias líneas
+                mensaje += `_${nombreLimpio}_\n`; 
+                
+                // === AGREGADO DE FORMA EXCLUSIVA: CASILLA DE OBSERVACIONES/NOTAS ===
+                if (p.nota && p.nota.trim() !== "") {
+                    mensaje += `📝 _Nota: ${p.nota}_\n`;
+                }
+
+                // El resto del desglose sigue intacto con tus rombos azules alineados
                 mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `🔹 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
                 mensaje += `🔹 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
@@ -181,6 +188,7 @@
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
+
 
 
 
