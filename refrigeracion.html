@@ -33,7 +33,7 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
-                <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     <option>Instalación Aire Split</option>
                     <option>Mantenimiento Preventivo</option>
                     <option>Recarga de Gas</option>
@@ -44,11 +44,11 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
-                    <input type="number" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                    <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                         <option>Und (Unidad/Equipo)</option>
                         <option>BTU (Capacidad)</option>
                         <option>Mtrs (Metros de tubería)</option>
@@ -63,13 +63,13 @@
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
-                    <input type="number" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea rows="2" placeholder="Ej: Incluye materiales..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
+                <textarea id="descripcion-nota" rows="2" placeholder="Ej: Incluye materiales..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
             </div>
 
             <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
@@ -80,50 +80,48 @@
 
     <script>
         function guardarPartida() {
-    // 1. Lectura exacta utilizando los mismos IDs unificados de electricidad
-    const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
-    const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
-    const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
-    const unidadSeleccionada = document.getElementById('unidad-select').value;
-    const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
+            // 1. Lectura exacta utilizando los mismos IDs unificados de electricidad
+            const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
+            const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
+            const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
+            const unidadSeleccionada = document.getElementById('unidad-select').value;
+            const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
-    // 2. Validación de seguridad para no guardar datos vacíos
-    if (cantidad <= 0 || precioUnitario <= 0) {
-        alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
-        return;
-    }
+            // 2. Validación de seguridad para no guardar datos vacíos
+            if (cantidad <= 0 || precioUnitario <= 0) {
+                alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
+                return;
+            }
 
-    const totalUSD = cantidad * precioUnitario;
+            const totalUSD = cantidad * precioUnitario;
 
-    // 3. Creación del objeto de la partida asignando el módulo correspondiente
-    const nuevaPartida = {
-        modulo: 'Refrigeración',
-        trabajo: tipoTrabajo,
-        cantidad: cantidad,
-        unidad: unidadSeleccionada, 
-        precioUnitario: precioUnitario,
-        totalUSD: totalUSD,
-        nota: descripcionAdicional
-    };
+            // 3. Creación del objeto de la partida asignando el módulo correspondiente
+            const nuevaPartida = {
+                modulo: 'Refrigeración',
+                trabajo: tipoTrabajo,
+                cantidad: cantidad,
+                unidad: unidadSeleccionada, 
+                precioUnitario: precioUnitario,
+                totalUSD: totalUSD,
+                nota: descripcionAdicional
+            };
 
-    // 4. Guardado directo en la base de datos del navegador
-    let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-    presupuesto.push(nuevaPartida);
-    localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
+            // 4. Guardado directo en la base de datos del navegador
+            let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+            presupuesto.push(nuevaPartida);
+            localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-    // 5. Limpieza automática de las casillas en la pantalla
-    document.getElementById('cantidad-input').value = "";
-    document.getElementById('precio-input').value = "";
-    document.getElementById('descripcion-nota').value = "";
+            // 5. Limpieza automática de las casillas en la pantalla
+            document.getElementById('cantidad-input').value = "";
+            document.getElementById('precio-input').value = "";
+            document.getElementById('descripcion-nota').value = "";
 
-    alert('¡Partida agregada al presupuesto con éxito!');
-}
-
-
-
+            alert('¡Partida agregada al presupuesto con éxito!');
+        }
     </script>
 </body>
 </html>
+
 
 
 
