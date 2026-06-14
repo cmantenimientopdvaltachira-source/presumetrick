@@ -93,72 +93,83 @@
             `;
         }
 
-        function generarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-            if (presupuesto.length === 0) return alert("No hay partidas");
+            function generarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+        if (presupuesto.length === 0) return alert("No hay partidas");
 
-            const cliente = prompt("Nombre del cliente:");
-            if (!cliente) return;
+        const cliente = prompt("Nombre del cliente:");
+        if (!cliente) return;
 
-            // Bloque Observaciones
-            const obsBase = localStorage.getItem('observacionesGenerales') || "";
-            const notasFinales = prompt("Observaciones para este presupuesto:", obsBase);
-            if (notasFinales === null) return;
+        // 1. Solicitud de observaciones
+        const obsBase = localStorage.getItem('observacionesGenerales') || "";
+        const notasFinales = prompt("Observaciones para este presupuesto:", obsBase);
+        if (notasFinales === null) return;
 
-            const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
-            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal";
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-            const logoBase64 = localStorage.getItem('logoEmpresa');
+        // 2. Datos Empresa
+        const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+        const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal";
+        const logoBase64 = localStorage.getItem('logoEmpresa');
 
-            if (logoBase64) doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+        if (logoBase64) doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+        doc.setFont("helvetica", "bold");
+        doc.text(nombreEmpresa.toUpperCase(), 45, 22);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text(direccionEmpresa, 45, 28);
+        doc.line(15, 48, 195, 48);
+
+        // 3. Listado de Partidas
+        let y = 60;
+        doc.setFontSize(10);
+        doc.text("Presupuesto para: " + cliente, 15, y);
+        y += 15;
+
+        let subtotalUSD = 0;
+        presupuesto.forEach((p) => {
             doc.setFont("helvetica", "bold");
-            doc.text(nombreEmpresa.toUpperCase(), 45, 22);
-            doc.setFont("helvetica", "normal");
-            doc.text(direccionEmpresa, 45, 28);
-            doc.line(15, 48, 195, 48);
+            doc.text(`${p.cantidad} ${p.unidad || ''} - ${p.trabajo}`, 15, y);
+            doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+            y += 5;
+            if (p.nota) {
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "italic");
+                doc.text("Nota: " + p.nota, 18, y);
+                y += 7;
+            }
+            subtotalUSD += p.totalUSD;
+            y += 8;
+        });
 
-            let y = 60;
-            doc.text("Presupuesto para: " + cliente, 15, y);
-            y += 15;
-
-            presupuesto.forEach((p) => {
-                doc.text(`${p.cantidad} - ${p.trabajo.substring(0, 50)}`, 15, y);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                if (p.nota) {
-                    y += 5;
-                    doc.setFontSize(8);
-                    doc.text("Nota: " + p.nota.substring(0, 80), 18, y);
-                    doc.setFontSize(10);
-                }
-                y += 10;
-            });
-
+        // 4. Observaciones Generales
+        if (notasFinales && notasFinales.trim() !== "") {
             y += 5;
             doc.line(15, y, 195, y);
             y += 10;
-
-            // Bloque Observaciones insertado
-            if (notasFinales.trim() !== "") {
-                doc.setFont("helvetica", "bold");
-                doc.text("Observaciones:", 15, y);
-                y += 5;
-                doc.setFont("helvetica", "normal");
-                const lineasObs = doc.splitTextToSize(notasFinales, 180);
-                doc.text(lineasObs, 15, y);
-                y += (lineasObs.length * 5) + 5;
-            }
-
-            // Totales
-            const subtotalUSD = presupuesto.reduce((acc, p) => acc + p.totalUSD, 0);
-            const imp = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-            const total = subtotalUSD + (subtotalUSD * (imp / 100));
-            doc.text(`TOTAL GENERAL: $${total.toFixed(2)} USD`, 120, y);
-            
-            doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(9);
+            doc.text("Observaciones:", 15, y);
+            y += 5;
+            doc.setFont("helvetica", "normal");
+            const lineasObs = doc.splitTextToSize(notasFinales, 180);
+            doc.text(lineasObs, 15, y);
+            y += (lineasObs.length * 5) + 5;
         }
+
+        // 5. Totales
+        y += 5;
+        doc.line(15, y, 195, y);
+        y += 10;
+        const imp = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
+        const total = subtotalUSD + (subtotalUSD * (imp / 100));
+        doc.setFont("helvetica", "bold");
+        doc.text(`TOTAL GENERAL: $${total.toFixed(2)} USD`, 120, y);
+        
+        doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+    }
+
 
         function vaciarPresupuesto() {
             if (confirm('¿Borrar todo?')) {
