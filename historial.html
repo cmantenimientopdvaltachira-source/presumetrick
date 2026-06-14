@@ -106,29 +106,31 @@
             }
         }
 
-                // CORREGIDO: Ahora el linter reconoce M2, M3 y también detecta de forma específica los Metros Lineales (ML)
         function unidadLinter(uni) {
-    const u = uni.toLowerCase().trim();
-    
-    if (u.includes('glob')) return 'Global';
-    if (u.includes('m2') || u.includes('cuad')) return 'M2';
-    if (u.includes('m3') || u.includes('cubi')) return 'M3';
-    
-    // 1. PRIMERO buscamos la palabra lineal para que no se confunda
-    if (u.includes('lineal') || u.includes('ml')) return 'ML';
-    
-    // 2. DESPUÉS dejamos los metros comunes
-    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-    
-    if (u.includes('pto') || u.includes('pun')) return 'Pto';
-    if (u.includes('und') || u.includes('uni')) return 'Unid';
-    if (u.includes('kg') || u.includes('kil')) return 'KG';
-    
-    return 'Global';
-}
-
+            const u = uni.toLowerCase().trim();
+            if (u.includes('glob')) return 'Global';
+            if (u.includes('m2') || u.includes('cuad')) return 'M2';
+            if (u.includes('m3') || u.includes('cubi')) return 'M3';
             
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 51.96;
+            // Evaluamos primero la palabra lineal para evitar que se confunda con metros comunes
+            if (u.includes('lineal') || u.includes('ml')) return 'ML';
+            if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
+            
+            if (u.includes('pto') || u.includes('pun')) return 'Pto';
+            if (u.includes('und') || u.includes('uni')) return 'Unid';
+            if (u.includes('kg') || u.includes('kil')) return 'KG';
+            
+            return 'Global';
+        }
+
+        function enviarWhatsApp() {
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            if (presupuesto.length === 0) {
+                alert("No hay partidas en el presupuesto para enviar.");
+                return;
+            }
+            
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
             let mensaje = "*PRESUPUESTO FORMAL*\n";
@@ -142,7 +144,6 @@
                 const unidadOriginal = (p.unidad || '').split('(')[0].trim();
                 const unidadVisual = unidadLinter(unidadOriginal);
 
-                // Control inteligente de etiquetas de precio, incluyendo las nuevas unidades de Albañilería
                 let etiquetaPrecio = `Precio por ${unidadVisual}`;
                 if (unidadVisual === 'Global') {
                     etiquetaPrecio = 'Precio Global';
@@ -153,7 +154,7 @@
                 } else if (unidadVisual === 'M3') {
                     etiquetaPrecio = 'Precio por M3';
                 } else if (unidadVisual === 'ML') {
-                    etiquetaPrecio = 'Precio por ML'; // <-- ETIQUETA CORREGIDA PARA WHATSAPP
+                    etiquetaPrecio = 'Precio por ML';
                 }
 
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
@@ -193,7 +194,6 @@
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
-
 
         function generarPDF() {
             const { jsPDF } = window.jspdf;
@@ -297,6 +297,7 @@
     </script>
 </body>
 </html>
+
 
 
 
