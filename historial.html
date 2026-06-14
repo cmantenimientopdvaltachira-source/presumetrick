@@ -152,10 +152,11 @@
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
                 mensaje += `_${nombreLimpio}_\n`; 
                 
-                // === AGREGADO DE FORMA EXCLUSIVA: CASILLA DE OBSERVACIONES/NOTAS ===
+                                // === AGREGADO DE FORMA EXCLUSIVA: CASILLA DE OBSERVACIONES/NOTAS ===
                 if (p.nota && p.nota.trim() !== "") {
-                    mensaje += `📝 _Nota: ${p.nota}_\n`;
+                    mensaje += `📝 *Nota:*\n_${p.nota}_\n`;
                 }
+
 
                 // El resto del desglose sigue intacto con tus rombos azules alineados
                 mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
