@@ -263,12 +263,32 @@
             y += 10;
             let subtotalUSD = 0;
 
-            presupuesto.forEach((p) => {
-                doc.text(p.trabajo.substring(0, 70), 15, y);
+                        presupuesto.forEach((p) => {
+                // 1. Limpieza de unidad para formato técnico
+                const unidadOriginal = (p.unidad || '').split('(')[0].trim();
+                const unidadVisual = unidadLinter(unidadOriginal);
+                
+                // 2. Construcción de línea de descripción con cantidad y unidad
+                const lineaDescripcion = `${p.cantidad} ${unidadVisual} - ${p.trabajo.substring(0, 50)}`;
+                
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.text(lineaDescripcion, 15, y);
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                
+                // 3. Impresión de nota (si existe) debajo de la partida
+                if (p.nota && p.nota.trim() !== "") {
+                    y += 5; // Salto de línea corto
+                    doc.setFontSize(8);
+                    doc.setFont("helvetica", "italic");
+                    doc.text("Nota: " + p.nota.substring(0, 80), 18, y);
+                    doc.setFontSize(10); // Restaurar tamaño para el siguiente ítem
+                }
+                
                 subtotalUSD += p.totalUSD;
-                y += 8;
+                y += 10; // Espaciado final entre partidas
             });
+
 
             y += 10;
             doc.line(15, y, 195, y);
