@@ -80,38 +80,41 @@
 
     <script>
         function guardarPartida() {
-            const selects = document.querySelectorAll('select');
-            const inputs = document.querySelectorAll('input');
-            const textarea = document.querySelector('textarea');
+    const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
+    const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
+    const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
+    const unidadSeleccionada = document.getElementById('unidad-select').value;
+    const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
-            const cantidad = parseFloat(inputs[0].value) || 0;
-            const precio = parseFloat(inputs[1].value) || 0;
+    if (cantidad <= 0 || precioUnitario <= 0) {
+        alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
+        return;
+    }
 
-            if (cantidad <= 0 || precio <= 0) {
-                alert('Por favor, ingresa cantidad y precio válidos.');
-                return;
-            }
+    const totalUSD = cantidad * precioUnitario;
 
-            const nuevaPartida = {
-                modulo: 'Refrigeración',
-                trabajo: selects[0].value,
-                cantidad: cantidad,
-                unidad: selects[1].value,
-                precioUnitario: precio,
-                totalUSD: cantidad * precio,
-                nota: textarea.value
-            };
+    const nuevaPartida = {
+        modulo: 'Refrigeración',
+        trabajo: tipoTrabajo,
+        cantidad: cantidad,
+        unidad: unidadSeleccionada, 
+        precioUnitario: precioUnitario,
+        totalUSD: totalUSD,
+        nota: descripcionAdicional
+    };
 
-            let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-            presupuesto.push(nuevaPartida);
-            localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
+    let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+    presupuesto.push(nuevaPartida);
+    localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-            inputs[0].value = "";
-            inputs[1].value = "";
-            textarea.value = "";
+    // Limpieza exacta del formulario
+    document.getElementById('cantidad-input').value = "";
+    document.getElementById('precio-input').value = "";
+    document.getElementById('descripcion-nota').value = "";
 
-            alert('¡Partida agregada con éxito!');
-        }
+    alert('¡Partida agregada al presupuesto con éxito!');
+}
+
     </script>
 </body>
 </html>
