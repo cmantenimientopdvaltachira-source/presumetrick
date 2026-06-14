@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PresuMetrick - Plomeria</title>
+    <title>PresuMetrick - Plomería</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,20 +14,15 @@
             <a href="index.html" class="text-slate-400 hover:text-amber-500 transition-colors p-1">
                 <i class="fa-solid fa-arrow-left text-xl"></i>
             </a>
-            <h1 class="text-xl font-bold tracking-tight text-amber-500">
-                <i class="fa-solid fa-faucet mr-1"></i> Plomería
-            </h1>
+            <h1 class="text-xl font-bold tracking-tight text-amber-500"><i class="fa-solid fa-faucet mr-1"></i> Plomería</h1>
         </div>
-        <span class="bg-amber-500/10 text-amber-500 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-500/20">
-            Activo
-        </span>
     </header>
 
     <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-6 pb-24">
         
         <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
             <p class="text-sm text-slate-400 leading-relaxed">
-                Registra los trabajos de tuberías, piezas sanitarias y sistemas hidráulicos para generar el cómputo métrico.
+                Registra los trabajos de tuberías, griferías, filtraciones o instalaciones hidráulicas para generar el cómputo métrico automáticamente.
             </p>
         </div>
 
@@ -38,27 +33,28 @@
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
-                <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     <option>Instalación de Tubería Aguas Blancas</option>
                     <option>Instalación de Tubería Aguas Negras</option>
-                    <option>Montaje de Piezas Sanitarias</option>
-                    <option>Instalación de Sistema Hidroneumático</option>
-                    <option>Reparación de Filtración o Fuga</option>
+                    <option>Reparación de Filtración</option>
+                    <option>Instalación de Grifería / Pieza Sanitaria</option>
+                    <option>Mantenimiento de Destape / Sifón</option>
                 </select>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
-                    <input type="number" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                    <select class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
-                        <option>Pto (Punto)</option>
-                        <option>Mtrs (Metros)</option>
-                        <option>Und (Unidad)</option>
-                        <option>Glob (Global)</option>
+                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                        <option>Mtrs (Metros lineales)</option>
+                        <option>Pto (Puntos de agua)</option>
+                        <option>Unid (Unidades)</option>
+                        <option>Serv (Servicio)</option>
+                        <option>Global (Global)</option>
                     </select>
                 </div>
             </div>
@@ -67,56 +63,63 @@
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
-                    <input type="number" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
             </div>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea rows="2" placeholder="Ej: Incluye pegamento y accesorios..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
+                <textarea id="descripcion-nota" rows="2" placeholder="Ej: No incluye ruptura de piso..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
             </div>
 
-            <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg shadow-amber-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 text-sm">
-                <i class="fa-solid fa-plus text-base"></i> Agregar al Presupuesto
+            <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
+                <i class="fa-solid fa-plus mr-2"></i> Agregar al Presupuesto
             </button>
         </div>
     </main>
 
     <script>
         function guardarPartida() {
-            const selects = document.querySelectorAll('select');
-            const inputs = document.querySelectorAll('input');
-            const textarea = document.querySelector('textarea');
+            // 1. Lectura exacta utilizando los mismos IDs unificados de electricidad
+            const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
+            const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
+            const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
+            const unidadSeleccionada = document.getElementById('unidad-select').value;
+            const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
-            const cantidad = parseFloat(inputs[0].value) || 0;
-            const precio = parseFloat(inputs[1].value) || 0;
-
-            if (cantidad <= 0 || precio <= 0) {
-                alert('Por favor, ingresa cantidad y precio válidos.');
+            // 2. Validación de seguridad para no guardar datos vacíos
+            if (cantidad <= 0 || precioUnitario <= 0) {
+                alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
                 return;
             }
 
+            const totalUSD = cantidad * precioUnitario;
+
+            // 3. Creación del objeto de la partida asignando el módulo correspondiente
             const nuevaPartida = {
                 modulo: 'Plomería',
-                trabajo: selects[0].value,
+                trabajo: tipoTrabajo,
                 cantidad: cantidad,
-                unidad: selects[1].value,
-                precioUnitario: precio,
-                totalUSD: cantidad * precio,
-                nota: textarea.value
+                unidad: unidadSeleccionada, 
+                precioUnitario: precioUnitario,
+                totalUSD: totalUSD,
+                nota: descripcionAdicional
             };
 
+            // 4. Guardado directo en la base de datos del navegador
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             presupuesto.push(nuevaPartida);
             localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-            inputs[0].value = "";
-            inputs[1].value = "";
-            textarea.value = "";
+            // 5. Limpieza automática de las casillas en la pantalla
+            document.getElementById('cantidad-input').value = "";
+            document.getElementById('precio-input').value = "";
+            document.getElementById('descripcion-nota').value = "";
 
-            alert('¡Partida de Plomería agregada con éxito!');
+            alert('¡Partida agregada al presupuesto con éxito!');
         }
     </script>
 </body>
 </html>
+
 
