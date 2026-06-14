@@ -34,7 +34,7 @@
             let htmlContenido = '';
             let granTotal = 0;
 
-            presupuesto.forEach((partida) => {
+            presupuesto.forEach((partida, index) => {
                 granTotal += partida.totalUSD;
                 htmlContenido += `
                     <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
@@ -52,6 +52,7 @@
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
 
             let bloqueTotalesHtml = '';
+
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
@@ -64,18 +65,23 @@
                         <div class="text-xs text-white flex justify-between"><span>Impuesto (${porcentajeImpuesto}%):</span> <span class="font-bold">+$${montoImpuesto.toFixed(2)} USD</span></div>
                         <div class="border-t border-emerald-500/40 my-1"></div>
                         <div class="text-base font-black text-white flex justify-between items-center"><span>TOTAL GENERAL:</span> <span class="text-xl">$${granTotalConImpuesto.toFixed(2)} USD</span></div>
-                        <div class="text-xs font-bold text-emerald-100 text-right pt-1">Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="text-xs font-bold text-emerald-100 text-right pt-1">
+                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
                     </div>
                 `;
             } else {
                 const totalBs = granTotal * tasaBCV;
+
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5">
                         <div class="flex justify-between items-center text-white">
                             <span class="font-bold uppercase text-xs">Total General:</span>
                             <span class="font-bold text-xl">$${granTotal.toFixed(2)} USD</span>
                         </div>
-                        <div class="text-emerald-100 text-xs border-t border-emerald-500/40 pt-2 text-right font-bold">Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="text-emerald-100 text-xs border-t border-emerald-500/40 pt-2 text-right font-bold">
+                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
                     </div>
                 `;
             }
@@ -84,8 +90,8 @@
                 ${htmlContenido}
                 ${bloqueTotalesHtml}
                 <div class="flex gap-3 mt-6">
-                    <button onclick="enviarWhatsApp()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg text-sm">WhatsApp</button>
-                    <button onclick="generarPDF()" class="flex-1 bg-sky-700 text-white font-bold py-3 rounded-xl shadow-lg text-sm">PDF Formal</button>
+                    <button onclick="enviarWhatsApp()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">WhatsApp</button>
+                    <button onclick="generarPDF()" class="flex-1 bg-sky-700 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">PDF Formal</button>
                 </div>
                 <div class="text-center mt-6 mb-20">
                     <button onclick="vaciarPresupuesto()" class="text-rose-400 text-xs underline font-medium">Borrar todo</button>
@@ -93,93 +99,205 @@
             `;
         }
 
-            function generarPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-        if (presupuesto.length === 0) return alert("No hay partidas");
-
-        const cliente = prompt("Nombre del cliente:");
-        if (!cliente) return;
-
-        // 1. Solicitud de observaciones
-        const obsBase = localStorage.getItem('observacionesGenerales') || "";
-        const notasFinales = prompt("Observaciones para este presupuesto:", obsBase);
-        if (notasFinales === null) return;
-
-        // 2. Datos Empresa
-        const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
-        const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal";
-        const logoBase64 = localStorage.getItem('logoEmpresa');
-
-        if (logoBase64) doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
-        doc.setFont("helvetica", "bold");
-        doc.text(nombreEmpresa.toUpperCase(), 45, 22);
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(9);
-        doc.text(direccionEmpresa, 45, 28);
-        doc.line(15, 48, 195, 48);
-
-        // 3. Listado de Partidas
-        let y = 60;
-        doc.setFontSize(10);
-        doc.text("Presupuesto para: " + cliente, 15, y);
-        y += 15;
-
-        let subtotalUSD = 0;
-        presupuesto.forEach((p) => {
-            doc.setFont("helvetica", "bold");
-            doc.text(`${p.cantidad} ${p.unidad || ''} - ${p.trabajo}`, 15, y);
-            doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-            y += 5;
-            if (p.nota) {
-                doc.setFontSize(8);
-                doc.setFont("helvetica", "italic");
-                doc.text("Nota: " + p.nota, 18, y);
-                y += 7;
-            }
-            subtotalUSD += p.totalUSD;
-            y += 8;
-        });
-
-        // 4. Observaciones Generales
-        if (notasFinales && notasFinales.trim() !== "") {
-            y += 5;
-            doc.line(15, y, 195, y);
-            y += 10;
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(9);
-            doc.text("Observaciones:", 15, y);
-            y += 5;
-            doc.setFont("helvetica", "normal");
-            const lineasObs = doc.splitTextToSize(notasFinales, 180);
-            doc.text(lineasObs, 15, y);
-            y += (lineasObs.length * 5) + 5;
-        }
-
-        // 5. Totales
-        y += 5;
-        doc.line(15, y, 195, y);
-        y += 10;
-        const imp = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-        const total = subtotalUSD + (subtotalUSD * (imp / 100));
-        doc.setFont("helvetica", "bold");
-        doc.text(`TOTAL GENERAL: $${total.toFixed(2)} USD`, 120, y);
-        
-        doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
-    }
-
-
         function vaciarPresupuesto() {
-            if (confirm('¿Borrar todo?')) {
+            if (confirm('¿Seguro que quieres borrar todo el presupuesto?')) {
                 localStorage.setItem('presupuestoActual', JSON.stringify([]));
                 location.reload();
             }
         }
+
+        function unidadLinter(uni) {
+            const u = uni.toLowerCase().trim();
+            if (u.includes('glob')) return 'Global';
+            if (u.includes('m2') || u.includes('cuad')) return 'M2';
+            if (u.includes('m3') || u.includes('cubi')) return 'M3';
+            
+            // Evaluamos primero la palabra lineal para evitar que se confunda con metros comunes
+            if (u.includes('lineal') || u.includes('ml')) return 'ML';
+            if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
+            
+            if (u.includes('pto') || u.includes('pun')) return 'Pto';
+            if (u.includes('und') || u.includes('uni')) return 'Unid';
+            if (u.includes('kg') || u.includes('kil')) return 'KG';
+            
+            return 'Global';
+        }
+
+        function enviarWhatsApp() {
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
+            if (presupuesto.length === 0) {
+                alert("No hay partidas en el presupuesto para enviar.");
+                return;
+            }
+            
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
+            
+            let mensaje = "*PRESUPUESTO FORMAL*\n";
+            mensaje += "--------------------------------------\n\n";
+            
+            let granTotal = 0;
+            presupuesto.forEach(p => {
+                const textoOriginal = p.trabajo || '';
+                const nombreLimpio = textoOriginal.split('(')[0].trim();
+
+                const unidadOriginal = (p.unidad || '').split('(')[0].trim();
+                const unidadVisual = unidadLinter(unidadOriginal);
+
+                let etiquetaPrecio = `Precio por ${unidadVisual}`;
+                if (unidadVisual === 'Global') {
+                    etiquetaPrecio = 'Precio Global';
+                } else if (unidadVisual === 'Unid') {
+                    etiquetaPrecio = 'Precio Unitario';
+                } else if (unidadVisual === 'M2') {
+                    etiquetaPrecio = 'Precio por M2';
+                } else if (unidadVisual === 'M3') {
+                    etiquetaPrecio = 'Precio por M3';
+                } else if (unidadVisual === 'ML') {
+                    etiquetaPrecio = 'Precio por ML';
+                }
+
+                mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
+                mensaje += `_${nombreLimpio}_\n`; 
+                
+                if (p.nota && p.nota.trim() !== "") {
+                    mensaje += `📝 *Nota:*\n_${p.nota}_\n`;
+                }
+
+                mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
+                mensaje += `🔹 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
+                mensaje += `🔹 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+
+                granTotal += p.totalUSD;
+            });
+
+            mensaje += "--------------------------------------\n";
+            
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = granTotal + montoImpuesto;
+                const totalBs = granTotalConImpuesto * tasaBCV;
+                
+                mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            } else {
+                const totalBs = granTotal * tasaBCV;
+                
+                mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
+                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            }
+            
+            mensaje += "\n_Generado por PresuMetrick._";
+            
+            const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            window.open(link, '_blank');
+        }
+
+        function generarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+            const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+            const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
+            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
+            const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || ""; 
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const logoBase64 = localStorage.getItem('logoEmpresa');
+
+            if (presupuesto.length === 0) {
+                alert("No hay partidas para generar el PDF");
+                return;
+            }
+
+            const cliente = prompt("Nombre del cliente:");
+            if (!cliente) return;
+
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
+
+            if (logoBase64) {
+                try {
+                    doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
+                } catch (e) { console.warn("No se pudo cargar el logo"); }
+            }
+            
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(9);
+            doc.text("Dirección: " + direccionEmpresa, 45, 28); 
+            doc.text("RIF: " + rifEmpresa, 45, 33);             
+            if (telefonoEmpresa) {
+                doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
+            }
+            
+            doc.line(15, 48, 195, 48);
+
+            const fechaActual = new Date();
+            const dia = String(fechaActual.getDate()).padStart(2, '0');
+            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+            const anioCorto = String(fechaActual.getFullYear()).slice(-2); 
+            const fechaFormateada = `${dia}/${mes}/${anioCorto}`;
+
+            let y = 56;
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("Presupuesto para: " + cliente, 15, y);
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text("Fecha: " + fechaFormateada, 15, y + 7);
+            
+            y += 20; 
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "bold");
+            doc.text("Descripcion", 15, y);
+            doc.text("Total", 170, y);
+            doc.line(15, y + 2, 195, y + 2);
+            
+            doc.setFont("helvetica", "normal");
+            y += 10;
+            let subtotalUSD = 0;
+
+            presupuesto.forEach((p) => {
+                doc.text(p.trabajo.substring(0, 70), 15, y);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                subtotalUSD += p.totalUSD;
+                y += 8;
+            });
+
+            y += 10;
+            doc.line(15, y, 195, y);
+            y += 10;
+            doc.setFont("helvetica", "bold");
+
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = subtotalUSD + montoImpuesto;
+
+                doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
+                y += 6;
+                doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y);
+                y += 6;
+                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y);
+                y += 7;
+                doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+            } else {
+                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
+                y += 7;
+                doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+            }
+
+            doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
+        }
     </script>
 </body>
 </html>
+
 
 
 
