@@ -108,25 +108,25 @@
 
                 // CORREGIDO: Ahora el linter reconoce M2, M3 y también detecta de forma específica los Metros Lineales (ML)
         function unidadLinter(uni) {
-            const u = uni.toLowerCase().trim();
-            if (u.includes('glob')) return 'Global';
-            if (u.includes('m2') || u.includes('cuad')) return 'M2';
-            if (u.includes('m3') || u.includes('cubi')) return 'M3';
-            if (u.includes('lineal') || u.includes('ml')) return 'ML'; // <-- NUEVA REGLA AGREGADA
-            if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-            if (u.includes('pto') || u.includes('pun')) return 'Pto';
-            if (u.includes('und') || u.includes('uni')) return 'Unid';
-            if (u.includes('kg') || u.includes('kil')) return 'KG';
-            
-            return 'Global';
-        }
+    const u = uni.toLowerCase().trim();
+    
+    if (u.includes('glob')) return 'Global';
+    if (u.includes('m2') || u.includes('cuad')) return 'M2';
+    if (u.includes('m3') || u.includes('cubi')) return 'M3';
+    
+    // 1. PRIMERO buscamos la palabra lineal para que no se confunda
+    if (u.includes('lineal') || u.includes('ml')) return 'ML';
+    
+    // 2. DESPUÉS dejamos los metros comunes
+    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
+    
+    if (u.includes('pto') || u.includes('pun')) return 'Pto';
+    if (u.includes('und') || u.includes('uni')) return 'Unid';
+    if (u.includes('kg') || u.includes('kil')) return 'KG';
+    
+    return 'Global';
+}
 
-        function enviarWhatsApp() {
-            const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
-            if (presupuesto.length === 0) {
-                alert("No hay partidas en el presupuesto para enviar.");
-                return;
-            }
             
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 51.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
