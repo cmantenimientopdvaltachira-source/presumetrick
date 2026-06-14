@@ -107,13 +107,14 @@
     presupuesto.push(nuevaPartida);
     localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-    // Limpieza exacta del formulario
+    // Limpieza de campos
     document.getElementById('cantidad-input').value = "";
     document.getElementById('precio-input').value = "";
     document.getElementById('descripcion-nota').value = "";
 
     alert('¡Partida agregada al presupuesto con éxito!');
 }
+
 
     </script>
 </body>
