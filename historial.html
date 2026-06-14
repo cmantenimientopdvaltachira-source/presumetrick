@@ -118,14 +118,14 @@
             return 'Global';
         }
 
-        function enviarWhatsApp() {
+                function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             if (presupuesto.length === 0) {
                 alert("No hay partidas en el presupuesto para enviar.");
                 return;
             }
             
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 51.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
             let mensaje = "*PRESUPUESTO FORMAL*\n";
@@ -133,15 +133,14 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                // 1. Nombre limpio del trabajo
+                // 1. Limpieza total de textos duplicados o espacios extra
                 const textoOriginal = p.trabajo || '';
                 const nombreLimpio = textoOriginal.split('(')[0].trim();
 
-                // 2. Identificación precisa de la unidad
                 const unidadOriginal = (p.unidad || '').split('(')[0].trim();
                 const unidadVisual = unidadLinter(unidadOriginal);
 
-                // 3. Control de etiquetas dinámicas acopladas
+                // 2. Control inteligente de etiquetas
                 let etiquetaPrecio = `Precio por ${unidadVisual}`;
                 if (unidadVisual === 'Global') {
                     etiquetaPrecio = 'Precio Global';
@@ -149,11 +148,12 @@
                     etiquetaPrecio = 'Precio Unitario';
                 }
 
-                // 4. Estructura con saltos de línea explícitos para alineación en WhatsApp
-                mensaje += `• *${(p.modulo || 'SERVICIO').toUpperCase()}:* ${nombreLimpio}\n`;
-                mensaje += `  Cantidad: ${p.cantidad} ${unidadVisual}\n`;
-                mensaje += `  ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
-                mensaje += `  Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+                // 3. Estructura protegida contra textos largos
+                mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
+                mensaje += `_${nombreLimpio}_\n`; // El nombre largo va aquí abajo, libre para usar varias líneas
+                mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
+                mensaje += `🔹 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
+                mensaje += `🔹 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
 
                 granTotal += p.totalUSD;
             });
@@ -181,6 +181,7 @@
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
+
 
 
         function generarPDF() {
