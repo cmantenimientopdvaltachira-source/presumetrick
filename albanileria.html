@@ -93,11 +93,12 @@
 
             const totalUSD = cantidad * precioUnitario;
 
+            // MODELO DE GUARDADO EXACTO IGUAL A REFRIGERACIÓN/ELECTRICIDAD
             const nuevaPartida = {
                 modulo: 'Albañilería',
                 trabajo: tipoTrabajo,
                 cantidad: cantidad,
-                unidad: unidadSeleccionada, // Guardará directamente "M2", "M3", etc.
+                unidad: unidadSeleccionada, 
                 precioUnitario: precioUnitario,
                 totalUSD: totalUSD,
                 nota: descripcionAdicional
@@ -116,6 +117,7 @@
     </script>
 </body>
 </html>
+
 
 
 
