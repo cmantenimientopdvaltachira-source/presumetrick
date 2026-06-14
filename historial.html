@@ -106,19 +106,21 @@
             }
         }
 
-                function unidadLinter(uni) {
+        // CORREGIDO: Ahora el linter reconoce y procesa de forma específica las dimensiones de albañilería
+        function unidadLinter(uni) {
             const u = uni.toLowerCase().trim();
             if (u.includes('glob')) return 'Global';
+            if (u.includes('m2') || u.includes('cuad')) return 'M2';
+            if (u.includes('m3') || u.includes('cubi')) return 'M3';
             if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
             if (u.includes('pto') || u.includes('pun')) return 'Pto';
             if (u.includes('und') || u.includes('uni')) return 'Unid';
             if (u.includes('kg') || u.includes('kil')) return 'KG';
             
-            // Si el texto de la unidad es largo o idéntico al trabajo, asumimos Global por defecto
             return 'Global';
         }
 
-                        function enviarWhatsApp() {
+        function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             if (presupuesto.length === 0) {
                 alert("No hay partidas en el presupuesto para enviar.");
@@ -133,32 +135,30 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                // 1. Limpieza total de textos duplicados o espacios extra
                 const textoOriginal = p.trabajo || '';
                 const nombreLimpio = textoOriginal.split('(')[0].trim();
 
                 const unidadOriginal = (p.unidad || '').split('(')[0].trim();
                 const unidadVisual = unidadLinter(unidadOriginal);
 
-                // 2. Control inteligente de etiquetas
                 let etiquetaPrecio = `Precio por ${unidadVisual}`;
                 if (unidadVisual === 'Global') {
                     etiquetaPrecio = 'Precio Global';
                 } else if (unidadVisual === 'Unid') {
                     etiquetaPrecio = 'Precio Unitario';
+                } else if (unidadVisual === 'M2') {
+                    etiquetaPrecio = 'Precio por M2';
+                } else if (unidadVisual === 'M3') {
+                    etiquetaPrecio = 'Precio por M3';
                 }
 
-                // 3. Estructura protegida contra textos largos (Mantenida exactamente igual)
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
                 mensaje += `_${nombreLimpio}_\n`; 
                 
-                                // === AGREGADO DE FORMA EXCLUSIVA: CASILLA DE OBSERVACIONES/NOTAS ===
                 if (p.nota && p.nota.trim() !== "") {
                     mensaje += `📝 *Nota:*\n_${p.nota}_\n`;
                 }
 
-
-                // El resto del desglose sigue intacto con tus rombos azules alineados
                 mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `🔹 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
                 mensaje += `🔹 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
@@ -189,9 +189,6 @@
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
-
-
-
 
         function generarPDF() {
             const { jsPDF } = window.jspdf;
@@ -295,6 +292,7 @@
     </script>
 </body>
 </html>
+
 
 
 
