@@ -214,6 +214,12 @@
 
             const cliente = prompt("Nombre del cliente:");
             if (!cliente) return;
+            // --- Inicio: Notas personalizadas ---
+const obsBase = localStorage.getItem('observacionesGenerales') || "";
+const notasFinales = prompt("Observaciones para este presupuesto:", obsBase);
+
+if (notasFinales === null) return; // Si cancelan, detenemos el proceso
+// --- Fin: Notas personalizadas ---
 
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
 
@@ -294,6 +300,29 @@
             doc.line(15, y, 195, y);
             y += 10;
             doc.setFont("helvetica", "bold");
+// ... (Tu código sigue igual arriba) ...
+y += 10;
+doc.line(15, y, 195, y); // Esta línea ya la tenías (línea 301)
+y += 10;                // Espacio antes de las observaciones
+
+// --- AQUÍ INSERTAS EL SEGUNDO BLOQUE ---
+if (notasFinales.trim() !== "") {
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    doc.text("Observaciones:", 15, y);
+    y += 5;
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    const lineasObs = doc.splitTextToSize(notasFinales, 180);
+    doc.text(lineasObs, 15, y);
+    y += (lineasObs.length * 5) + 5; // Esto calcula cuánto bajamos el cursor
+}
+
+// Ahora seguimos con los totales como los tenías
+doc.setFont("helvetica", "bold");
+
+if (porcentajeImpuesto > 0) {
+// ... (continúa tu código original desde la línea 304) ...
 
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
