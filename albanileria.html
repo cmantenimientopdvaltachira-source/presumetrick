@@ -49,9 +49,10 @@
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
+                    <!-- CORRECCIÓN DEL MENÚ: Iniciales únicas y directas para el formateador de WhatsApp -->
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                        <option>Mtrs (Metros Cuadrados - M2)</option>
-                        <option>Mtrs (Metros Cúbicos - M3)</option>
+                        <option>M2 (Metros Cuadrados)</option>
+                        <option>M3 (Metros Cúbicos)</option>
                         <option>Mtrs (Metros Lineales)</option>
                         <option>Und (Unidades)</option>
                         <option>Glob (Global)</option>
@@ -93,7 +94,6 @@
 
             const totalUSD = cantidad * precioUnitario;
 
-            // Clonación exacta de la estructura de Refrigeración
             const nuevaPartida = {
                 modulo: 'Albañilería',
                 trabajo: tipoTrabajo,
@@ -117,6 +117,7 @@
     </script>
 </body>
 </html>
+
 
 
 
