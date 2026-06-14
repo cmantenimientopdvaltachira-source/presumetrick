@@ -50,11 +50,11 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                        <option value="M2">Metros Cuadrados (M2)</option>
-                        <option value="M3">Metros Cúbicos (M3)</option>
-                        <option value="Mtrs">Metros Lineales (Mtrs)</option>
-                        <option value="Unid">Unid (Unidades)</option>
-                        <option value="Global">Global (Global)</option>
+                        <option>Mtrs (Metros Cuadrados - M2)</option>
+                        <option>Mtrs (Metros Cúbicos - M3)</option>
+                        <option>Mtrs (Metros Lineales)</option>
+                        <option>Und (Unidades)</option>
+                        <option>Glob (Global)</option>
                     </select>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 
             const totalUSD = cantidad * precioUnitario;
 
-            // MODELO DE GUARDADO EXACTO IGUAL A REFRIGERACIÓN/ELECTRICIDAD
+            // Clonación exacta de la estructura de Refrigeración
             const nuevaPartida = {
                 modulo: 'Albañilería',
                 trabajo: tipoTrabajo,
@@ -117,6 +117,7 @@
     </script>
 </body>
 </html>
+
 
 
 
