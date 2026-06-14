@@ -50,9 +50,9 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                        <option>M2 (Metros cuadrados)</option>
-                        <option>M3 (Metros cúbicos)</option>
-                        <option>Mtrs (Metros lineales)</option>
+                        <option>Metros Cuadrados (M2)</option>
+                        <option>Metros Cúbicos (M3)</option>
+                        <option>Metros Lineales (Mtrs)</option>
                         <option>Unid (Unidades)</option>
                         <option>Global (Global)</option>
                     </select>
@@ -80,14 +80,12 @@
 
     <script>
         function guardarPartida() {
-            // 1. Lectura exacta utilizando los mismos IDs unificados de electricidad
             const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
             const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
-            // 2. Validación de seguridad para no guardar datos vacíos
             if (cantidad <= 0 || precioUnitario <= 0) {
                 alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
                 return;
@@ -95,7 +93,6 @@
 
             const totalUSD = cantidad * precioUnitario;
 
-            // 3. Creación del objeto de la partida asignando el módulo correspondiente
             const nuevaPartida = {
                 modulo: 'Albañilería',
                 trabajo: tipoTrabajo,
@@ -106,12 +103,10 @@
                 nota: descripcionAdicional
             };
 
-            // 4. Guardado directo en la base de datos del navegador
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             presupuesto.push(nuevaPartida);
             localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-            // 5. Limpieza automática de las casillas en la pantalla
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
             document.getElementById('descripcion-nota').value = "";
@@ -121,5 +116,6 @@
     </script>
 </body>
 </html>
+
 
 
