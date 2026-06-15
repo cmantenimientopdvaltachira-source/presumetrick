@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-900">
 
     <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-4 flex items-center justify-between shadow-lg">
         <div class="flex items-center gap-3">
@@ -19,12 +19,21 @@
     </header>
 
     <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-6 pb-24">
+        
+        <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
+            <p class="text-sm text-slate-400 leading-relaxed">
+                Registra trabajos de hierro, acero de refuerzo, estructuras metálicas o herrería general para generar el cómputo métrico automáticamente.
+            </p>
+        </div>
+
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
+            <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2 flex items-center">
+                <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nuevo Concepto
+            </h2>
             
-            <!-- Tipo de Trabajo -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
-                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     <option>Acero de Refuerzo / Cabillas (Infraestructura)</option>
                     <option>Malla Electrosoldada (Malla Trucson)</option>
                     <option>Estructuras y Correas de Techo</option>
@@ -33,15 +42,14 @@
                 </select>
             </div>
 
-            <!-- Cantidad y Unidad -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
-                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
+                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
+                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                         <option>Kg (Kilogramos)</option>
                         <option>ML (Metro Lineal)</option>
                         <option>M2 (Metro Cuadrado)</option>
@@ -50,16 +58,12 @@
                 </div>
             </div>
 
-            <!-- Precio -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
-                <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-            </div>
-
-            <!-- Descripción y Notas -->
-            <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea id="descripcion-nota" rows="2" placeholder="Ej: Perfil Conduven 100x100, incluye soldadura..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 resize-none"></textarea>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
+                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                </div>
             </div>
 
             <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
@@ -74,7 +78,6 @@
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
-            const descripcion = document.getElementById('descripcion-nota').value.trim();
 
             if (cantidad <= 0 || precioUnitario <= 0) {
                 alert('Ingresa cantidad y precio válidos.');
@@ -87,8 +90,7 @@
                 cantidad: cantidad,
                 unidad: unidadSeleccionada,
                 precioUnitario: precioUnitario,
-                totalUSD: cantidad * precioUnitario,
-                nota: descripcion
+                totalUSD: cantidad * precioUnitario
             };
 
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
@@ -101,5 +103,6 @@
     </script>
 </body>
 </html>
+
 
 
