@@ -56,12 +56,6 @@
                 <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
             </div>
 
-            <!-- Descripción y Notas (ACTIVADO) -->
-            <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea id="descripcion-nota" rows="2" placeholder="Ej: Incluye material, pintura acrílica..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 resize-none"></textarea>
-            </div>
-
             <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
                 <i class="fa-solid fa-plus mr-2"></i> Agregar al Presupuesto
             </button>
@@ -74,7 +68,6 @@
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
-            const descripcion = document.getElementById('descripcion-nota').value.trim();
 
             if (cantidad <= 0 || precioUnitario <= 0) {
                 alert('Ingresa cantidad y precio válidos.');
@@ -87,8 +80,7 @@
                 cantidad: cantidad,
                 unidad: unidadSeleccionada,
                 precioUnitario: precioUnitario,
-                totalUSD: cantidad * precioUnitario,
-                nota: descripcion
+                totalUSD: cantidad * precioUnitario
             };
 
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
@@ -101,5 +93,6 @@
     </script>
 </body>
 </html>
+
 
 
