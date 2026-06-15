@@ -234,52 +234,51 @@
             y += 10;
             let subtotalUSD = 0;
 
-                                   presupuesto.forEach((p) => {
-                // 1. Añadimos el Módulo (Electricidad, Pintura, etc.)
+                            presupuesto.forEach((p) => {
+                // Módulo
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(8);
-                doc.setTextColor(100, 100, 100); // Color gris para diferenciarlo
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 4;
 
-                // 2. Nombre del trabajo
-                doc.setTextColor(0, 0, 0); // Regresamos a negro
+                // Nombre del trabajo
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
                 doc.text(p.trabajo.substring(0, 60), 15, y);
                 
-                // 3. Detalle técnico (limpiamos la redundancia de "Punto")
+                // Detalle técnico (Precio Unitario corregido)
                 y += 4;
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
-                // Si la unidad es "Pto", queda claro.
                 doc.text(`Cantidad: ${p.cantidad} ${p.unidad} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
                 
-                // 4. Total a la derecha
+                // Total a la derecha
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y - 2);
                 
                 subtotalUSD += p.totalUSD;
-                y += 14; // Un poco más de espacio para separar los módulos
+                y += 12;
             });
-     
-        
 
+            y += 5; 
+            doc.line(15, y, 195, y); 
+            y += 10; 
+            doc.setFont("helvetica", "bold");
 
-            y += 10; doc.line(15, y, 195, y); y += 10; doc.setFont("helvetica", "bold");
-
+            // Totales alineados
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
                 doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
                 doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y); y += 7;
+                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y); y += 6;
                 doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             } else {
-                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 7;
+                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
                 doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             }
+
 
             // --- INSERCIÓN DE NOTA GENERAL EN EL PDF ---
             if (observaciones && observaciones.trim() !== "") {
