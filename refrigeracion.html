@@ -22,7 +22,7 @@
         
         <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
             <p class="text-sm text-slate-400 leading-relaxed">
-                Registra los equipos de aire acondicionado, mantenimiento o instalación para generar el cómputo métrico automáticamente.
+                Registra equipos y servicios técnicos de refrigeración para generar el cómputo métrico profesional.
             </p>
         </div>
 
@@ -34,11 +34,30 @@
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
                 <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                    <option>Instalación Aire Split</option>
-                    <option>Mantenimiento Preventivo</option>
-                    <option>Recarga de Gas</option>
-                    <option>Instalación de Tubería</option>
+                    <optgroup label="Instalación" class="bg-slate-800 text-amber-500">
+                        <option>Instalación (Split / Ventana)</option>
+                        <option>Instalación (Piso-Techo)</option>
+                        <option>Instalación (Compacto / Paquete)</option>
+                        <option>Instalación (Chiller / Industrial)</option>
+                        <option>Instalación (Vitrina / Nevera Comercial)</option>
+                    </optgroup>
+                    <optgroup label="Mantenimiento" class="bg-slate-800 text-amber-500">
+                        <option>Mantenimiento Preventivo</option>
+                        <option>Mantenimiento Correctivo (Reparación)</option>
+                    </optgroup>
+                    <optgroup label="Servicios Especializados" class="bg-slate-800 text-amber-500">
+                        <option>Reparación de Fugas</option>
+                        <option>Barrido con Nitrógeno</option>
+                        <option>Lavado Químico de Sistema</option>
+                        <option>Vacío y Carga de Refrigerante</option>
+                        <option>Cambio de Compresor</option>
+                    </optgroup>
                 </select>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Detalle del Equipo</label>
+                <input type="text" id="detalle-input" placeholder="Ej: Aire 24.000 BTU o Chiller 5 Ton" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -76,6 +95,7 @@
     <script>
         function guardarPartida() {
             const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
+            const detalle = document.getElementById('detalle-input').value;
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
@@ -90,6 +110,7 @@
             const nuevaPartida = {
                 modulo: 'Refrigeración',
                 trabajo: tipoTrabajo,
+                detalle: detalle, // Ahora capturamos el detalle técnico
                 cantidad: cantidad,
                 unidad: unidadSeleccionada, 
                 precioUnitario: precioUnitario,
@@ -102,12 +123,14 @@
 
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
+            document.getElementById('detalle-input').value = "";
 
             alert('¡Partida agregada al presupuesto con éxito!');
         }
     </script>
 </body>
 </html>
+
 
 
 
