@@ -67,11 +67,6 @@
                 </div>
             </div>
 
-            <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea id="descripcion-nota" rows="2" placeholder="Ej: Incluye materiales..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
-            </div>
-
             <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
                 <i class="fa-solid fa-plus mr-2"></i> Agregar al Presupuesto
             </button>
@@ -80,14 +75,11 @@
 
     <script>
         function guardarPartida() {
-            // 1. Lectura exacta utilizando los mismos IDs unificados de electricidad
             const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
-            const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
-            // 2. Validación de seguridad para no guardar datos vacíos
             if (cantidad <= 0 || precioUnitario <= 0) {
                 alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
                 return;
@@ -95,32 +87,28 @@
 
             const totalUSD = cantidad * precioUnitario;
 
-            // 3. Creación del objeto de la partida asignando el módulo correspondiente
             const nuevaPartida = {
                 modulo: 'Refrigeración',
                 trabajo: tipoTrabajo,
                 cantidad: cantidad,
                 unidad: unidadSeleccionada, 
                 precioUnitario: precioUnitario,
-                totalUSD: totalUSD,
-                nota: descripcionAdicional
+                totalUSD: totalUSD
             };
 
-            // 4. Guardado directo en la base de datos del navegador
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             presupuesto.push(nuevaPartida);
             localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-            // 5. Limpieza automática de las casillas en la pantalla
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
-            document.getElementById('descripcion-nota').value = "";
 
             alert('¡Partida agregada al presupuesto con éxito!');
         }
     </script>
 </body>
 </html>
+
 
 
 
