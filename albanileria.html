@@ -49,7 +49,6 @@
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                    <!-- CORREGIDO: Cambiamos Mtrs por ML al inicio para evitar que el corte por paréntesis elimine la referencia lineal -->
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                         <option>M2 (Metros Cuadrados)</option>
                         <option>M3 (Metros Cúbicos)</option>
@@ -68,11 +67,6 @@
                 </div>
             </div>
 
-            <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Descripción o Notas</label>
-                <textarea id="descripcion-nota" rows="2" placeholder="Ej: Incluye acarreo de materiales..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all resize-none"></textarea>
-            </div>
-
             <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all active:scale-[0.98]">
                 <i class="fa-solid fa-plus mr-2"></i> Agregar al Presupuesto
             </button>
@@ -85,7 +79,6 @@
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidadSeleccionada = document.getElementById('unidad-select').value;
-            const descripcionAdicional = document.getElementById('descripcion-nota').value.trim();
 
             if (cantidad <= 0 || precioUnitario <= 0) {
                 alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
@@ -100,8 +93,7 @@
                 cantidad: cantidad,
                 unidad: unidadSeleccionada, 
                 precioUnitario: precioUnitario,
-                totalUSD: totalUSD,
-                nota: descripcionAdicional
+                totalUSD: totalUSD
             };
 
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
@@ -110,13 +102,13 @@
 
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
-            document.getElementById('descripcion-nota').value = "";
 
             alert('¡Partida agregada al presupuesto con éxito!');
         }
     </script>
 </body>
 </html>
+
 
 
 
