@@ -234,12 +234,25 @@
             y += 10;
             let subtotalUSD = 0;
 
-            presupuesto.forEach((p) => {
-                doc.text(p.trabajo.substring(0, 70), 15, y);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                        presupuesto.forEach((p) => {
+                // Dibujamos el nombre del trabajo
+                doc.setFont("helvetica", "bold");
+                doc.text(p.trabajo.substring(0, 60), 15, y);
+                
+                // Dibujamos el detalle debajo (Cantidad y Unidad)
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(8);
+                doc.text(`Cantidad: ${p.cantidad} ${p.unidad} | P.U: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y + 4);
+                
+                // Dibujamos el total a la derecha
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y + 2);
+                
                 subtotalUSD += p.totalUSD;
-                y += 8;
+                y += 15; // Aumentamos el espacio para que quepa la nueva línea
             });
+
 
             y += 10; doc.line(15, y, 195, y); y += 10; doc.setFont("helvetica", "bold");
 
