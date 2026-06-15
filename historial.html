@@ -22,7 +22,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', mostrarPresupuesto);
 
-        function mostrarPresupuesto() {
+                function mostrarPresupuesto() {
             const tablaContainer = document.getElementById('lista-presupuesto');
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             
@@ -89,6 +89,12 @@
             tablaContainer.innerHTML = `
                 ${htmlContenido}
                 ${bloqueTotalesHtml}
+                
+                <div class="mt-6 bg-[#1F2937] p-4 rounded-xl border border-gray-600">
+                    <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Nota General</label>
+                    <textarea id="observacionesGenerales" class="w-full bg-[#0F172A] border border-gray-600 rounded-lg p-3 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none" rows="3" placeholder="Escribe aquí las condiciones o notas generales..."></textarea>
+                </div>
+
                 <div class="flex gap-3 mt-6">
                     <button onclick="enviarWhatsApp()" class="flex-1 bg-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">WhatsApp</button>
                     <button onclick="generarPDF()" class="flex-1 bg-sky-700 text-white font-bold py-3 rounded-xl shadow-lg text-sm transition-all active:scale-95">PDF Formal</button>
@@ -98,6 +104,7 @@
                 </div>
             `;
         }
+
 
         function vaciarPresupuesto() {
             if (confirm('¿Seguro que quieres borrar todo el presupuesto?')) {
@@ -123,13 +130,17 @@
             return 'Global';
         }
 
-        function enviarWhatsApp() {
+                function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             if (presupuesto.length === 0) {
                 alert("No hay partidas en el presupuesto para enviar.");
                 return;
             }
             
+            // --- NUEVA LÍNEA DE CAPTURA ---
+            const observaciones = document.getElementById('observacionesGenerales').value;
+            // ------------------------------
+
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
@@ -140,34 +151,15 @@
             presupuesto.forEach(p => {
                 const textoOriginal = p.trabajo || '';
                 const nombreLimpio = textoOriginal.split('(')[0].trim();
+                const unidadVisual = unidadLinter((p.unidad || '').split('(')[0].trim());
 
-                const unidadOriginal = (p.unidad || '').split('(')[0].trim();
-                const unidadVisual = unidadLinter(unidadOriginal);
-
-                let etiquetaPrecio = `Precio por ${unidadVisual}`;
-                if (unidadVisual === 'Global') {
-                    etiquetaPrecio = 'Precio Global';
-                } else if (unidadVisual === 'Unid') {
-                    etiquetaPrecio = 'Precio Unitario';
-                } else if (unidadVisual === 'M2') {
-                    etiquetaPrecio = 'Precio por M2';
-                } else if (unidadVisual === 'M3') {
-                    etiquetaPrecio = 'Precio por M3';
-                } else if (unidadVisual === 'ML') {
-                    etiquetaPrecio = 'Precio por ML';
-                }
+                let etiquetaPrecio = (unidadVisual === 'Global') ? 'Precio Global' : 'Precio Unitario';
 
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
                 mensaje += `_${nombreLimpio}_\n`; 
-                
-                if (p.nota && p.nota.trim() !== "") {
-                    mensaje += `📝 *Nota:*\n_${p.nota}_\n`;
-                }
-
                 mensaje += `🔹 Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `🔹 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
                 mensaje += `🔹 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
-
                 granTotal += p.totalUSD;
             });
 
@@ -177,16 +169,19 @@
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
                 const totalBs = granTotalConImpuesto * tasaBCV;
-                
                 mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
                 mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
                 mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
                 mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
             } else {
                 const totalBs = granTotal * tasaBCV;
-                
                 mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
                 mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+            }
+            
+            // --- INSERCIÓN DE LA NOTA GENERAL ---
+            if (observaciones && observaciones.trim() !== "") {
+                mensaje += "\n*Nota General:*\n_" + observaciones + "_\n";
             }
             
             mensaje += "\n_Generado por PresuMetrick._";
@@ -200,6 +195,10 @@
             const doc = new jsPDF();
             
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+            // --- NUEVA LÍNEA DE CAPTURA ---
+            const observaciones = document.getElementById('observacionesGenerales').value;
+            // ------------------------------
+            
             const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
             const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
             const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
@@ -207,58 +206,30 @@
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const logoBase64 = localStorage.getItem('logoEmpresa');
 
-            if (presupuesto.length === 0) {
-                alert("No hay partidas para generar el PDF");
-                return;
-            }
-
+            if (presupuesto.length === 0) { alert("No hay partidas para generar el PDF"); return; }
             const cliente = prompt("Nombre del cliente:");
             if (!cliente) return;
 
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
 
-            if (logoBase64) {
-                try {
-                    doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25);
-                } catch (e) { console.warn("No se pudo cargar el logo"); }
-            }
+            if (logoBase64) { try { doc.addImage(logoBase64, 'JPEG', 15, 15, 25, 25); } catch (e) { } }
             
-            doc.setFontSize(16);
-            doc.setFont("helvetica", "bold");
-            doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(9);
+            doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
+            doc.setFont("helvetica", "normal"); doc.setFontSize(9);
             doc.text("Dirección: " + direccionEmpresa, 45, 28); 
             doc.text("RIF: " + rifEmpresa, 45, 33);             
-            if (telefonoEmpresa) {
-                doc.text("Teléfono: " + telefonoEmpresa, 45, 38);  
-            }
-            
+            if (telefonoEmpresa) { doc.text("Teléfono: " + telefonoEmpresa, 45, 38); }
             doc.line(15, 48, 195, 48);
 
             const fechaActual = new Date();
-            const dia = String(fechaActual.getDate()).padStart(2, '0');
-            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-            const anioCorto = String(fechaActual.getFullYear()).slice(-2); 
-            const fechaFormateada = `${dia}/${mes}/${anioCorto}`;
+            const fechaFormateada = `${String(fechaActual.getDate()).padStart(2, '0')}/${String(fechaActual.getMonth() + 1).padStart(2, '0')}/${String(fechaActual.getFullYear()).slice(-2)}`;
 
             let y = 56;
-            doc.setFontSize(12);
-            doc.setFont("helvetica", "bold");
-            doc.text("Presupuesto para: " + cliente, 15, y);
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(10);
-            doc.text("Fecha: " + fechaFormateada, 15, y + 7);
-            
+            doc.setFontSize(12); doc.setFont("helvetica", "bold"); doc.text("Presupuesto para: " + cliente, 15, y);
+            doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.text("Fecha: " + fechaFormateada, 15, y + 7);
             y += 20; 
-            doc.setFontSize(10);
-            doc.setFont("helvetica", "bold");
-            doc.text("Descripcion", 15, y);
-            doc.text("Total", 170, y);
+            doc.setFontSize(10); doc.setFont("helvetica", "bold"); doc.text("Descripcion", 15, y); doc.text("Total", 170, y);
             doc.line(15, y + 2, 195, y + 2);
-            
             doc.setFont("helvetica", "normal");
             y += 10;
             let subtotalUSD = 0;
@@ -270,30 +241,32 @@
                 y += 8;
             });
 
-            y += 10;
-            doc.line(15, y, 195, y);
-            y += 10;
-            doc.setFont("helvetica", "bold");
+            y += 10; doc.line(15, y, 195, y); y += 10; doc.setFont("helvetica", "bold");
 
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
-
-                doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
-                y += 6;
-                doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y);
-                y += 6;
-                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y);
-                y += 7;
+                doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
+                doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y); y += 6;
+                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y); y += 7;
                 doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             } else {
-                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y);
-                y += 7;
+                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 7;
                 doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+            }
+
+            // --- INSERCIÓN DE NOTA GENERAL EN EL PDF ---
+            if (observaciones && observaciones.trim() !== "") {
+                y += 15;
+                doc.setFont("helvetica", "bold"); doc.text("Nota General:", 15, y);
+                y += 6;
+                doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+                doc.text(doc.splitTextToSize(observaciones, 180), 15, y);
             }
 
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
         }
+
     </script>
 </body>
 </html>
