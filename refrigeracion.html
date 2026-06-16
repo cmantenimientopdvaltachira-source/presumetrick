@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PresuMetrick - Módulo Refrigeración</title>
+    <title>Módulo Refrigeración - Registro Técnico</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
@@ -38,7 +38,14 @@
 
             <div>
                 <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Servicio / Acción</label>
-                <input type="text" id="servicio" placeholder="Ej: Lavado, Carga de gas, Cambio compresor..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200">
+                    <option value="Mantenimiento Preventivo Completo">Mantenimiento Preventivo Completo</option>
+                    <option value="Reparación de Fugas">Reparación de Fugas</option>
+                    <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
+                    <option value="Barrido con Nitrógeno + Carga de Gas">Barrido con Nitrógeno + Carga de Gas</option>
+                    <option value="Cambio de Compresor (Incluye barrido/filtro/gas)">Cambio de Compresor (Incluye barrido/filtro/gas)</option>
+                    <option value="Lavado Químico de Serpentines">Lavado Químico de Serpentines</option>
+                </select>
             </div>
 
             <div>
@@ -74,24 +81,23 @@
                 precio: document.getElementById('precio').value
             };
 
-            if (!data.servicio || !data.cantidad || !data.precio) {
-                alert("Por favor completa los campos obligatorios.");
+            if (!data.cantidad || !data.precio) {
+                alert("Por favor asegúrate de incluir cantidad y precio.");
                 return;
             }
 
-            // Aquí se genera la descripción técnica para el PDF/WhatsApp
+            // Lógica de salida para tu presupuesto
             const descripcionCompleta = `${data.equipo} - ${data.tipo}: ${data.servicio} (${data.specs})`;
             const total = data.cantidad * data.precio;
 
             console.log("Guardando partida:", { descripcionCompleta, cantidad: data.cantidad, total });
             
-            alert(`Partida agregada:\n${descripcionCompleta}\nTotal: $${total}`);
-            
-            // Lógica para guardar en localStorage iría aquí...
+            alert(`Partida agregada con éxito:\n\n${descripcionCompleta}\nCantidad: ${data.cantidad}\nTotal: $${total}`);
         }
     </script>
 </body>
 </html>
+
 
 
 
