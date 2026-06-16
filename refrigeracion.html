@@ -71,30 +71,37 @@
     </div>
 
     <script>
+            <script>
         function agregarPartida() {
-            const data = {
-                equipo: document.getElementById('equipo').value,
-                tipo: document.getElementById('tipoMantenimiento').value,
-                servicio: document.getElementById('servicio').value,
-                specs: document.getElementById('especificaciones').value,
-                cantidad: document.getElementById('cantidad').value,
-                precio: document.getElementById('precio').value
-            };
+            // Capturamos los elementos directamente
+            const equipo = document.getElementById('equipo').value;
+            const tipo = document.getElementById('tipoMantenimiento').value;
+            const servicio = document.getElementById('servicio').value;
+            const specs = document.getElementById('especificaciones').value;
+            const cantidad = document.getElementById('cantidad').value;
+            const precio = document.getElementById('precio').value;
 
-            if (!data.cantidad || !data.precio) {
-                alert("Por favor asegúrate de incluir cantidad y precio.");
+            // Validación mejorada: convertimos a número para asegurar que existen
+            if (!cantidad || cantidad <= 0 || !precio || precio < 0) {
+                alert("Error: Revisa que la cantidad y el precio sean números válidos.");
                 return;
             }
 
-            // Lógica de salida para tu presupuesto
-            const descripcionCompleta = `${data.equipo} - ${data.tipo}: ${data.servicio} (${data.specs})`;
-            const total = data.cantidad * data.precio;
+            // Si pasa la validación, procesamos
+            const total = parseFloat(cantidad) * parseFloat(precio);
+            const descripcionCompleta = `${equipo} - ${tipo}: ${servicio} (${specs})`;
 
-            console.log("Guardando partida:", { descripcionCompleta, cantidad: data.cantidad, total });
+            console.log("Partida procesada:", { descripcionCompleta, total });
             
-            alert(`Partida agregada con éxito:\n\n${descripcionCompleta}\nCantidad: ${data.cantidad}\nTotal: $${total}`);
+            alert("¡Partida agregada con éxito!\n\n" + descripcionCompleta + "\nTotal: $" + total);
+            
+            // Opcional: Limpiar los campos después de agregar
+            document.getElementById('cantidad').value = '';
+            document.getElementById('precio').value = '';
+            document.getElementById('especificaciones').value = '';
         }
     </script>
+
 </body>
 </html>
 
