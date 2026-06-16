@@ -36,6 +36,7 @@
                 <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nueva Partida
             </h2>
 
+            <!-- Equipo -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Equipo</label>
                 <select id="equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -50,6 +51,7 @@
                 </select>
             </div>
 
+            <!-- Tipo Mantenimiento -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Mantenimiento</label>
                 <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -58,6 +60,7 @@
                 </select>
             </div>
 
+            <!-- Servicio / Acción -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Servicio / Acción</label>
                 <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -69,14 +72,19 @@
                     <option value="Cambio de elementos de arranque y protección">Cambio de elementos de arranque y protección</option>
                     <option value="Cambio de válvulas, accesorios, empaques y gomas">Cambio de válvulas, accesorios, empaques y gomas</option>
                     <option value="Cambio de termostatos, sensores y controles">Cambio de termostatos, sensores y controles</option>
+                    <option value="Instalación de equipo: montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha">Instalación de equipo: montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha</option>
+                    <option value="Reubicación de equipo: retiro técnico, traslado, reinstalación integral, verificación de estanqueidad y ajuste de niveles de operación">Reubicación de equipo: retiro técnico, traslado, reinstalación integral, verificación de estanqueidad y ajuste de niveles de operación</option>
+                    <option value="Desmontaje de equipo: retiro controlado, recuperación segura de refrigerante, desconexión de puntos y estibado de componentes">Desmontaje de equipo: retiro controlado, recuperación segura de refrigerante, desconexión de puntos y estibado de componentes</option>
                 </select>
             </div>
 
+            <!-- Especificaciones -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Especificaciones</label>
                 <input type="text" id="especificaciones" placeholder="Ej: 12.000 BTU / R410A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
             </div>
 
+            <!-- Cantidad y Precio -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
@@ -146,6 +154,7 @@ function guardarPartida() {
 </script>
 </body>
 </html>
+
 
 
 
