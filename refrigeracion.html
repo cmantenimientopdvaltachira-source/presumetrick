@@ -3,107 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Módulo Refrigeración - Registro Técnico</title>
+    <title>Módulo Refrigeración</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans p-4">
 
-    <div class="p-4 max-w-lg mx-auto space-y-6">
+    <div class="max-w-lg mx-auto space-y-6">
         <header class="text-center py-4">
             <h1 class="text-2xl font-bold text-amber-500">Módulo Refrigeración</h1>
-            <p class="text-slate-400 text-sm">Registro Técnico de Partidas</p>
         </header>
 
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4 shadow-2xl">
+            <select id="equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                <option>Split / Ventana</option>
+                <option>Compacto</option>
+                <option>Chiller</option>
+            </select>
             
-            <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Equipo</label>
-                <select id="equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
-                    <option>Split / Ventana</option>
-                    <option>Compacto</option>
-                    <option>Chiller</option>
-                    <option>Nevera / Congelador</option>
-                    <option>Cuarto Frío / Cava</option>
-                    <option>Exhibidora Comercial</option>
-                </select>
-            </div>
+            <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                <option>Preventivo</option>
+                <option>Correctivo</option>
+            </select>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Tipo de Mantenimiento</label>
-                <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
-                    <option>Preventivo</option>
-                    <option>Correctivo</option>
-                </select>
-            </div>
+            <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                <option value="Mantenimiento Preventivo Completo">Mantenimiento Preventivo Completo</option>
+                <option value="Reparación de Fugas">Reparación de Fugas</option>
+                <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
+            </select>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Servicio / Acción</label>
-                <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-200">
-                    <option value="Mantenimiento Preventivo Completo">Mantenimiento Preventivo Completo</option>
-                    <option value="Reparación de Fugas">Reparación de Fugas</option>
-                    <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
-                    <option value="Barrido con Nitrógeno + Carga de Gas">Barrido con Nitrógeno + Carga de Gas</option>
-                    <option value="Cambio de Compresor (Incluye barrido/filtro/gas)">Cambio de Compresor (Incluye barrido/filtro/gas)</option>
-                    <option value="Lavado Químico de Serpentines">Lavado Químico de Serpentines</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-amber-500 uppercase mb-1">Especificaciones (BTU, KG, Ton)</label>
-                <input type="text" id="especificaciones" placeholder="Ej: 24.000 BTU / 1.5 KG / R410A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
-            </div>
-
+            <input type="text" id="especificaciones" placeholder="Especificaciones (BTU, KG...)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+            
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Cantidad</label>
-                    <input type="number" id="cantidad" placeholder="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Precio Unitario ($)</label>
-                    <input type="number" id="precio" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
-                </div>
+                <input type="number" id="cantidad" placeholder="Cant." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                <input type="number" id="precio" placeholder="Precio $" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
             </div>
 
-            <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-xl transition-all shadow-lg shadow-amber-900/20">
-                Agregar Partida al Presupuesto
+            <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-xl">
+                Agregar Partida
             </button>
+        </div>
+
+        <div id="historial" class="bg-slate-800 rounded-2xl p-6 space-y-3">
+            <h2 class="text-lg font-bold text-slate-300">Presupuesto Actual</h2>
+            <ul id="listaPartidas" class="space-y-2 text-sm text-slate-400">
+                </ul>
         </div>
     </div>
 
     <script>
-            <script>
         function agregarPartida() {
-            // Capturamos los elementos directamente
-            const equipo = document.getElementById('equipo').value;
-            const tipo = document.getElementById('tipoMantenimiento').value;
-            const servicio = document.getElementById('servicio').value;
-            const specs = document.getElementById('especificaciones').value;
-            const cantidad = document.getElementById('cantidad').value;
-            const precio = document.getElementById('precio').value;
+            const eq = document.getElementById('equipo').value;
+            const serv = document.getElementById('servicio').value;
+            const cant = document.getElementById('cantidad').value;
+            const prec = document.getElementById('precio').value;
 
-            // Validación mejorada: convertimos a número para asegurar que existen
-            if (!cantidad || cantidad <= 0 || !precio || precio < 0) {
-                alert("Error: Revisa que la cantidad y el precio sean números válidos.");
-                return;
-            }
+            if(!cant || !prec) { alert("Completa cantidad y precio"); return; }
 
-            // Si pasa la validación, procesamos
-            const total = parseFloat(cantidad) * parseFloat(precio);
-            const descripcionCompleta = `${equipo} - ${tipo}: ${servicio} (${specs})`;
-
-            console.log("Partida procesada:", { descripcionCompleta, total });
+            const total = cant * prec;
+            const li = document.createElement('li');
+            li.className = "border-b border-slate-700 pb-2 flex justify-between";
+            li.innerHTML = `<span>${cant}x ${eq} (${serv})</span> <span>$${total}</span>`;
             
-            alert("¡Partida agregada con éxito!\n\n" + descripcionCompleta + "\nTotal: $" + total);
+            document.getElementById('listaPartidas').appendChild(li);
             
-            // Opcional: Limpiar los campos después de agregar
+            // Limpiar campos
             document.getElementById('cantidad').value = '';
             document.getElementById('precio').value = '';
-            document.getElementById('especificaciones').value = '';
         }
     </script>
-
 </body>
 </html>
+
 
 
 
