@@ -22,33 +22,34 @@
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
             <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2">Nuevo Concepto</h2>
 
+            <!-- Selector con Títulos Deshabilitados para máxima alineación -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase">Tipo de Trabajo</label>
                 <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    <optgroup label="INSTALACIÓN">
-                        <option value="Instalación: Split / Ventana">Instalación: Split / Ventana</option>
-                        <option value="Instalación: Piso-Techo">Instalación: Piso-Techo</option>
-                        <option value="Instalación: Compacto">Instalación: Compacto</option>
-                        <option value="Instalación: Chiller / Industrial">Instalación: Chiller / Industrial</option>
-                        <option value="Instalación: Vitrina Comercial">Instalación: Vitrina Comercial</option>
-                    </optgroup>
-                    <optgroup label="MANTENIMIENTO">
-                        <option value="Mant. Preventivo">Mant. Preventivo</option>
-                        <option value="Mant. Correctivo">Mant. Correctivo</option>
-                    </optgroup>
-                    <optgroup label="SERVICIOS ESPECIALIZADOS">
-                        <option value="Reparación de Fugas">Reparación de Fugas</option>
-                        <option value="Barrido con Nitrógeno">Barrido con Nitrógeno</option>
-                        <option value="Lavado Químico">Lavado Químico</option>
-                        <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
-                        <option value="Cambio de Compresor">Cambio de Compresor</option>
-                    </optgroup>
+                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- INSTALACIÓN ---</option>
+                    <option value="Instalación: Split / Ventana">Instalación: Split / Ventana</option>
+                    <option value="Instalación: Piso-Techo">Instalación: Piso-Techo</option>
+                    <option value="Instalación: Compacto">Instalación: Compacto</option>
+                    <option value="Instalación: Chiller / Industrial">Instalación: Chiller / Industrial</option>
+                    <option value="Instalación: Vitrina Comercial">Instalación: Vitrina Comercial</option>
+                    
+                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- MANTENIMIENTO ---</option>
+                    <option value="Mant. Preventivo">Mant. Preventivo</option>
+                    <option value="Mant. Correctivo">Mant. Correctivo</option>
+                    
+                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- SERVICIOS ESPECIALIZADOS ---</option>
+                    <option value="Reparación de Fugas">Reparación de Fugas</option>
+                    <option value="Barrido con Nitrógeno">Barrido con Nitrógeno</option>
+                    <option value="Lavado Químico">Lavado Químico</option>
+                    <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
+                    <option value="Cambio de Compresor">Cambio de Compresor</option>
                 </select>
             </div>
 
+            <!-- Campo de Especificación Técnica: BTU / KG -->
             <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase">Detalle del Equipo</label>
-                <input type="text" id="detalle-input" placeholder="Ej: Aire 24.000 BTU" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:border-amber-500 outline-none">
+                <label class="block text-xs font-medium text-amber-500 uppercase tracking-wider">Especificaciones de BTU y Kilogramos</label>
+                <input type="text" id="detalle-input" placeholder="Ej: 24.000 BTU o 1.5 KG" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:border-amber-500 outline-none">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -61,8 +62,8 @@
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:border-amber-500 outline-none">
                         <option>Und</option>
                         <option>BTU</option>
-                        <option>Mtrs</option>
                         <option>KG</option>
+                        <option>Mtrs</option>
                         <option>Serv</option>
                         <option>Glob</option>
                     </select>
@@ -83,26 +84,28 @@
     <script>
         function guardarPartida() {
             const selectElement = document.getElementById('tipo-trabajo');
-            const tipoTrabajo = selectElement.value; // Captura el valor de la opción seleccionada
+            const tipoTrabajo = selectElement.value;
             const detalle = document.getElementById('detalle-input').value;
             const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
             const unidad = document.getElementById('unidad-select').value;
 
-            // Validación mejorada
-            if (!tipoTrabajo) {
-                alert('Por favor, selecciona un tipo de trabajo.');
+            // Validación de seguridad para no permitir seleccionar los títulos
+            if (selectElement.options[selectElement.selectedIndex].disabled) {
+                alert('Por favor, selecciona un trabajo válido.');
                 return;
             }
-            if (cantidad <= 0 || precioUnitario <= 0) {
-                alert('Por favor, ingresa una cantidad y precio válidos.');
+            if (!tipoTrabajo || cantidad <= 0 || precioUnitario <= 0) {
+                alert('Por favor, verifica que todos los campos estén completos y válidos.');
                 return;
             }
 
+            // Concatenación inteligente: Tipo de trabajo + (Detalle Técnico)
+            const descripcionFinal = detalle ? `${tipoTrabajo} (${detalle})` : tipoTrabajo;
+
             const nuevaPartida = {
                 modulo: 'Refrigeración',
-                trabajo: tipoTrabajo,
-                detalle: detalle,
+                trabajo: descripcionFinal,
                 cantidad: cantidad,
                 unidad: unidad,
                 precioUnitario: precioUnitario,
@@ -115,7 +118,7 @@
 
             alert('¡Partida agregada con éxito!');
             
-            // Limpieza de campos
+            // Limpieza de campos para la siguiente carga
             document.getElementById('detalle-input').value = "";
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
@@ -123,6 +126,7 @@
     </script>
 </body>
 </html>
+
 
 
 
