@@ -25,12 +25,17 @@
 
     <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-6 pb-24">
         
+        <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
+            <p class="text-sm text-slate-400 leading-relaxed">
+                Selecciona el equipo y el tipo de mantenimiento para registrar el servicio técnico y generar el cómputo.
+            </p>
+        </div>
+
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
             <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2">
                 <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nueva Partida
             </h2>
 
-            <!-- Equipo -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Equipo</label>
                 <select id="equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -42,7 +47,6 @@
                 </select>
             </div>
 
-            <!-- Tipo Mantenimiento -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Mantenimiento</label>
                 <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -51,7 +55,6 @@
                 </select>
             </div>
 
-            <!-- Servicio -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Servicio / Acción</label>
                 <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
@@ -63,13 +66,11 @@
                 </select>
             </div>
 
-            <!-- Especificaciones -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Especificaciones (BTU, KG, Ton)</label>
                 <input type="text" id="especificaciones" placeholder="Ej: 12.000 BTU / R410A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
             </div>
 
-            <!-- Cantidad y Precio -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
@@ -144,6 +145,7 @@ function guardarPartida() {
 </script>
 </body>
 </html>
+
 
 
 
