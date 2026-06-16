@@ -3,103 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PresuMetrick - Refrigeración</title>
+    <title>PresuMetrick - Módulo Refrigeración</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
-    <header class="sticky top-0 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-4 flex items-center gap-3">
-        <a href="index.html" class="text-slate-400 hover:text-amber-500"><i class="fa-solid fa-arrow-left text-xl"></i></a>
-        <h1 class="text-xl font-bold text-amber-500">Módulo Refrigeración</h1>
-    </header>
+    <div class="p-4 max-w-lg mx-auto space-y-6">
+        <header class="text-center py-4">
+            <h1 class="text-2xl font-bold text-amber-500">Módulo Refrigeración</h1>
+            <p class="text-slate-400 text-sm">Registro Técnico de Partidas</p>
+        </header>
 
-    <main class="p-4 max-w-md mx-auto space-y-6">
-        <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 space-y-4 shadow-2xl">
             
             <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Categoría</label>
-                <select id="categoria" onchange="actualizarDependientes()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-                    <option value="MANTENIMIENTO">MANTENIMIENTO</option>
-                    <option value="INSTALACIÓN">INSTALACIÓN</option>
-                    <option value="SERVICIOS">SERVICIOS ESPECIALIZADOS</option>
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Equipo</label>
+                <select id="equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                    <option>Split / Ventana</option>
+                    <option>Compacto</option>
+                    <option>Chiller</option>
+                    <option>Nevera / Congelador</option>
+                    <option>Cuarto Frío / Cava</option>
+                    <option>Exhibidora Comercial</option>
                 </select>
             </div>
 
             <div>
-                <label id="label-dinamico" class="block text-xs font-bold text-slate-400 uppercase mb-1">Equipo / Trabajo</label>
-                <select id="trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200"></select>
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Tipo de Mantenimiento</label>
+                <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+                    <option>Preventivo</option>
+                    <option>Correctivo</option>
+                </select>
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-amber-500 uppercase mb-1">Especificaciones (BTU, KG, Modelo)</label>
-                <input type="text" id="especificacion" placeholder="Ej: 24.000 BTU / 1.5 KG" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Servicio / Acción</label>
+                <input type="text" id="servicio" placeholder="Ej: Lavado, Carga de gas, Cambio compresor..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-amber-500 uppercase mb-1">Especificaciones (BTU, KG, Ton)</label>
+                <input type="text" id="especificaciones" placeholder="Ej: 24.000 BTU / 1.5 KG / R410A" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Cant.</label>
-                    <input type="number" id="cantidad" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Cantidad</label>
+                    <input type="number" id="cantidad" placeholder="1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Unidad</label>
-                    <select id="unidad" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-                        <option>Und</option><option>KG</option><option>Mtrs</option><option>Serv</option><option>Glob</option>
-                    </select>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Precio Unitario ($)</label>
+                    <input type="number" id="precio" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm">
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Precio Unitario ($)</label>
-                <input type="number" id="precio" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-            </div>
-
-            <button onclick="guardar()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl">Agregar Partida</button>
+            <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-4 rounded-xl transition-all shadow-lg shadow-amber-900/20">
+                Agregar Partida al Presupuesto
+            </button>
         </div>
-    </main>
+    </div>
 
     <script>
-        const data = {
-            "MANTENIMIENTO": ["Aire Split/Ventana", "Nevera/Congelador", "Cuarto Frío/Cava", "Exhibidora Supermercado"],
-            "INSTALACIÓN": ["Aire Split/Ventana", "Equipo Piso-Techo", "Chiller Industrial", "Vitrina Comercial"],
-            "SERVICIOS": ["Reparación de Fugas", "Barrido c/Nitrógeno", "Lavado Químico", "Vacío y Carga de Gas", "Cambio de Compresor"]
-        };
-
-        function actualizarDependientes() {
-            const cat = document.getElementById('categoria').value;
-            const selectTrabajo = document.getElementById('trabajo');
-            selectTrabajo.innerHTML = data[cat].map(item => `<option value="${item}">${item}</option>`).join('');
-        }
-
-        actualizarDependientes();
-
-        function guardar() {
-            const cat = document.getElementById('categoria').value;
-            const trab = document.getElementById('trabajo').value;
-            const espec = document.getElementById('especificacion').value;
-            const cant = parseFloat(document.getElementById('cantidad').value) || 0;
-            const prec = parseFloat(document.getElementById('precio').value) || 0;
-            
-            if (cant <= 0 || prec <= 0) return alert("Verifica datos.");
-
-            const concepto = `${cat} | ${trab} ${espec ? '(' + espec + ')' : ''}`;
-            
-            const item = {
-                modulo: 'Refrigeración',
-                trabajo: concepto,
-                cantidad: cant,
-                unidad: document.getElementById('unidad').value,
-                totalUSD: cant * prec
+        function agregarPartida() {
+            const data = {
+                equipo: document.getElementById('equipo').value,
+                tipo: document.getElementById('tipoMantenimiento').value,
+                servicio: document.getElementById('servicio').value,
+                specs: document.getElementById('especificaciones').value,
+                cantidad: document.getElementById('cantidad').value,
+                precio: document.getElementById('precio').value
             };
 
-            let pres = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-            pres.push(item);
-            localStorage.setItem('presupuestoActual', JSON.stringify(pres));
-            alert("Partida agregada correctamente.");
+            if (!data.servicio || !data.cantidad || !data.precio) {
+                alert("Por favor completa los campos obligatorios.");
+                return;
+            }
+
+            // Aquí se genera la descripción técnica para el PDF/WhatsApp
+            const descripcionCompleta = `${data.equipo} - ${data.tipo}: ${data.servicio} (${data.specs})`;
+            const total = data.cantidad * data.precio;
+
+            console.log("Guardando partida:", { descripcionCompleta, cantidad: data.cantidad, total });
+            
+            alert(`Partida agregada:\n${descripcionCompleta}\nTotal: $${total}`);
+            
+            // Lógica para guardar en localStorage iría aquí...
         }
     </script>
 </body>
 </html>
+
 
 
 
