@@ -23,30 +23,22 @@
             <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2">Nuevo Concepto</h2>
 
             <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase">Tipo de Trabajo</label>
-                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
-                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- INSTALACIÓN ---</option>
-                    <option value="Instalación: Split / Ventana">Instalación: Split / Ventana</option>
-                    <option value="Instalación: Piso-Techo">Instalación: Piso-Techo</option>
-                    <option value="Instalación: Compacto">Instalación: Compacto</option>
-                    <option value="Instalación: Chiller / Industrial">Instalación: Chiller / Industrial</option>
-                    <option value="Instalación: Vitrina Comercial">Instalación: Vitrina Comercial</option>
-                    
-                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- MANTENIMIENTO ---</option>
-                    <option value="Mant. Preventivo">Mant. Preventivo</option>
-                    <option value="Mant. Correctivo">Mant. Correctivo</option>
-                    
-                    <option disabled class="text-amber-500 font-bold bg-slate-800">--- SERVICIOS ESPECIALIZADOS ---</option>
-                    <option value="Reparación de Fugas">Reparación de Fugas</option>
-                    <option value="Barrido con Nitrógeno">Barrido con Nitrógeno</option>
-                    <option value="Lavado Químico">Lavado Químico</option>
-                    <option value="Vacío y Carga de Gas">Vacío y Carga de Gas</option>
-                    <option value="Cambio de Compresor">Cambio de Compresor</option>
+                <label class="block text-xs font-medium text-slate-400 uppercase">Categoría</label>
+                <select id="categoria-select" onchange="actualizarTrabajos()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                    <option value="INSTALACIÓN">INSTALACIÓN</option>
+                    <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                    <option value="SERVICIOS ESPECIALIZADOS">SERVICIOS ESPECIALIZADOS</option>
                 </select>
             </div>
 
             <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-amber-500 uppercase tracking-wider">Especificaciones (BTU / KG)</label>
+                <label class="block text-xs font-medium text-slate-400 uppercase">Trabajo / Equipo</label>
+                <select id="trabajo-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                    </select>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-amber-500 uppercase">Especificaciones (BTU / KG)</label>
                 <input type="text" id="detalle-input" placeholder="Ej: 24.000 BTU / 1.5 KG" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:border-amber-500 outline-none">
             </div>
 
@@ -58,10 +50,11 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase">Unidad de Cobro</label>
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:border-amber-500 outline-none">
-                        <option>Und</option>
-                        <option>Mtrs</option>
-                        <option>Serv</option>
-                        <option>Glob</option>
+                        <option value="Und">Und</option>
+                        <option value="KG">KG</option>
+                        <option value="Mtrs">Mtrs</option>
+                        <option value="Serv">Serv</option>
+                        <option value="Glob">Glob</option>
                     </select>
                 </div>
             </div>
@@ -78,33 +71,44 @@
     </main>
 
     <script>
+        const opcionesTrabajo = {
+            "INSTALACIÓN": ["Split / Ventana", "Piso-Techo", "Compacto", "Chiller / Industrial", "Vitrina Comercial"],
+            "MANTENIMIENTO": ["Aire Split", "Nevera", "Cuarto Frío", "Preventivo General", "Correctivo General"],
+            "SERVICIOS ESPECIALIZADOS": ["Reparación de Fugas", "Barrido con Nitrógeno", "Lavado Químico", "Vacío y Carga de Gas", "Cambio de Compresor"]
+        };
+
+        function actualizarTrabajos() {
+            const cat = document.getElementById('categoria-select').value;
+            const sel = document.getElementById('trabajo-select');
+            sel.innerHTML = opcionesTrabajo[cat].map(t => `<option value="${t}">${t}</option>`).join('');
+        }
+
+        // Inicializar al cargar
+        actualizarTrabajos();
+
         function guardarPartida() {
-            const selectElement = document.getElementById('tipo-trabajo');
-            const tipoTrabajo = selectElement.value;
-            const detalle = document.getElementById('detalle-input').value;
-            const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
-            const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
-            const unidad = document.getElementById('unidad-select').value;
+            const cat = document.getElementById('categoria-select').value;
+            const trab = document.getElementById('trabajo-select').value;
+            const det = document.getElementById('detalle-input').value;
+            const cant = parseFloat(document.getElementById('cantidad-input').value) || 0;
+            const prec = parseFloat(document.getElementById('precio-input').value) || 0;
+            const unid = document.getElementById('unidad-select').value;
 
-            if (selectElement.options[selectElement.selectedIndex].disabled) {
-                alert('Por favor, selecciona un trabajo válido.');
-                return;
-            }
-            if (!tipoTrabajo || cantidad <= 0 || precioUnitario <= 0) {
-                alert('Por favor, completa todos los campos.');
+            if (cant <= 0 || prec <= 0) {
+                alert('Verifica la cantidad y el precio.');
                 return;
             }
 
-            // Concatenación: Trabajo (Especificación)
-            const descripcionFinal = detalle ? `${tipoTrabajo} (${detalle})` : tipoTrabajo;
+            // Concatenación: CATEGORÍA - Trabajo (Especificación)
+            const descripcionFinal = `${cat} - ${trab} ${det ? '(' + det + ')' : ''}`;
 
             const nuevaPartida = {
                 modulo: 'Refrigeración',
                 trabajo: descripcionFinal,
-                cantidad: cantidad,
-                unidad: unidad,
-                precioUnitario: precioUnitario,
-                totalUSD: cantidad * precioUnitario
+                cantidad: cant,
+                unidad: unid,
+                precioUnitario: prec,
+                totalUSD: cant * prec
             };
 
             let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
@@ -112,8 +116,6 @@
             localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
             alert('¡Partida agregada!');
-            
-            // Limpiar solo los campos de entrada
             document.getElementById('detalle-input').value = "";
             document.getElementById('cantidad-input').value = "";
             document.getElementById('precio-input').value = "";
@@ -121,6 +123,7 @@
     </script>
 </body>
 </html>
+
 
 
 
