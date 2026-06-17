@@ -36,39 +36,51 @@
                 <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nuevo Concepto
             </h2>
 
-            <div class="space-y-1.5">
-  <label class="block text-xs font-medium text-slate-400">TIPO DE TRABAJO</label>
-  <select id="tipo-trabajo" class="w-full bg-slate-800 border border-slate-700 text-white p-2 rounded">
-    <option>Punto de Iluminación</option>
-    <option>Punto de Tomacorriente 110V / 220V</option>
-    <option>Acometida / Cableado</option>
-    <option>Instalación de Tablero Eléctrico</option>
-    <option>Balanceo de Cargas / Revisión</option>
-    <option>Protecciones: disyuntores, fusibles</option>
-    <option>Interruptores y apagadores</option>
-    <option>Punto eléctrico para equipos especiales</option>
-    <option>Puesta a tierra</option>
-    <option>Revisión y ajuste de conexiones</option>
-    <option>Detección y reparación de fallas</option>
-    <option>Medición de voltaje y consumo</option>
-  </select>
+            <!-- TIPO DE TRABAJO -->
+<div class="space-y-1.5">
+    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
+    <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+        <option>Punto de Iluminación</option>
+        <option>Punto de Tomacorriente 110V / 220V</option>
+        <option>Acometida / Cableado</option>
+        <option>Instalación de Tablero Eléctrico</option>
+        <option>Balanceo de Cargas / Revisión</option>
+        <option>Protecciones: disyuntores, fusibles</option>
+        <option>Interruptores y apagadores</option>
+        <option>Punto eléctrico para equipos especiales</option>
+        <option>Puesta a tierra</option>
+        <option>Revisión y ajuste de conexiones</option>
+        <option>Detección y reparación de fallas</option>
+        <option>Medición de voltaje y consumo</option>
+    </select>
 </div>
 
+<!-- CANTIDAD Y UNIDAD -->
 <div class="grid grid-cols-2 gap-4">
-  <div class="space-y-1.5">
-    <label class="block text-xs font-medium text-slate-400">CANTIDAD</label>
-    <input type="number" class="w-full bg-slate-800 border border-slate-700 text-white p-2 rounded" placeholder="0">
-  </div>
-  <div class="space-y-1.5">
-    <label class="block text-xs font-medium text-slate-400">UNIDAD</label>
-    <select id="unidad-select" class="w-full bg-slate-800 border border-slate-700 text-white p-2 rounded">
-      <option>pto</option>
-      <option>mts</option>
-      <option>glob</option>
-      <option>und</option>
-    </select>
-  </div>
+    <div class="space-y-1.5">
+        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
+        <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+    </div>
+    <div class="space-y-1.5">
+        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
+        <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+            <option>pto</option>
+            <option>mts</option>
+            <option>glob</option>
+            <option>und</option>
+        </select>
+    </div>
 </div>
+
+<!-- PRECIO UNITARIO -->
+<div class="space-y-1.5">
+    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
+    <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
+        <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+    </div>
+</div>
+
 
 
             </div>
