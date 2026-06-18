@@ -225,21 +225,27 @@
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 6;
 
-                // 2. EQUIPO + DESCRIPCIÓN FIJA (Texto normal)
-                doc.setFont("helvetica", "normal");
+                // 2. EQUIPO (Negrita - Primera línea)
+                doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
-                const textoCompleto = `${p.trabajo}. Montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha.`;
-                const descLines = doc.splitTextToSize(textoCompleto, 140);
-                doc.text(descLines, 15, y);
+                doc.text(p.trabajo, 15, y);
                 
                 // 3. PRECIO (Alineado a la derecha)
                 doc.setFont("helvetica", "bold");
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                y += 5; // Salto para la descripción
+
+                // 4. DESCRIPCIÓN (Normal)
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9);
+                const descripcionFija = "Montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha.";
+                const descLines = doc.splitTextToSize(descripcionFija, 140);
+                doc.text(descLines, 15, y);
                 
-                // Ajustar Y según el largo del texto
+                // Ajustar Y según el largo de la descripción
                 y += (descLines.length * 5) + 2;
 
-                // 4. DETALLE (Normal, fuente más pequeña)
+                // 5. DETALLE (Normal, más pequeño)
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
@@ -277,5 +283,6 @@
     </script>
 </body>
 </html>
+
 
             
