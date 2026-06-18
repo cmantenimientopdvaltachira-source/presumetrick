@@ -141,9 +141,8 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                const textoOriginal = p.trabajo || '';
-                const nombreLimpio = textoOriginal.split('(')[0].trim();
-                const unidadVisual = unidadLinter((p.unidad || '').split('(')[0].trim());
+                const nombreLimpio = p.trabajo || '';
+                const unidadVisual = unidadLinter((p.unidad || ''));
                 let etiquetaPrecio = (unidadVisual === 'Global') ? 'Precio Global' : 'Precio Unitario';
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
                 mensaje += `_${nombreLimpio}_\n`; 
@@ -220,37 +219,26 @@
             presupuesto.forEach((p) => {
                 if (y > 260) { doc.addPage(); y = 20; }
 
+                // 1. Módulo en Negrita
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(8);
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 5;
 
-                const textoCompleto = p.trabajo || '';
-                const parentesisMatch = textoCompleto.match(/\(([^)]+)\)/);
-                const tituloEquipo = parentesisMatch ? parentesisMatch[1] : ""; 
-                const descripcionLimpia = textoCompleto.replace(/\([^)]*\)/, '').trim();
+                // 2. Trabajo/Equipo (sin paréntesis y sin negrita)
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.text(p.trabajo || '', 15, y);
+                y += 5;
 
-                if (tituloEquipo) {
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(10);
-                    doc.text(tituloEquipo, 15, y);
-                    y += 5;
-                }
-
+                // 3. Cantidad y Precio
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(9);
-                const splitDesc = doc.splitTextToSize(descripcionLimpia, 145);
-                doc.text(splitDesc, 15, y);
+                doc.text(`Cantidad: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
                 
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y - (tituloEquipo ? 0 : 2));
-                
-                y += (splitDesc.length * 5) + 2;
-
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(8);
-                doc.text(`Cantidad: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y - 2);
                 
                 subtotalUSD += p.totalUSD;
                 y += 12;
@@ -285,6 +273,7 @@
     </script>
 </body>
 </html>
+
 
 
 
