@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -225,27 +225,30 @@
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 6;
 
-                // 2. EQUIPO + DESCRIPCIÓN (Estructura: Equipo: Descripción)
-                const descripcionFija = "montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha";
-                const textoCompleto = `${p.trabajo}: ${descripcionFija}`;
-                
+                // 2. EQUIPO (Título)
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
-                const lineasTexto = doc.splitTextToSize(textoCompleto, 140);
-                doc.text(lineasTexto, 15, y);
+                doc.text(p.trabajo, 15, y);
                 
-                // 3. PRECIO (Alineado a la derecha)
+                // 3. PRECIO (Alineado derecha)
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                
-                // Ajustar Y según el alto total
-                y += (lineasTexto.length * 5) + 2;
+                y += 5;
 
-                // 4. DETALLE (Normal)
+                // 4. DESCRIPCIÓN TÉCNICA (Texto explicativo debajo)
                 doc.setFont("helvetica", "normal");
-                doc.setFontSize(8);
-                doc.text(`Cantidad: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
+                doc.setFontSize(9);
+                const descFija = "montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha";
+                const lineasDesc = doc.splitTextToSize(descFija, 140);
+                doc.text(lineasDesc, 15, y);
                 
-                y += 10;
+                y += (lineasDesc.length * 5) + 3;
+
+                // 5. DETALLE CANTIDAD
+                doc.setFontSize(8);
+                doc.setFont("helvetica", "normal");
+                doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
+                
+                y += 12;
                 subtotalUSD += p.totalUSD;
             });
 
@@ -278,4 +281,5 @@
     </script>
 </body>
 </html>
-                                  
+
+                
