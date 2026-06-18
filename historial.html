@@ -216,10 +216,10 @@
             y += 10;
             let subtotalUSD = 0;
 
-            presupuesto.forEach((p) => {
+                       presupuesto.forEach((p) => {
                 if (y > 250) { doc.addPage(); y = 20; }
 
-                // 1. MÓDULO (En negrita)
+                // 1. MÓDULO (Negrita)
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
                 doc.text(p.modulo.toUpperCase(), 15, y);
@@ -235,9 +235,10 @@
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
                 y += 5;
 
-                // 4. DESCRIPCIÓN FIJA (Texto normal)
+                // 4. DESCRIPCIÓN FIJA (Texto justificado/ajustado)
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(9);
+                // Usamos una cadena limpia sin repetir el trabajo anterior
                 const descripcion = "Montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha.";
                 const descLines = doc.splitTextToSize(descripcion, 140);
                 doc.text(descLines, 15, y);
@@ -253,6 +254,7 @@
                 y += 10;
                 subtotalUSD += p.totalUSD;
             });
+
 
             if (y > 240) { doc.addPage(); y = 20; }
             y += 2; doc.line(15, y, 195, y); y += 10; 
