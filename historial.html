@@ -175,7 +175,7 @@
             window.open(link, '_blank');
         }
 
-                function generarPDF() {
+                        function generarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
@@ -217,53 +217,48 @@
             let subtotalUSD = 0;
 
             presupuesto.forEach((p) => {
-                // 0. Separación de lógica: 1ra línea equipo, resto tareas
-                const lineasRaw = (p.trabajo || '').split('\n');
-                const equipo = lineasRaw[0];
-                const detalles = lineasRaw.slice(1).join('\n');
-
                 if (y > 250) { doc.addPage(); y = 20; }
 
-                // 1. MÓDULO (Categoría)
+                // 1. MÓDULO
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(9);
-                doc.setTextColor(0, 128, 0); // Verde para el módulo
+                doc.setTextColor(0, 128, 0); 
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 6;
 
-                // 2. EQUIPO (Negrita)
+                // 2. EQUIPO Y PRECIO (Separados para que no choquen)
                 doc.setTextColor(0, 0, 0);
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
-                doc.text(equipo, 15, y);
-                
-                // 3. PRECIO (Alineado a la derecha en la línea del equipo)
+                // Imprimimos el título del equipo limitado a un ancho que no toque el precio
+                const equipoLines = doc.splitTextToSize(p.trabajo.split('\n')[0] || "Servicio", 140);
+                doc.text(equipoLines, 15, y);
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                y += 5;
+                y += (equipoLines.length * 5);
 
-                // 4. TAREAS (Si existen, en texto normal y más pequeño)
-                if (detalles.trim() !== "") {
+                // 3. DETALLES (Tareas debajo, en letra normal)
+                const detalles = p.trabajo.split('\n').slice(1).join('\n');
+                if (detalles) {
                     doc.setFont("helvetica", "normal");
                     doc.setFontSize(9);
-                    const tareaLines = doc.splitTextToSize(detalles, 140);
-                    doc.text(tareaLines, 15, y);
-                    y += (tareaLines.length * 5) + 2;
+                    const detalleLines = doc.splitTextToSize(detalles, 140);
+                    doc.text(detalleLines, 15, y);
+                    y += (detalleLines.length * 5) + 2;
                 }
 
-                // 5. METADATOS (Cantidad y P.U.)
+                // 4. METADATOS
                 doc.setFontSize(8);
                 doc.setTextColor(100);
-                doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
+                doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | P.U: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
                 
-                y += 10; // Espaciado final de partida
+                y += 12; 
                 subtotalUSD += p.totalUSD;
             });
 
-            // ... (El resto del código de totales se mantiene igual)
+            // ... (El código de totales y observaciones se mantiene igual que antes)
             if (y > 240) { doc.addPage(); y = 20; }
             y += 2; doc.line(15, y, 195, y); y += 10; 
-            doc.setFont("helvetica", "bold");
-            doc.setTextColor(0,0,0);
+            doc.setFont("helvetica", "bold"); doc.setTextColor(0,0,0);
 
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
@@ -287,6 +282,7 @@
             }
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
         }
+
 
     </script>
 </body>
