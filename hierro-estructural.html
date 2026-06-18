@@ -33,7 +33,7 @@
 
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
             <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2">
-                <i class="fa-solid fa-hammer text-amber-500 mr-2"></i>Nuevo Concepto
+                <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nuevo Concepto
             </h2>
 
             <div class="space-y-1.5">
@@ -56,28 +56,29 @@
                 </select>
             </div>
 
-            <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                    <option>Kg</option>
-                    <option>m</option>
-                    <option>m²</option>
-                    <option>und</option>
-                    <option>global</option>
-                </select>
-            </div>
-
+            <!-- Cantidad y Unidad alineados -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
                     <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
-                        <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
-                    </div>
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
+                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                        <option>Kg</option>
+                        <option>m</option>
+                        <option>m²</option>
+                        <option>und</option>
+                        <option>global</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
+                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
             </div>
 
@@ -85,7 +86,6 @@
                 <i class="fa-solid fa-plus text-base"></i> Agregar al Presupuesto
             </button>
         </div>
-
     </main>
 
     <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-6 py-2 shadow-2xl">
@@ -133,7 +133,6 @@ function guardarPartida() {
     presupuesto.push(nuevaPartida);
     localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
 
-    // Feedback visual y limpieza
     document.getElementById('cantidad-input').value = "";
     document.getElementById('precio-input').value = "";
 
@@ -142,6 +141,7 @@ function guardarPartida() {
 </script>
 </body>
 </html>
+
 
 
 
