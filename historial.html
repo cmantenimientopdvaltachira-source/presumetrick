@@ -225,16 +225,17 @@
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 6;
 
-                // 2. EQUIPO (Título)
+                // 2. EQUIPO (Campo p.trabajo)
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
                 doc.text(p.trabajo, 15, y);
                 
-                // 3. PRECIO (Alineado derecha)
+                // PRECIO (Alineado a la derecha)
+                doc.setFont("helvetica", "bold");
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
                 y += 5;
 
-                // 4. DESCRIPCIÓN TÉCNICA (Texto explicativo debajo)
+                // 3. DESCRIPCIÓN FIJA
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(9);
                 const descFija = "montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha";
@@ -243,9 +244,9 @@
                 
                 y += (lineasDesc.length * 5) + 3;
 
-                // 5. DETALLE CANTIDAD
-                doc.setFontSize(8);
+                // 4. DETALLE CANTIDAD
                 doc.setFont("helvetica", "normal");
+                doc.setFontSize(8);
                 doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
                 
                 y += 12;
@@ -281,4 +282,4 @@
     </script>
 </body>
 </html>
-                      
+                                    
