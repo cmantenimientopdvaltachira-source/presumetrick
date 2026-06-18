@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -34,7 +34,7 @@
             let htmlContenido = '';
             let granTotal = 0;
 
-            presupuesto.forEach((partida, index) => {
+            presupuesto.forEach((partida) => {
                 granTotal += partida.totalUSD;
                 htmlContenido += `
                     <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
@@ -216,37 +216,30 @@
             y += 10;
             let subtotalUSD = 0;
 
-                       presupuesto.forEach((p) => {
+            presupuesto.forEach((p) => {
                 if (y > 250) { doc.addPage(); y = 20; }
 
-                // 1. MÓDULO (Negrita)
+                // 1. MÓDULO (En negrita)
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 6;
 
-                // 2. EQUIPO (Texto normal)
+                // 2. EQUIPO + DESCRIPCIÓN FIJA (Texto normal)
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(10);
-                doc.text(p.trabajo || '', 15, y);
+                const textoCompleto = `${p.trabajo}. Montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha.`;
+                const descLines = doc.splitTextToSize(textoCompleto, 140);
+                doc.text(descLines, 15, y);
                 
                 // 3. PRECIO (Alineado a la derecha)
                 doc.setFont("helvetica", "bold");
                 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                y += 5;
-
-                // 4. DESCRIPCIÓN FIJA (Texto justificado/ajustado)
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(9);
-                // Usamos una cadena limpia sin repetir el trabajo anterior
-                const descripcion = "Montaje, canalización de tuberías, cableado eléctrico, sellado de puntos de conexión y puesta en marcha.";
-                const descLines = doc.splitTextToSize(descripcion, 140);
-                doc.text(descLines, 15, y);
                 
-                // Ajustar Y según el largo del texto de la descripción
+                // Ajustar Y según el largo del texto
                 y += (descLines.length * 5) + 2;
 
-                // 5. DETALLE (Normal)
+                // 4. DETALLE (Normal, fuente más pequeña)
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 doc.text(`Cant: ${p.cantidad} ${unidadLinter(p.unidad)} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
@@ -254,7 +247,6 @@
                 y += 10;
                 subtotalUSD += p.totalUSD;
             });
-
 
             if (y > 240) { doc.addPage(); y = 20; }
             y += 2; doc.line(15, y, 195, y); y += 10; 
@@ -285,4 +277,5 @@
     </script>
 </body>
 </html>
-                           
+
+            
