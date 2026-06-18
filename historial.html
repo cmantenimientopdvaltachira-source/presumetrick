@@ -22,7 +22,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', mostrarPresupuesto);
 
-                function mostrarPresupuesto() {
+        function mostrarPresupuesto() {
             const tablaContainer = document.getElementById('lista-presupuesto');
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             
@@ -105,7 +105,6 @@
             `;
         }
 
-
         function vaciarPresupuesto() {
             if (confirm('¿Seguro que quieres borrar todo el presupuesto?')) {
                 localStorage.setItem('presupuestoActual', JSON.stringify([]));
@@ -114,32 +113,27 @@
         }
 
         function unidadLinter(uni) {
+            if (!uni) return 'Global';
             const u = uni.toLowerCase().trim();
             if (u.includes('glob')) return 'Global';
             if (u.includes('m2') || u.includes('cuad')) return 'M2';
             if (u.includes('m3') || u.includes('cubi')) return 'M3';
-            
-            // Evaluamos primero la palabra lineal para evitar que se confunda con metros comunes
             if (u.includes('lineal') || u.includes('ml')) return 'ML';
             if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-            
             if (u.includes('pto') || u.includes('pun')) return 'Pto';
             if (u.includes('und') || u.includes('uni')) return 'Unid';
             if (u.includes('kg') || u.includes('kil')) return 'KG';
-            
             return 'Global';
         }
 
-                function enviarWhatsApp() {
+        function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             if (presupuesto.length === 0) {
                 alert("No hay partidas en el presupuesto para enviar.");
                 return;
             }
             
-            // --- NUEVA LÍNEA DE CAPTURA ---
             const observaciones = document.getElementById('observacionesGenerales').value;
-            // ------------------------------
 
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
@@ -179,7 +173,6 @@
                 mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
             }
             
-            // --- INSERCIÓN DE LA NOTA GENERAL ---
             if (observaciones && observaciones.trim() !== "") {
                 mensaje += "\n*Nota General:*\n_" + observaciones + "_\n";
             }
@@ -195,9 +188,7 @@
             const doc = new jsPDF();
             
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
-            // --- NUEVA LÍNEA DE CAPTURA ---
             const observaciones = document.getElementById('observacionesGenerales').value;
-            // ------------------------------
             
             const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
             const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
@@ -234,39 +225,55 @@
             y += 10;
             let subtotalUSD = 0;
 
-                            presupuesto.forEach((p) => {
+            presupuesto.forEach((p) => {
+                // Validación de desbordamiento de página dentro del bucle
+                if (y > 260) {
+                    doc.addPage();
+                    y = 20;
+                }
+
                 // Módulo
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(8);
                 doc.text(p.modulo.toUpperCase(), 15, y);
                 y += 4;
 
-                // Nombre del trabajo
+                // Nombre del trabajo (Ajuste multi-línea dinámico)
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(10);
-                doc.text(p.trabajo.substring(0, 60), 15, y);
+                const splitTrabajo = doc.splitTextToSize(p.trabajo || '', 145);
+                doc.text(splitTrabajo, 15, y);
                 
-                // Detalle técnico (Precio Unitario corregido)
-                y += 4;
+                // Total de la partida (Alineado a la derecha con la primera línea del concepto)
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                
+                // Incrementamos 'y' dinámicamente según las líneas calculadas del concepto
+                y += (splitTrabajo.length * 5);
+                
+                // Detalle técnico (Corregido 'undefined' aplicando el procesador de unidad)
+                const unidadLimpia = unidadLinter(p.unidad);
                 doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
-                doc.text(`Cantidad: ${p.cantidad} ${p.unidad} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
-                
-                // Total a la derecha
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(10);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y - 2);
+                doc.text(`Cantidad: ${p.cantidad} ${unidadLimpia} | Precio Unitario: $${parseFloat(p.precioUnitario).toFixed(2)}`, 15, y);
                 
                 subtotalUSD += p.totalUSD;
-                y += 12;
+                y += 12; // Separación controlada entre conceptos
             });
 
-            y += 5; 
+            // Verificación antes de imprimir el bloque de totales
+            if (y > 240) {
+                doc.addPage();
+                y = 20;
+            }
+
+            y += 2; 
             doc.line(15, y, 195, y); 
             y += 10; 
             doc.setFont("helvetica", "bold");
 
-            // Totales alineados
+            // Totales alineados perfectamente a la derecha
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
@@ -279,14 +286,19 @@
                 doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             }
 
-
-            // --- INSERCIÓN DE NOTA GENERAL EN EL PDF ---
+            // Inserción controlada de la Nota General con saltos de página inteligentes
             if (observaciones && observaciones.trim() !== "") {
-                y += 15;
+                const splitNotas = doc.splitTextToSize(observaciones, 180);
+                if (y + 20 + (splitNotas.length * 5) > 280) {
+                    doc.addPage();
+                    y = 20;
+                } else {
+                    y += 15;
+                }
                 doc.setFont("helvetica", "bold"); doc.text("Nota General:", 15, y);
                 y += 6;
                 doc.setFont("helvetica", "normal"); doc.setFontSize(9);
-                doc.text(doc.splitTextToSize(observaciones, 180), 15, y);
+                doc.text(splitNotas, 15, y);
             }
 
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
@@ -295,6 +307,7 @@
     </script>
 </body>
 </html>
+
 
 
 
