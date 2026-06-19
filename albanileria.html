@@ -27,7 +27,7 @@
         
         <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
             <p class="text-sm text-slate-400 leading-relaxed">
-                Registra levantamiento de paredes, friso, colocación de cerámica o reparaciones de concreto.
+                Registra trabajos de construcción, acabados y reparaciones estructurales para generar el cómputo métrico automáticamente.
             </p>
         </div>
 
@@ -41,11 +41,22 @@
                 <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
                     <option>Levantamiento de Pared en Bloque</option>
                     <option>Friso (revoque) de paredes</option>
-                    <option>Colocación de Cerámica / Porcelanato</option>
+                    <option>Encamisado y acabado de paredes</option>
                     <option>Reparación de grietas / resane</option>
-                    <option>Vaciado de concreto (losas/brocales)</option>
-                    <option>Colocación de topes de cocina</option>
+                    <option>Demolición y retiro de escombros</option>
+                    <option>Colocación de Cerámica (piso)</option>
+                    <option>Colocación de Porcelanato</option>
                     <option>Construcción de contrapiso</option>
+                    <option>Instalación de rodapiés</option>
+                    <option>Nivelación de pisos</option>
+                    <option>Vaciado de concreto (losas/brocales)</option>
+                    <option>Construcción de columnas / vigas</option>
+                    <option>Reparación de estructuras de concreto</option>
+                    <option>Impermeabilización de techos (manto)</option>
+                    <option>Reparación de filtraciones en techo</option>
+                    <option>Colocación de topes de cocina (granito/mármol)</option>
+                    <option>Friso en techos</option>
+                    <option>Instalación de piedra decorativa</option>
                 </select>
             </div>
 
@@ -59,8 +70,9 @@
                     <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
                         <option>m2</option>
                         <option>m3</option>
-                        <option>und</option>
                         <option>m lineal</option>
+                        <option>und</option>
+                        <option>glob</option>
                     </select>
                 </div>
             </div>
@@ -97,6 +109,12 @@
     </nav>
 
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('presupuestoActual')) {
+        localStorage.setItem('presupuestoActual', JSON.stringify([]));
+    }
+});
+
 function guardarPartida() {
     const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
     const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
@@ -124,11 +142,12 @@ function guardarPartida() {
     document.getElementById('cantidad-input').value = "";
     document.getElementById('precio-input').value = "";
 
-    alert('¡Partida de Albañilería agregada con éxito!');
+    alert('¡Partida de Albañilería agregada al presupuesto con éxito!');
 }
 </script>
 </body>
 </html>
+
 
 
 
