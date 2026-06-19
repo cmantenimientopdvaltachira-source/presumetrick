@@ -219,32 +219,42 @@
                         presupuesto.forEach((p) => {
                 if (y > 250) { doc.addPage(); y = 20; }
 
-                // 1. MODULO (Negrita)
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(9);
-                doc.text(p.modulo.toUpperCase(), 15, y);
-                y += 6;
+                // --- INICIO DEL BLOQUE DE IMPRESIÓN MEJORADO ---
 
-                // 2. EQUIPO + ESPECIFICACIONES (Misma línea, sin negrita)
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(10);
-                doc.text(p.equipo + " - " + p.especificaciones, 15, y);
-                y += 7;
+// 1. TÍTULO DEL MÓDULO (Siempre lo mostramos en negrita)
+doc.setFont("helvetica", "bold");
+doc.setFontSize(10);
+doc.text(p.modulo.toUpperCase(), 15, y);
+y += 5;
 
-                // 3. SERVICIO / ACCIÓN (Debajo)
-                const servicioLines = doc.splitTextToSize(p.servicio || '', 140);
+// 2. EQUIPO + ESPECIFICACIONES (Solo se muestra si tienen datos reales)
+if (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    
+    // Si además hay especificaciones, las unimos con un guion
+    let textoInfo = p.equipo;
+    if (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') {
+        textoInfo += " - " + p.especificaciones;
+    }
+    
+    doc.text(textoInfo, 15, y);
+    y += 5; // Ajuste de espacio vertical solo si se imprimió esta línea
+}
 
-                doc.text(servicioLines, 15, y);
-                y += (servicioLines.length * 5) + 2;
+// 3. SERVICIO / ACCIÓN (Siempre se muestra)
+doc.setFont("helvetica", "normal");
+const servicioLines = doc.splitTextToSize(p.servicio || '', 140);
+doc.text(servicioLines, 15, y);
+y += (servicioLines.length * 5) + 2;
 
-                // 4. CANTIDAD + PRECIO (Misma línea)
-                doc.text(`Cantidad: ${p.cantidad} | Precio Unitario: $${p.precioUnitario.toFixed(2)}`, 15, y);
-                
-                // TOTAL PARCIAL (Alineado a la derecha)
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-                
-                y += 10;
-                subtotalUSD += p.totalUSD;
+// 4. CANTIDAD Y PRECIO
+doc.text("Cantidad: " + p.cantidad + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
+doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+y += 10; // Espacio final para la siguiente partida
+
+// --- FIN DEL BLOQUE DE IMPRESIÓN MEJORADO ---
+
             });
 
 
