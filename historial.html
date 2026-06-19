@@ -253,9 +253,11 @@ doc.text("Cantidad: " + p.cantidad + " | Precio Unitario: $" + p.precioUnitario.
 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
 y += 10; // Espacio final para la siguiente partida
 
-// --- FIN DEL BLOQUE DE IMPRESIÓN MEJORADO ---
+// ESTA LÍNEA ES LA QUE SUMA EL TOTAL AL SUBTOTAL FINAL
+subtotalUSD += p.totalUSD; 
 
-            });
+}); // Fin del forEach
+
 
 
 
