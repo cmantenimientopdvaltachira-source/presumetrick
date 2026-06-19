@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PresuMetrick - Herrería y Estructura</title>
+    <title>PresuMetrick - Herrería</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -27,7 +27,7 @@
         
         <div class="bg-slate-800/50 border border-slate-800 rounded-2xl p-4 shadow-md">
             <p class="text-sm text-slate-400 leading-relaxed">
-                Registra trabajos de herrería, estructuras metálicas, soldaduras y refuerzos para generar el cómputo métrico automáticamente.
+                Registra trabajos de herrería, estructuras metálicas, soldaduras y refuerzos para generar el cómputo métrico.
             </p>
         </div>
 
@@ -56,7 +56,6 @@
                 </select>
             </div>
 
-            <!-- Cantidad y Unidad alineados -->
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
@@ -96,7 +95,7 @@
             </a>
             <div class="flex flex-col items-center gap-1 text-amber-500 py-1 px-3 border-b-2 border-amber-500">
                 <i class="fa-solid fa-industry text-lg"></i>
-                <span class="text-[10px] font-bold tracking-wide">Cómputo</span>
+                <span class="text-[10px] font-bold tracking-wide">Herrería</span>
             </div>
             <a href="perfil.html" class="flex flex-col items-center gap-1 text-slate-400 hover:text-amber-500 transition-colors py-1 px-3">
                 <i class="fa-solid fa-gear text-lg"></i>
@@ -117,16 +116,13 @@ function guardarPartida() {
         return;
     }
 
-    const totalUSD = cantidad * precioUnitario;
-
     const nuevaPartida = {
-        modulo: 'Herrería',
-        trabajo: tipoTrabajo,
+        modulo: 'HERRERÍA',
+        servicio: tipoTrabajo,
         cantidad: cantidad,
         unidad: unidadSeleccionada, 
         precioUnitario: precioUnitario,
-        totalUSD: totalUSD,
-        fecha: new Date().toLocaleDateString()
+        totalUSD: cantidad * precioUnitario
     };
 
     let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
@@ -141,6 +137,7 @@ function guardarPartida() {
 </script>
 </body>
 </html>
+
 
 
 
