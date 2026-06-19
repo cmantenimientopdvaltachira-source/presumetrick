@@ -129,13 +129,16 @@ function guardarPartida() {
         return;
     }
 
-    const nuevaPartida = {
+        const nuevaPartida = {
         modulo: 'REFRIGERACIÓN',
-        trabajo: `${servicio} | ${equipo} (${specs})`, 
+        equipo: equipo,
+        especificaciones: specs,
+        servicio: servicio,
         cantidad: cantidad,
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
+
 
     let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
     presupuesto.push(nuevaPartida);
