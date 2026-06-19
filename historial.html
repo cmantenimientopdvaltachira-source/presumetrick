@@ -214,18 +214,24 @@
             doc.setFontSize(10); doc.setFont("helvetica", "bold"); doc.text("Descripcion", 15, y); doc.text("Total", 170, y);
             doc.line(15, y + 2, 195, y + 2);
             y += 10;
+            let ultimoModulo = ""; 
             let subtotalUSD = 0;
+
 
                         presupuesto.forEach((p) => {
                 if (y > 250) { doc.addPage(); y = 20; }
 
                 // --- INICIO DEL BLOQUE DE IMPRESIÓN MEJORADO ---
 
-// 1. TÍTULO DEL MÓDULO (Siempre lo mostramos en negrita)
-doc.setFont("helvetica", "bold");
-doc.setFontSize(10);
-doc.text(p.modulo.toUpperCase(), 15, y);
-y += 5;
+// 1. TÍTULO DEL MÓDULO (Solo si es un módulo nuevo)
+if (p.modulo !== ultimoModulo) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(p.modulo.toUpperCase(), 15, y);
+    y += 7; 
+    ultimoModulo = p.modulo;
+}
+
 
 // 2. EQUIPO + ESPECIFICACIONES (Solo se muestra si tienen datos reales)
 if (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') {
