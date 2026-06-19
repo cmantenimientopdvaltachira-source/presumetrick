@@ -232,7 +232,7 @@
                 y += 7;
 
                 // 3. SERVICIO / ACCIÓN (Debajo)
-                const servicioLines = doc.splitTextToSize(p.servicio || '', 160);
+                const servicioLines = doc.splitTextToSize(p.servicio || '', 150);
 
                 doc.text(servicioLines, 15, y);
                 y += (servicioLines.length * 5) + 2;
