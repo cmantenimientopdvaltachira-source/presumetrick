@@ -122,14 +122,16 @@ function guardarPartida() {
 
     const totalUSD = cantidad * precioUnitario;
 
-    const nuevaPartida = {
-        modulo: 'Electricidad',
-        trabajo: tipoTrabajo,
+        const nuevaPartida = {
+        modulo: 'ELECTRICIDAD',
+        equipo: 'N/A', // O puedes capturar el nombre del equipo si lo tienes en tu formulario
+        especificaciones: 'N/A', // O puedes capturar las especificaciones si las tienes
+        servicio: tipoTrabajo,
         cantidad: cantidad,
-        unidad: unidadSeleccionada, 
         precioUnitario: precioUnitario,
-        totalUSD: totalUSD
+        totalUSD: cantidad * precioUnitario
     };
+
 
     let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
     presupuesto.push(nuevaPartida);
