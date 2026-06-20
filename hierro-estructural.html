@@ -109,7 +109,7 @@ function guardarPartida() {
     const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
     const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
     const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
-    const unidadSeleccionada = document.getElementById('unidad-select').value;
+    const unidadSeleccionada = document.getElementById('unidad-select').value; // Capturamos la unidad
 
     if (cantidad <= 0 || precioUnitario <= 0) {
         alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
@@ -118,9 +118,11 @@ function guardarPartida() {
 
     const nuevaPartida = {
         modulo: 'HERRERÍA',
+        equipo: 'N/A', // Agregado para consistencia con otros módulos
+        especificaciones: 'N/A', // Agregado para consistencia con otros módulos
         servicio: tipoTrabajo,
         cantidad: cantidad,
-        unidad: unidadSeleccionada, 
+        unidad: unidadSeleccionada, // Aquí está la clave
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
@@ -134,6 +136,7 @@ function guardarPartida() {
 
     alert('¡Partida de Herrería agregada con éxito!');
 }
+
 </script>
 </body>
 </html>
