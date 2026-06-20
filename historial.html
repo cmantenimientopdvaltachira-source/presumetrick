@@ -34,12 +34,15 @@
             let htmlContenido = '';
             let granTotal = 0;
 
-                        presupuesto.forEach((partida, index) => {
+                            presupuesto.forEach((partida, index) => {
                 granTotal += partida.totalUSD;
                 
-                // Aplicamos la lógica para capturar el nombre del servicio correctamente
-                // Si 'servicio' existe lo usa, si no, busca en 'trabajo'.
+                // Lógica mejorada: 
+                // 1. Busca el nombre del trabajo/servicio
                 const nombreServicio = partida.servicio || partida.trabajo || "Sin descripción";
+                
+                // 2. Captura la unidad con seguridad (si está vacía, no muestra nada)
+                const unidadTexto = partida.unidad ? ` ${partida.unidad}` : '';
 
                 htmlContenido += `
                     <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
@@ -48,10 +51,11 @@
                             <span class="text-white font-bold">$${(partida.totalUSD || 0).toFixed(2)}</span>
                         </div>
                         <p class="text-sm">${nombreServicio}</p>
-                        <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad || 0} ${partida.unidad || ''} | Precio Unitario: $${(partida.precioUnitario || 0).toFixed(2)}</p>
+                        <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad || 0}${unidadTexto} | Precio Unitario: $${(partida.precioUnitario || 0).toFixed(2)}</p>
                     </div>
                 `;
             });
+        
 
 
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
