@@ -128,20 +128,20 @@
     if (!uni) return ''; // Si está vacío, no devolvemos nada
     const u = uni.toLowerCase().trim();
     
-    // Si coincide con algo, devolvemos la versión estandarizada
-    if (u.includes('glob')) return 'Global';
-    if (u.includes('m2') || u.includes('cuad')) return 'M2';
-    if (u.includes('m3') || u.includes('cubi')) return 'M3';
-    if (u.includes('lineal') || u.includes('ml')) return 'ML';
-    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'Metros';
-    if (u.includes('pto') || u.includes('pun')) return 'Pto';
-    if (u.includes('und') || u.includes('uni')) return 'Unid';
-    if (u.includes('kg') || u.includes('kil')) return 'KG';
+        // Si coincide con algo, devolvemos la versión estandarizada en minúsculas
+    if (u.includes('glob')) return 'global';
+    if (u.includes('m2') || u.includes('cuad')) return 'm2';
+    if (u.includes('m3') || u.includes('cubi')) return 'm3';
+    if (u.includes('lineal') || u.includes('ml')) return 'ml';
+    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'mts';
+    if (u.includes('pto') || u.includes('pun')) return 'pto';
+    if (u.includes('und') || u.includes('uni')) return 'und';
+    if (u.includes('kg') || u.includes('kil')) return 'kg';
     
-    // CAMBIO IMPORTANTE: Si no coincide con nada de lo anterior,
-    // devolvemos el texto original en lugar de "Global"
-    return uni; 
+    // Si no coincide con nada, devolvemos el texto original en minúsculas
+    return u; 
 }
+
 
 
         function enviarWhatsApp() {
