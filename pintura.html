@@ -102,6 +102,7 @@ function guardarPartida() {
     const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
     const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
     const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
+    const unidadSeleccionada = document.getElementById('unidad-select').value; // Capturamos la unidad
 
     if (cantidad <= 0 || precioUnitario <= 0) {
         alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
@@ -114,6 +115,7 @@ function guardarPartida() {
         especificaciones: 'N/A',
         servicio: tipoTrabajo,
         cantidad: cantidad,
+        unidad: unidadSeleccionada, // Guardamos la unidad
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
@@ -127,6 +129,7 @@ function guardarPartida() {
 
     alert('¡Partida de Pintura agregada con éxito!');
 }
+
 </script>
 </body>
 </html>
