@@ -261,7 +261,8 @@ doc.text(servicioLines, 15, y);
 y += (servicioLines.length * 5) + 2;
 
 // 4. CANTIDAD Y PRECIO
-doc.text("Cantidad: " + p.cantidad + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
+doc.text("Cantidad: " + p.cantidad + " " + (p.unidad || "") + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
+
 doc.text("$" + p.totalUSD.toFixed(2), 170, y);
 y += 10; // Espacio final para la siguiente partida
 
