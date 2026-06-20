@@ -34,19 +34,25 @@
             let htmlContenido = '';
             let granTotal = 0;
 
-            presupuesto.forEach((partida, index) => {
+                        presupuesto.forEach((partida, index) => {
                 granTotal += partida.totalUSD;
+                
+                // Aplicamos la lógica para capturar el nombre del servicio correctamente
+                // Si 'servicio' existe lo usa, si no, busca en 'trabajo'.
+                const nombreServicio = partida.servicio || partida.trabajo || "Sin descripción";
+
                 htmlContenido += `
                     <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
                         <div class="flex justify-between items-center border-b border-gray-600 pb-2 mb-2">
-                            <span class="text-emerald-400 font-bold uppercase text-xs">${partida.modulo}</span>
-                            <span class="text-white font-bold">$${partida.totalUSD.toFixed(2)}</span>
+                            <span class="text-emerald-400 font-bold uppercase text-xs">${partida.modulo || 'SERVICIO'}</span>
+                            <span class="text-white font-bold">$${(partida.totalUSD || 0).toFixed(2)}</span>
                         </div>
-                        <p class="text-sm">${partida.trabajo}</p>
-                        <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad} | Precio Unitario: $${partida.precioUnitario.toFixed(2)}</p>
+                        <p class="text-sm">${nombreServicio}</p>
+                        <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad || 0} ${partida.unidad || ''} | Precio Unitario: $${(partida.precioUnitario || 0).toFixed(2)}</p>
                     </div>
                 `;
             });
+
 
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
