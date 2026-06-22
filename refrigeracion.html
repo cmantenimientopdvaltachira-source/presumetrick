@@ -118,28 +118,48 @@
     </nav>
 
 <script>
+<input type="number" id="cantidad-input" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all">
+
+<script>
 function guardarPartida() {
     const equipo = document.getElementById('equipo').value;
     const tipo = document.getElementById('tipoMantenimiento').value;
     const servicio = document.getElementById('servicio').value;
     const specs = document.getElementById('especificaciones').value;
-    const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+    
+    // Ahora leemos correctamente el id="cantidad-input"
+    const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
     const precioUnitario = parseFloat(document.getElementById('precio').value) || 0;
 
     if (cantidad <= 0 || precioUnitario <= 0) {
-        alert('Por favor, ingresa cantidad y precio unitario válidos.');
+        alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
         return;
     }
 
-            const nuevaPartida = {
+    const nuevaPartida = {
         modulo: 'REFRIGERACIÓN',
         equipo: equipo,
         especificaciones: specs,
         servicio: servicio,
         cantidad: cantidad,
+        unidad: 'und', // Se agrega para que unidadLinter lo procese
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
+
+    let presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
+    presupuesto.push(nuevaPartida);
+    localStorage.setItem('presupuestoActual', JSON.stringify(presupuesto));
+
+    // Limpieza de campos
+    document.getElementById('cantidad-input').value = "";
+    document.getElementById('precio').value = "";
+    document.getElementById('especificaciones').value = "";
+
+    alert('¡Partida de Refrigeración agregada con éxito!');
+}
+</script>
+
 
 
 
