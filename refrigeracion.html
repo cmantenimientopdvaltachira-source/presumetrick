@@ -51,17 +51,9 @@
             </div>
 
             <div class="space-y-1.5">
-                <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Mantenimiento</label>
-                <select id="tipoMantenimiento" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-                    <option>Preventivo</option>
-                    <option>Correctivo</option>
-                </select>
-            </div>
-
-            <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Servicio / Acción</label>
                 <select id="servicio" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200">
-                    <option value="Inspección, limpieza, medición y ajuste integral del sistema de refrigeración (Mtto. Preventivo)">Inspección, limpieza, medición y ajuste integral del sistema de refrigeración (Mtto. Preventivo)</option>
+                    <option value="Inspección, limpieza, medición y ajuste integral del sistema de refrigeración">Inspección, limpieza, medición y ajuste integral del sistema de refrigeración</option>
                     <option value="Reparación de fugas, sustitución de componentes, barrido con nitrógeno y carga de gas">Reparación de fugas, sustitución de componentes, barrido con nitrógeno y carga de gas</option>
                     <option value="Cambio de compresor, sustitución de componentes, barrido y carga de gas">Cambio de compresor, sustitución de componentes, barrido y carga de gas</option>
                     <option value="Reparación de fallas eléctricas y electrónicas">Reparación de fallas eléctricas y electrónicas</option>
@@ -117,7 +109,6 @@
     <script>
         function guardarPartida() {
             const equipo = document.getElementById('equipo').value;
-            const tipo = document.getElementById('tipoMantenimiento').value;
             const servicio = document.getElementById('servicio').value;
             const specs = document.getElementById('especificaciones').value;
             
@@ -153,6 +144,7 @@
     </script>
 </body>
 </html>
+
 
 
 
