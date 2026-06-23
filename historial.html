@@ -52,14 +52,15 @@
                 `;
             });
 
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const nombreTasa = localStorage.getItem('nombreTasa') || 'Tasa BCV';
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             let bloqueTotalesHtml = '';
 
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
-                const totalBs = granTotalConImpuesto * tasaBCV;
+                const totalBs = granTotalConImpuesto * tasaValor;
 
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5 text-right">
@@ -69,12 +70,12 @@
                         <div class="border-t border-emerald-500/40 my-1"></div>
                         <div class="text-base font-black text-white flex justify-between items-center"><span>TOTAL GENERAL:</span> <span class="text-xl">$${granTotalConImpuesto.toFixed(2)} USD</span></div>
                         <div class="text-xs font-bold text-emerald-100 text-right pt-1">
-                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                            Equivalente ${nombreTasa}: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                     </div>
                 `;
             } else {
-                const totalBs = granTotal * tasaBCV;
+                const totalBs = granTotal * tasaValor;
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5">
                         <div class="flex justify-between items-center text-white">
@@ -82,7 +83,7 @@
                             <span class="font-bold text-xl">$${granTotal.toFixed(2)} USD</span>
                         </div>
                         <div class="text-emerald-100 text-xs border-t border-emerald-500/40 pt-2 text-right font-bold">
-                            Equivalente BCV: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                            Equivalente ${nombreTasa}: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                         </div>
                     </div>
                 `;
@@ -135,7 +136,8 @@
                 return;
             }
             const observaciones = document.getElementById('observacionesGenerales').value;
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const nombreTasa = localStorage.getItem('nombreTasa') || 'Tasa BCV';
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
             let mensaje = "*PRESUPUESTO FORMAL*\n";
@@ -169,18 +171,17 @@
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
-                const totalBs = granTotalConImpuesto * tasaBCV;
+                const totalBs = granTotalConImpuesto * tasaValor;
                 mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
                 mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
                 mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
-                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                mensaje += `*Equivalente ${nombreTasa}:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
             } else {
-                const totalBs = granTotal * tasaBCV;
+                const totalBs = granTotal * tasaValor;
                 mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
-                mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                mensaje += `*Equivalente ${nombreTasa}:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
             }
             
-            // Nota general sin guiones bajos
             if (observaciones && observaciones.trim() !== "") {
                 mensaje += "\n*Nota General:*\n" + observaciones + "\n";
             }
@@ -194,12 +195,18 @@
             const doc = new jsPDF();
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             const observaciones = document.getElementById('observacionesGenerales').value;
+            
             const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
+            const paisUsuario = localStorage.getItem('paisUsuario') || 'VE';
             const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
-            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
+            const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "";
             const telefonoEmpresa = localStorage.getItem('telefonoWhatsApp') || ""; 
-            const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 0;
+            const nombreTasa = localStorage.getItem('nombreTasa') || "Tasa";
             const logoBase64 = localStorage.getItem('logoEmpresa');
+
+            const configuracionPaises = { 'VE': 'RIF', 'CO': 'NIT', 'PE': 'RUC', 'AR': 'CUIT / CUIL', 'EC': 'RUC', 'PA': 'RUC', 'CL': 'RUT', 'MX': 'RFC', 'BO': 'NIT', 'PY': 'RUC' };
+            const labelIdentificacion = configuracionPaises[paisUsuario] || 'ID';
 
             if (presupuesto.length === 0) { alert("No hay partidas para generar el PDF"); return; }
             const cliente = prompt("Nombre del cliente:");
@@ -212,7 +219,7 @@
             doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
             doc.setFont("helvetica", "normal"); doc.setFontSize(9);
             doc.text("Dirección: " + direccionEmpresa, 45, 28); 
-            doc.text("RIF: " + rifEmpresa, 45, 33);             
+            doc.text(labelIdentificacion + ": " + rifEmpresa, 45, 33);             
             if (telefonoEmpresa) { doc.text("Teléfono: " + telefonoEmpresa, 45, 38); }
             doc.line(15, 48, 195, 48);
 
@@ -261,16 +268,17 @@
             if (y > 240) { doc.addPage(); y = 20; }
             y += 2; doc.line(15, y, 195, y); y += 10; 
             doc.setFont("helvetica", "bold");
+            
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
                 doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
                 doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y); y += 6;
                 doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`Equivalente BCV: Bs. ${(granTotalConImpuesto * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+                doc.text(`Equivalente ${nombreTasa}: ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             } else {
                 doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`Equivalente BCV: Bs. ${(subtotalUSD * tasaBCV).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+                doc.text(`Equivalente ${nombreTasa}: ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
             }
 
             if (observaciones && observaciones.trim() !== "") {
@@ -286,6 +294,7 @@
     </script>
 </body>
 </html>
+
 
 
 
