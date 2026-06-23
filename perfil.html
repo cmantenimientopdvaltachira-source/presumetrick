@@ -31,21 +31,24 @@
         </div>
 
         <div class="space-y-4">
-            <!-- PAÍS -->
+            <!-- SELECTOR DE PAÍS (Menú Desplegable con 10 países) -->
             <div>
-                <label class="block text-xs font-bold text-gray-400 mb-2">País</label>
-                <div class="grid grid-cols-2 gap-2" id="gridPaises">
-                    <button type="button" onclick="seleccionarPais('VE', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Venezuela</button>
-                    <button type="button" onclick="seleccionarPais('CO', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Colombia</button>
-                    <button type="button" onclick="seleccionarPais('PE', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Perú</button>
-                    <button type="button" onclick="seleccionarPais('AR', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Argentina</button>
-                    <button type="button" onclick="seleccionarPais('EC', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Ecuador</button>
-                    <button type="button" onclick="seleccionarPais('PA', this)" class="pais-btn bg-gray-700 p-2 rounded-lg text-xs font-bold border border-gray-600 transition-all">Panamá</button>
-                </div>
-                <input type="hidden" id="paisUsuario" value="VE">
+                <label class="block text-xs font-bold text-gray-400 mb-1">País</label>
+                <select id="paisUsuario" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    <option value="VE">Venezuela</option>
+                    <option value="CO">Colombia</option>
+                    <option value="PE">Perú</option>
+                    <option value="AR">Argentina</option>
+                    <option value="EC">Ecuador</option>
+                    <option value="PA">Panamá</option>
+                    <option value="CL">Chile</option>
+                    <option value="MX">México</option>
+                    <option value="BO">Bolivia</option>
+                    <option value="PY">Paraguay</option>
+                </select>
             </div>
 
-            <!-- TASA -->
+            <!-- DATOS EMPRESA -->
             <div>
                 <label class="block text-xs font-bold text-gray-400 mb-1">Nombre de la Tasa de Cambio</label>
                 <input type="text" id="nombreTasa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
@@ -56,9 +59,9 @@
                 <input type="text" id="nombreEmpresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
 
-            <!-- IDENTIFICACIÓN -->
+            <!-- IDENTIFICACIÓN FISCAL (Dinamizada) -->
             <div>
-                <label id="labelIdentificacion" class="block text-xs font-bold text-gray-400 mb-1">Identificación Fiscal</label>
+                <label id="labelIdentificacion" class="block text-xs font-bold text-gray-400 mb-1">RIF</label>
                 <input type="text" id="rifEmpresa" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-sm focus:outline-none focus:border-emerald-500">
             </div>
 
@@ -90,40 +93,28 @@
 
     <script>
         const configuracionPaises = {
-            'VE': { nombre: 'Venezuela', etiqueta: 'RIF' },
-            'CO': { nombre: 'Colombia', etiqueta: 'NIT' },
-            'PE': { nombre: 'Perú', etiqueta: 'RUC' },
-            'AR': { nombre: 'Argentina', etiqueta: 'CUIT / CUIL' },
-            'EC': { nombre: 'Ecuador', etiqueta: 'RUC' },
-            'PA': { nombre: 'Panamá', etiqueta: 'RUC' }
+            'VE': 'RIF',
+            'CO': 'NIT',
+            'PE': 'RUC',
+            'AR': 'CUIT / CUIL',
+            'EC': 'RUC',
+            'PA': 'RUC',
+            'CL': 'RUT',
+            'MX': 'RFC',
+            'BO': 'NIT',
+            'PY': 'RUC'
         };
 
-        function seleccionarPais(pais, btn) {
-            document.getElementById('paisUsuario').value = pais;
-            document.querySelectorAll('.pais-btn').forEach(b => {
-                b.classList.remove('bg-emerald-600', 'border-emerald-500', 'text-white');
-                b.classList.add('bg-gray-700');
-            });
-            btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white');
-            document.getElementById('labelIdentificacion').innerText = configuracionPaises[pais].etiqueta;
-        }
+        // Actualizar etiqueta al cambiar país
+        document.getElementById('paisUsuario').addEventListener('change', function() {
+            document.getElementById('labelIdentificacion').innerText = configuracionPaises[this.value];
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             const paisGuardado = localStorage.getItem('paisUsuario') || 'VE';
-            const botones = document.querySelectorAll('.pais-btn');
-            
-            // Cargar estado inicial
             document.getElementById('paisUsuario').value = paisGuardado;
-            document.getElementById('labelIdentificacion').innerText = configuracionPaises[paisGuardado].etiqueta;
+            document.getElementById('labelIdentificacion').innerText = configuracionPaises[paisGuardado];
             
-            botones.forEach(btn => {
-                if(btn.innerText.toUpperCase() === configuracionPaises[paisGuardado].nombre.toUpperCase()) {
-                    btn.classList.add('bg-emerald-600', 'border-emerald-500', 'text-white');
-                    btn.classList.remove('bg-gray-700');
-                }
-            });
-
-            // Cargar resto de campos
             document.getElementById('nombreTasa').value = localStorage.getItem('nombreTasa') || 'Tasa BCV';
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
@@ -145,7 +136,7 @@
             localStorage.setItem('porcentajeImpuesto', document.getElementById('porcentajeImpuesto').value);
             localStorage.setItem('telefonoWhatsApp', document.getElementById('telefonoWhatsApp').value);
             localStorage.setItem('direccionEmpresa', document.getElementById('direccionEmpresa').value);
-            alert("Configuración guardada correctamente");
+            alert("Configuración internacionalizada guardada con éxito");
             window.location.href = 'index.html';
         }
 
@@ -160,6 +151,7 @@
     </script>
 </body>
 </html>
+
 
 
 
