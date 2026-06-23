@@ -33,36 +33,27 @@
 
             let htmlContenido = '';
             let granTotal = 0;
-
                             
-        presupuesto.forEach((partida, index) => {
-    granTotal += partida.totalUSD;
-    
-    const nombreServicio = partida.servicio || partida.trabajo || "Sin descripción";
-    
-    // AQUÍ ESTÁ EL TRUCO: Buscamos en todas las formas posibles que pudo haberse guardado
-    const unidadReal = partida.unidad || partida.unit || partida.unidadMedida || '';
-    
-    // Aplicamos el "linter" que ya tienes definido para limpiar el texto
-    const unidadLimpia = unidadLinter(unidadReal);
+            presupuesto.forEach((partida, index) => {
+                granTotal += partida.totalUSD;
+                const nombreServicio = partida.servicio || partida.trabajo || "Sin descripción";
+                const unidadReal = partida.unidad || partida.unit || partida.unidadMedida || '';
+                const unidadLimpia = unidadLinter(unidadReal);
 
-    htmlContenido += `
-        <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
-            <div class="flex justify-between items-center border-b border-gray-600 pb-2 mb-2">
-                <span class="text-emerald-400 font-bold uppercase text-xs">${partida.modulo || 'SERVICIO'}</span>
-                <span class="text-white font-bold">$${(partida.totalUSD || 0).toFixed(2)}</span>
-            </div>
-            <p class="text-sm">${nombreServicio}</p>
-            <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad || 0} ${unidadLimpia} | Precio Unitario: $${(partida.precioUnitario || 0).toFixed(2)}</p>
-        </div>
-    `;
-});
-
-
+                htmlContenido += `
+                    <div class="bg-[#1F2937] p-4 rounded-lg border border-gray-700">
+                        <div class="flex justify-between items-center border-b border-gray-600 pb-2 mb-2">
+                            <span class="text-emerald-400 font-bold uppercase text-xs">${partida.modulo || 'SERVICIO'}</span>
+                            <span class="text-white font-bold">$${(partida.totalUSD || 0).toFixed(2)}</span>
+                        </div>
+                        <p class="text-sm">${nombreServicio}</p>
+                        <p class="text-xs text-gray-400 mt-1">Cant: ${partida.cantidad || 0} ${unidadLimpia} | Precio Unitario: $${(partida.precioUnitario || 0).toFixed(2)}</p>
+                    </div>
+                `;
+            });
 
             const tasaBCV = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-
             let bloqueTotalesHtml = '';
 
             if (porcentajeImpuesto > 0) {
@@ -84,7 +75,6 @@
                 `;
             } else {
                 const totalBs = granTotal * tasaBCV;
-
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5">
                         <div class="flex justify-between items-center text-white">
@@ -125,24 +115,18 @@
         }
 
         function unidadLinter(uni) {
-    if (!uni) return ''; // Si está vacío, no devolvemos nada
-    const u = uni.toLowerCase().trim();
-    
-        // Si coincide con algo, devolvemos la versión estandarizada en minúsculas
-    if (u.includes('glob')) return 'global';
-    if (u.includes('m2') || u.includes('cuad')) return 'm2';
-    if (u.includes('m3') || u.includes('cubi')) return 'm3';
-    if (u.includes('lineal') || u.includes('ml')) return 'ml';
-    if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'mts';
-    if (u.includes('pto') || u.includes('pun')) return 'pto';
-    if (u.includes('und') || u.includes('uni')) return 'und';
-    if (u.includes('kg') || u.includes('kil')) return 'kg';
-    
-    // Si no coincide con nada, devolvemos el texto original en minúsculas
-    return u; 
-}
-
-
+            if (!uni) return ''; 
+            const u = uni.toLowerCase().trim();
+            if (u.includes('glob')) return 'global';
+            if (u.includes('m2') || u.includes('cuad')) return 'm2';
+            if (u.includes('m3') || u.includes('cubi')) return 'm3';
+            if (u.includes('lineal') || u.includes('ml')) return 'ml';
+            if (u.includes('ptr') || u.includes('mtr') || u.includes('met')) return 'mts';
+            if (u.includes('pto') || u.includes('pun')) return 'pto';
+            if (u.includes('und') || u.includes('uni')) return 'und';
+            if (u.includes('kg') || u.includes('kil')) return 'kg';
+            return u; 
+        }
 
         function enviarWhatsApp() {
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
@@ -159,14 +143,18 @@
             
             let granTotal = 0;
             presupuesto.forEach(p => {
-                const nombreLimpio = p.trabajo || '';
+                const nombreServicio = p.servicio || p.trabajo || "Sin descripción";
+                const infoExtra = (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') ? ` (${p.equipo})` : "";
+                const especificacion = (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') ? ` - ${p.especificaciones}` : "";
+                
                 const unidadVisual = unidadLinter((p.unidad || ''));
-                let etiquetaPrecio = (unidadVisual === 'Global') ? 'Precio Global' : 'Precio Unitario';
+                let etiquetaPrecio = (unidadVisual === 'global') ? 'Precio Global' : 'Precio Unitario';
+                
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
-                mensaje += `_${nombreLimpio}_\n`; 
-                mensaje += ` Cantidad: ${p.cantidad} ${unidadVisual}\n`;
-                mensaje += ` ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
-                mensaje += ` Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
+                mensaje += `_${nombreServicio}${infoExtra}${especificacion}_\n`; 
+                mensaje += `✅ Cantidad: ${p.cantidad} ${unidadVisual}\n`;
+                mensaje += `💵 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
+                mensaje += `💰 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
                 granTotal += p.totalUSD;
             });
 
@@ -196,10 +184,8 @@
         function generarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
             const observaciones = document.getElementById('observacionesGenerales').value;
-            
             const nombreEmpresa = localStorage.getItem('nombreEmpresa') || "Profesional";
             const rifEmpresa = localStorage.getItem('rifEmpresa') || "";
             const direccionEmpresa = localStorage.getItem('direccionEmpresa') || "San Cristóbal, Táchira";
@@ -235,61 +221,38 @@
             let ultimoModulo = ""; 
             let subtotalUSD = 0;
 
-
-                        presupuesto.forEach((p) => {
+            presupuesto.forEach((p) => {
                 if (y > 250) { doc.addPage(); y = 20; }
-
-                // --- INICIO DEL BLOQUE DE IMPRESIÓN MEJORADO ---
-
-// 1. TÍTULO DEL MÓDULO (Solo si es un módulo nuevo)
-if (p.modulo !== ultimoModulo) {
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.text(p.modulo.toUpperCase(), 15, y);
-    y += 7; 
-    ultimoModulo = p.modulo;
-}
-
-
-// 2. EQUIPO + ESPECIFICACIONES (Solo se muestra si tienen datos reales)
-if (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') {
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
-    
-    // Si además hay especificaciones, las unimos con un guion
-    let textoInfo = p.equipo;
-    if (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') {
-        textoInfo += " - " + p.especificaciones;
-    }
-    
-    doc.text(textoInfo, 15, y);
-    y += 5; // Ajuste de espacio vertical solo si se imprimió esta línea
-}
-
-// 3. SERVICIO / ACCIÓN (Siempre se muestra)
-doc.setFont("helvetica", "normal");
-const servicioLines = doc.splitTextToSize(p.servicio || '', 140);
-doc.text(servicioLines, 15, y);
-y += (servicioLines.length * 5) + 2;
-
-// 4. CANTIDAD Y PRECIO
-doc.text("Cantidad: " + p.cantidad + " " + (p.unidad || "") + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
-
-doc.text("$" + p.totalUSD.toFixed(2), 170, y);
-y += 10; // Espacio final para la siguiente partida
-
-// ESTA LÍNEA ES LA QUE SUMA EL TOTAL AL SUBTOTAL FINAL
-subtotalUSD += p.totalUSD; 
-
-}); // Fin del forEach
-
-
-
+                if (p.modulo !== ultimoModulo) {
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(10);
+                    doc.text(p.modulo.toUpperCase(), 15, y);
+                    y += 7; 
+                    ultimoModulo = p.modulo;
+                }
+                if (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') {
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(10);
+                    let textoInfo = p.equipo;
+                    if (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') {
+                        textoInfo += " - " + p.especificaciones;
+                    }
+                    doc.text(textoInfo, 15, y);
+                    y += 5;
+                }
+                doc.setFont("helvetica", "normal");
+                const servicioLines = doc.splitTextToSize(p.servicio || '', 140);
+                doc.text(servicioLines, 15, y);
+                y += (servicioLines.length * 5) + 2;
+                doc.text("Cantidad: " + p.cantidad + " " + (p.unidad || "") + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
+                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                y += 10;
+                subtotalUSD += p.totalUSD; 
+            });
 
             if (y > 240) { doc.addPage(); y = 20; }
             y += 2; doc.line(15, y, 195, y); y += 10; 
             doc.setFont("helvetica", "bold");
-
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
@@ -315,6 +278,7 @@ subtotalUSD += p.totalUSD;
     </script>
 </body>
 </html>
+
 
 
 
