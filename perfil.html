@@ -71,10 +71,6 @@
                     <label id="labelIdentificacion" class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">RIF</label>
                     <input type="text" id="rifEmpresa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Nombre de la Tasa</label>
-                    <input type="text" id="nombreTasa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
-                </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Valor Tasa</label>
@@ -95,22 +91,26 @@
 
     <script>
         const configuracionPaises = { 
-            'VE': { id: 'RIF', tasa: 'Tasa BCV' }, 
-            'CO': { id: 'NIT', tasa: 'TRM' }, 
-            'PE': { id: 'RUC', tasa: 'Tasa SBS' }, 
-            'AR': { id: 'CUIT / CUIL', tasa: 'Dólar Oficial' }, 
-            'EC': { id: 'RUC', tasa: 'Tasa de Cambio' }, 
-            'PA': { id: 'RUC', tasa: 'Tasa Local' }, 
-            'CL': { id: 'RUT', tasa: 'Dólar Observado' }, 
-            'MX': { id: 'RFC', tasa: 'Tipo de Cambio Diario' }, 
-            'BO': { id: 'NIT', tasa: 'Tasa BCB' }, 
-            'PY': { id: 'RUC', tasa: 'Tasa BCP' } 
+            'VE': { id: 'RIF', tasaLabel: 'Equivalente a BCV' }, 
+            'CO': { id: 'NIT', tasaLabel: 'Equivalente a TRM' }, 
+            'PE': { id: 'RUC', tasaLabel: 'Equivalente a Tasa SBS' }, 
+            'AR': { id: 'CUIT / CUIL', tasaLabel: 'Equivalente a Dólar Oficial' }, 
+            'EC': { id: 'RUC', tasaLabel: 'Equivalente a Tasa de Cambio' }, 
+            'PA': { id: 'RUC', tasaLabel: 'Equivalente a Tasa Local' }, 
+            'CL': { id: 'RUT', tasaLabel: 'Equivalente a Dólar Observado' }, 
+            'MX': { id: 'RFC', tasaLabel: 'Equivalente a Tasa Diario' }, 
+            'BO': { id: 'NIT', tasaLabel: 'Equivalente a Tasa BCB' }, 
+            'PY': { id: 'RUC', tasaLabel: 'Equivalente a Tasa BCP' } 
         };
+
+        // Función para obtener la etiqueta automática
+        function getEtiquetaTasa(paisCode) {
+            return configuracionPaises[paisCode]?.tasaLabel || 'Equivalente a Tasa';
+        }
 
         document.getElementById('paisUsuario').addEventListener('change', function() {
             const config = configuracionPaises[this.value];
             document.getElementById('labelIdentificacion').innerText = config.id;
-            document.getElementById('nombreTasa').placeholder = config.tasa;
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -119,9 +119,7 @@
             
             document.getElementById('paisUsuario').value = paisGuardado;
             document.getElementById('labelIdentificacion').innerText = config.id;
-            document.getElementById('nombreTasa').placeholder = config.tasa;
             
-            document.getElementById('nombreTasa').value = localStorage.getItem('nombreTasa') || '';
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
             document.getElementById('tasaBCV').value = localStorage.getItem('tasaBCV') || '';
@@ -135,7 +133,6 @@
 
         function guardarConfiguracion() {
             localStorage.setItem('paisUsuario', document.getElementById('paisUsuario').value);
-            localStorage.setItem('nombreTasa', document.getElementById('nombreTasa').value);
             localStorage.setItem('nombreEmpresa', document.getElementById('nombreEmpresa').value);
             localStorage.setItem('rifEmpresa', document.getElementById('rifEmpresa').value);
             localStorage.setItem('tasaBCV', document.getElementById('tasaBCV').value);
@@ -157,6 +154,7 @@
     </script>
 </body>
 </html>
+
 
 
 
