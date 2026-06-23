@@ -151,7 +151,7 @@
                 let etiquetaPrecio = (unidadVisual === 'global') ? 'Precio Global' : 'Precio Unitario';
                 
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
-                mensaje += `_${nombreServicio}${infoExtra}${especificacion}_\n`; 
+                mensaje += `${nombreServicio}${infoExtra}${especificacion}\n`; 
                 mensaje += `✅ Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `💵 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
                 mensaje += `💰 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
