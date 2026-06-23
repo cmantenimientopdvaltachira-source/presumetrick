@@ -144,14 +144,21 @@
             let granTotal = 0;
             presupuesto.forEach(p => {
                 const nombreServicio = p.servicio || p.trabajo || "Sin descripción";
-                const infoExtra = (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') ? ` (${p.equipo})` : "";
+                const infoExtra = (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') ? `${p.equipo}` : "";
                 const especificacion = (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') ? ` - ${p.especificaciones}` : "";
                 
                 const unidadVisual = unidadLinter((p.unidad || ''));
                 let etiquetaPrecio = (unidadVisual === 'global') ? 'Precio Global' : 'Precio Unitario';
                 
                 mensaje += `*• ${(p.modulo || 'SERVICIO').toUpperCase()}:*\n`;
-                mensaje += `${nombreServicio}${infoExtra}${especificacion}\n`; 
+                
+                if (infoExtra !== "") {
+                    mensaje += `${infoExtra}${especificacion}\n`;
+                    mensaje += `${nombreServicio}\n`;
+                } else {
+                    mensaje += `${nombreServicio}\n`;
+                }
+                
                 mensaje += `✅ Cantidad: ${p.cantidad} ${unidadVisual}\n`;
                 mensaje += `💵 ${etiquetaPrecio}: $${parseFloat(p.precioUnitario).toFixed(2)}\n`;
                 mensaje += `💰 Subtotal: $${parseFloat(p.totalUSD).toFixed(2)}\n\n`;
@@ -173,10 +180,11 @@
                 mensaje += `*Equivalente BCV:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
             }
             
+            // Nota general sin guiones bajos
             if (observaciones && observaciones.trim() !== "") {
-                mensaje += "\n*Nota General:*\n_" + observaciones + "_\n";
+                mensaje += "\n*Nota General:*\n" + observaciones + "\n";
             }
-            mensaje += "\n_Generado por PresuMetrick._";
+            mensaje += "\nGenerado por PresuMetrick.";
             const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(link, '_blank');
         }
@@ -278,6 +286,7 @@
     </script>
 </body>
 </html>
+
 
 
 
