@@ -208,7 +208,7 @@
             window.open(link, '_blank');
         }
 
-        function generarPDF() {
+                function generarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
@@ -222,9 +222,7 @@
             const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 0;
             const logoBase64 = localStorage.getItem('logoEmpresa');
 
-            // AUTOMATIZACIÓN DE ETIQUETAS
-            const etiquetaTasa = configuracionPaises[paisUsuario]?.tasaLabel || 'Equivalente a Tasa';
-            const labelIdentificacion = configuracionPaises[paisUsuario]?.id || 'ID';
+            const cfg = configuracionPaises[paisUsuario] || { id: 'ID', tasaLabel: 'Tasa', mon: 'Local' };
 
             if (presupuesto.length === 0) { alert("No hay partidas para generar el PDF"); return; }
             const cliente = prompt("Nombre del cliente:");
@@ -237,7 +235,7 @@
             doc.setFontSize(16); doc.setFont("helvetica", "bold"); doc.text(nombreEmpresa.toUpperCase(), 45, 22); 
             doc.setFont("helvetica", "normal"); doc.setFontSize(9);
             doc.text("Dirección: " + direccionEmpresa, 45, 28); 
-            doc.text(labelIdentificacion + ": " + rifEmpresa, 45, 33);             
+            doc.text(cfg.id + ": " + rifEmpresa, 45, 33);             
             if (telefonoEmpresa) { doc.text("Teléfono: " + telefonoEmpresa, 45, 38); }
             doc.line(15, 48, 195, 48);
 
@@ -266,10 +264,7 @@
                 if (p.equipo && p.equipo !== 'N/A' && p.equipo !== '') {
                     doc.setFont("helvetica", "normal");
                     doc.setFontSize(10);
-                    let textoInfo = p.equipo;
-                    if (p.especificaciones && p.especificaciones !== 'N/A' && p.especificaciones !== '') {
-                        textoInfo += " - " + p.especificaciones;
-                    }
+                    let textoInfo = p.equipo + (p.especificaciones && p.especificaciones !== 'N/A' ? " - " + p.especificaciones : "");
                     doc.text(textoInfo, 15, y);
                     y += 5;
                 }
@@ -277,8 +272,8 @@
                 const servicioLines = doc.splitTextToSize(p.servicio || '', 140);
                 doc.text(servicioLines, 15, y);
                 y += (servicioLines.length * 5) + 2;
-                doc.text("Cantidad: " + p.cantidad + " " + (p.unidad || "") + " | Precio Unitario: $" + p.precioUnitario.toFixed(2), 15, y);
-                doc.text("$" + p.totalUSD.toFixed(2), 170, y);
+                doc.text("Cantidad: " + p.cantidad + " " + (p.unidad || "") + " | Precio Unitario: " + fmt(p.precioUnitario), 15, y);
+                doc.text(fmt(p.totalUSD), 170, y);
                 y += 10;
                 subtotalUSD += p.totalUSD; 
             });
@@ -290,13 +285,13 @@
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = subtotalUSD + montoImpuesto;
-                doc.text(`SUBTOTAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`IMPUESTO (${porcentajeImpuesto}%): $${montoImpuesto.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`TOTAL GENERAL: $${granTotalConImpuesto.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`${etiquetaTasa}: ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+                doc.text(`SUBTOTAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
+                doc.text(`IMPUESTO (${porcentajeImpuesto}%): ${fmt(montoImpuesto)}`, 120, y); y += 6;
+                doc.text(`TOTAL GENERAL: ${fmt(granTotalConImpuesto)}`, 120, y); y += 6;
+                doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
             } else {
-                doc.text(`TOTAL GENERAL: $${subtotalUSD.toFixed(2)} USD`, 120, y); y += 6;
-                doc.text(`${etiquetaTasa}: ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 120, y);
+                doc.text(`TOTAL GENERAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
+                doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
             }
 
             if (observaciones && observaciones.trim() !== "") {
@@ -309,6 +304,7 @@
             }
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
         }
+
     </script>
 </body>
 </html>
