@@ -46,8 +46,12 @@
                     <option>Instalación de Lavamanos / Fregadero</option>
                     <option>Montaje de Tuberías (PVC/PPR)</option>
                     <option>Mantenimiento de Tanque</option>
+                    <option>Instalación de Tanque de Agua</option>
                     <option>Instalación de Bomba de Agua</option>
                     <option>Revisión General de Instalaciones</option>
+                    <option>Cambio de Válvulas y Llaves de Paso</option>
+                    <option>Instalación de Calentador / Termotanque</option>
+                    <option>Prueba de Estanqueidad y Presión</option>
                 </select>
             </div>
 
@@ -63,6 +67,9 @@
                         <option>mts</option>
                         <option>pto</option>
                         <option>glob</option>
+                        <option>cm</option>
+                        <option>kg</option>
+                        <option>lts</option>
                     </select>
                 </div>
             </div>
@@ -103,7 +110,7 @@ function guardarPartida() {
     const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
     const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
     const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
-    const unidadSeleccionada = document.getElementById('unidad-select').value; // Nueva línea
+    const unidadSeleccionada = document.getElementById('unidad-select').value;
 
     if (cantidad <= 0 || precioUnitario <= 0) {
         alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
@@ -116,7 +123,7 @@ function guardarPartida() {
         especificaciones: 'N/A',
         servicio: tipoTrabajo,
         cantidad: cantidad,
-        unidad: unidadSeleccionada, // Nueva línea
+        unidad: unidadSeleccionada,
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
@@ -130,10 +137,10 @@ function guardarPartida() {
 
     alert('¡Partida de Plomería agregada con éxito!');
 }
-
 </script>
 </body>
 </html>
+
 
 
 
