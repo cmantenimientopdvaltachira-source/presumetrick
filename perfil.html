@@ -10,7 +10,7 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen">
 
     <div class="p-4 max-w-md mx-auto w-full pb-24">
-        <!-- Botón Volver estilizado como los otros módulos -->
+        <!-- Botón Volver -->
         <a href="index.html" class="flex items-center text-slate-400 hover:text-amber-500 transition-colors mb-6">
             <i class="fa-solid fa-arrow-left mr-2"></i> Volver
         </a>
@@ -94,18 +94,34 @@
     </div>
 
     <script>
-        const configuracionPaises = { 'VE': 'RIF', 'CO': 'NIT', 'PE': 'RUC', 'AR': 'CUIT / CUIL', 'EC': 'RUC', 'PA': 'RUC', 'CL': 'RUT', 'MX': 'RFC', 'BO': 'NIT', 'PY': 'RUC' };
+        const configuracionPaises = { 
+            'VE': { id: 'RIF', tasa: 'Tasa BCV' }, 
+            'CO': { id: 'NIT', tasa: 'TRM' }, 
+            'PE': { id: 'RUC', tasa: 'Tasa SBS' }, 
+            'AR': { id: 'CUIT / CUIL', tasa: 'Dólar Oficial' }, 
+            'EC': { id: 'RUC', tasa: 'Tasa de Cambio' }, 
+            'PA': { id: 'RUC', tasa: 'Tasa Local' }, 
+            'CL': { id: 'RUT', tasa: 'Dólar Observado' }, 
+            'MX': { id: 'RFC', tasa: 'Tipo de Cambio Diario' }, 
+            'BO': { id: 'NIT', tasa: 'Tasa BCB' }, 
+            'PY': { id: 'RUC', tasa: 'Tasa BCP' } 
+        };
 
         document.getElementById('paisUsuario').addEventListener('change', function() {
-            document.getElementById('labelIdentificacion').innerText = configuracionPaises[this.value];
+            const config = configuracionPaises[this.value];
+            document.getElementById('labelIdentificacion').innerText = config.id;
+            document.getElementById('nombreTasa').placeholder = config.tasa;
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             const paisGuardado = localStorage.getItem('paisUsuario') || 'VE';
-            document.getElementById('paisUsuario').value = paisGuardado;
-            document.getElementById('labelIdentificacion').innerText = configuracionPaises[paisGuardado];
+            const config = configuracionPaises[paisGuardado];
             
-            document.getElementById('nombreTasa').value = localStorage.getItem('nombreTasa') || 'Tasa BCV';
+            document.getElementById('paisUsuario').value = paisGuardado;
+            document.getElementById('labelIdentificacion').innerText = config.id;
+            document.getElementById('nombreTasa').placeholder = config.tasa;
+            
+            document.getElementById('nombreTasa').value = localStorage.getItem('nombreTasa') || '';
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
             document.getElementById('tasaBCV').value = localStorage.getItem('tasaBCV') || '';
@@ -141,6 +157,7 @@
     </script>
 </body>
 </html>
+
 
 
 
