@@ -4,85 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Configuración</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Configuración - PresuMetrick</title>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-slate-900 text-slate-100 min-h-screen">
 
-    <div class="bg-gray-900 p-6 min-h-screen">
-        <!-- Botón Volver ajustado -->
-        <a href="index.html" class="flex items-center text-gray-300 hover:text-emerald-500 mb-6 transition-colors text-lg font-bold">
-            <span class="mr-2 text-2xl">←</span> Volver
+    <div class="p-4 max-w-md mx-auto w-full pb-24">
+        <!-- Botón Volver estilizado como los otros módulos -->
+        <a href="index.html" class="flex items-center text-slate-400 hover:text-amber-500 transition-colors mb-6">
+            <i class="fa-solid fa-arrow-left mr-2"></i> Volver
         </a>
         
-        <h2 class="text-2xl font-bold mb-8 text-emerald-500 text-center">Configuración</h2>
+        <h2 class="text-xl font-bold mb-6 text-amber-500 flex items-center">
+            <i class="fa-solid fa-gear mr-2"></i> Configuración
+        </h2>
 
         <!-- BLOQUE 1: INFORMACIÓN DE LA EMPRESA -->
-        <div class="mb-8 pb-6 border-b border-gray-700">
-            <h3 class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-5">Información de la Empresa</h3>
+        <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl mb-6">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 border-b border-slate-700 pb-2">Información de la Empresa</h3>
             
             <div class="flex flex-col items-center mb-6">
-                <div id="previewLogo" class="w-24 h-24 bg-gray-800 rounded-full mb-3 overflow-hidden border-2 border-emerald-500 flex items-center justify-center">
-                    <span class="text-xs text-gray-500">Logo</span>
+                <div id="previewLogo" class="w-24 h-24 bg-slate-900 rounded-full mb-3 overflow-hidden border-2 border-slate-700 flex items-center justify-center">
+                    <span class="text-xs text-slate-500">Logo</span>
                 </div>
-                <label for="inputLogo" class="cursor-pointer bg-gray-800 border border-gray-600 text-xs font-bold px-4 py-2 rounded-lg mt-2">CARGAR LOGOTIPO</label>
+                <label for="inputLogo" class="cursor-pointer bg-slate-900 border border-slate-700 text-xs font-bold px-4 py-2 rounded-xl mt-2 text-slate-300">CARGAR LOGOTIPO</label>
                 <input type="file" id="inputLogo" accept="image/*" onchange="cargarLogo(event)" class="hidden">
             </div>
 
-            <div class="space-y-5">
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Nombre de la Empresa</label>
-                    <input type="text" id="nombreEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Nombre de la Empresa</label>
+                    <input type="text" id="nombreEmpresa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Teléfono WhatsApp</label>
-                    <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Teléfono WhatsApp</label>
+                    <input type="text" id="telefonoWhatsApp" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
-                    <textarea id="direccionEmpresa" rows="2" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500"></textarea>
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Dirección</label>
+                    <textarea id="direccionEmpresa" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all"></textarea>
                 </div>
             </div>
         </div>
 
         <!-- BLOQUE 2: DATOS LEGALES Y FINANCIEROS -->
-        <div class="space-y-5 mb-10">
-            <h3 class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-2">Datos Legales y Financieros</h3>
-            <div>
-                <label class="block text-sm font-medium text-gray-400 mb-1">País</label>
-                <select id="paisUsuario" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
-                    <option value="AR">Argentina</option>
-                    <option value="BO">Bolivia</option>
-                    <option value="CL">Chile</option>
-                    <option value="CO">Colombia</option>
-                    <option value="EC">Ecuador</option>
-                    <option value="MX">México</option>
-                    <option value="PA">Panamá</option>
-                    <option value="PY">Paraguay</option>
-                    <option value="PE">Perú</option>
-                    <option value="VE">Venezuela</option>
-                </select>
-            </div>
-            <div>
-                <label id="labelIdentificacion" class="block text-sm font-medium text-gray-400 mb-1">RIF</label>
-                <input type="text" id="rifEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre de la Tasa</label>
-                <input type="text" id="nombreTasa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
-            </div>
-            <div class="grid grid-cols-2 gap-4">
+        <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl mb-6">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5 border-b border-slate-700 pb-2">Datos Legales y Financieros</h3>
+            
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Valor Tasa</label>
-                    <input type="number" id="tasaBCV" step="0.01" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">País</label>
+                    <select id="paisUsuario" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
+                        <option value="AR">Argentina</option>
+                        <option value="BO">Bolivia</option>
+                        <option value="CL">Chile</option>
+                        <option value="CO">Colombia</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="MX">México</option>
+                        <option value="PA">Panamá</option>
+                        <option value="PY">Paraguay</option>
+                        <option value="PE">Perú</option>
+                        <option value="VE">Venezuela</option>
+                    </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1">Impuesto (%)</label>
-                    <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
+                    <label id="labelIdentificacion" class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">RIF</label>
+                    <input type="text" id="rifEmpresa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Nombre de la Tasa</label>
+                    <input type="text" id="nombreTasa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Valor Tasa</label>
+                        <input type="number" id="tasaBCV" step="0.01" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Impuesto (%)</label>
+                        <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-all">
+                    </div>
                 </div>
             </div>
         </div>
 
-        <button onclick="guardarConfiguracion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg mb-8">GUARDAR CAMBIOS</button>
+        <button onclick="guardarConfiguracion()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl shadow-lg transition-all active:scale-[0.98] text-sm">
+            GUARDAR CAMBIOS
+        </button>
     </div>
 
     <script>
@@ -133,6 +141,7 @@
     </script>
 </body>
 </html>
+
 
 
 
