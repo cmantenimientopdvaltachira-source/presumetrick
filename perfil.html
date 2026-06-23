@@ -8,43 +8,42 @@
 </head>
 <body class="bg-gray-900 text-white">
 
-    <!-- Contenedor a pantalla completa -->
     <div class="bg-gray-900 p-6 min-h-screen">
-        <a href="index.html" class="flex items-center text-gray-400 hover:text-emerald-500 mb-4 transition-colors text-xs font-bold">← Volver</a>
-        <h2 class="text-xl font-bold mb-6 text-emerald-500 text-center">Configuración</h2>
+        <a href="index.html" class="flex items-center text-gray-400 hover:text-emerald-500 mb-6 transition-colors text-sm font-semibold">← Volver</a>
+        <h2 class="text-2xl font-bold mb-8 text-emerald-500 text-center">Configuración</h2>
 
-        <!-- BLOQUE 1: IDENTIDAD COMERCIAL -->
-        <div class="mb-6 pb-6 border-b border-gray-700">
-            <h3 class="text-emerald-500 text-[10px] font-bold uppercase mb-4">Información de la Empresa</h3>
-            <div class="flex flex-col items-center mb-4">
-                <div id="previewLogo" class="w-24 h-24 bg-gray-800 rounded-full mb-2 overflow-hidden border-2 border-emerald-500 flex items-center justify-center">
-                    <span class="text-[10px] text-gray-500">Logo</span>
+        <div class="mb-8 pb-6 border-b border-gray-700">
+            <h3 class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-5">Información de la Empresa</h3>
+            
+            <div class="flex flex-col items-center mb-6">
+                <div id="previewLogo" class="w-24 h-24 bg-gray-800 rounded-full mb-3 overflow-hidden border-2 border-emerald-500 flex items-center justify-center">
+                    <span class="text-xs text-gray-500">Logo</span>
                 </div>
-                <label for="inputLogo" class="cursor-pointer bg-gray-800 border border-gray-600 text-[10px] font-bold px-4 py-2 rounded-lg mt-2">CARGAR LOGOTIPO</label>
+                <label for="inputLogo" class="cursor-pointer bg-gray-800 border border-gray-600 text-xs font-bold px-4 py-2 rounded-lg mt-2">CARGAR LOGOTIPO</label>
                 <input type="file" id="inputLogo" accept="image/*" onchange="cargarLogo(event)" class="hidden">
             </div>
-            <div class="space-y-4">
+
+            <div class="space-y-5">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">Nombre de la Empresa</label>
-                    <input type="text" id="nombreEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Nombre de la Empresa</label>
+                    <input type="text" id="nombreEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">Teléfono WhatsApp</label>
-                    <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Teléfono WhatsApp</label>
+                    <input type="text" id="telefonoWhatsApp" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">Dirección</label>
-                    <textarea id="direccionEmpresa" rows="2" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500"></textarea>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Dirección</label>
+                    <textarea id="direccionEmpresa" rows="2" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500"></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- BLOQUE 2: LEGAL Y FINANCIERO -->
-        <div class="space-y-4 mb-8">
-            <h3 class="text-emerald-500 text-[10px] font-bold uppercase mb-2">Datos Legales y Financieros</h3>
+        <div class="space-y-5 mb-10">
+            <h3 class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-2">Datos Legales y Financieros</h3>
             <div>
-                <label class="block text-[10px] font-bold text-gray-400 mb-1">País</label>
-                <select id="paisUsuario" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                <label class="block text-sm font-medium text-gray-400 mb-1">País</label>
+                <select id="paisUsuario" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
                     <option value="AR">Argentina</option>
                     <option value="BO">Bolivia</option>
                     <option value="CL">Chile</option>
@@ -58,26 +57,26 @@
                 </select>
             </div>
             <div>
-                <label id="labelIdentificacion" class="block text-[10px] font-bold text-gray-400 mb-1">RIF</label>
-                <input type="text" id="rifEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                <label id="labelIdentificacion" class="block text-sm font-medium text-gray-400 mb-1">RIF</label>
+                <input type="text" id="rifEmpresa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
             </div>
             <div>
-                <label class="block text-[10px] font-bold text-gray-400 mb-1">Nombre de la Tasa</label>
-                <input type="text" id="nombreTasa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                <label class="block text-sm font-medium text-gray-400 mb-1">Nombre de la Tasa</label>
+                <input type="text" id="nombreTasa" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">Valor Tasa</label>
-                    <input type="number" id="tasaBCV" step="0.01" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Valor Tasa</label>
+                    <input type="number" id="tasaBCV" step="0.01" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 mb-1">Impuesto (%)</label>
-                    <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-500">
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Impuesto (%)</label>
+                    <input type="number" id="porcentajeImpuesto" step="0.1" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white outline-none focus:border-emerald-500">
                 </div>
             </div>
         </div>
 
-        <button onclick="guardarConfiguracion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-xl font-bold text-sm shadow-lg mb-6">GUARDAR CAMBIOS</button>
+        <button onclick="guardarConfiguracion()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg mb-8">GUARDAR CAMBIOS</button>
     </div>
 
     <script>
@@ -92,6 +91,7 @@
             document.getElementById('paisUsuario').value = paisGuardado;
             document.getElementById('labelIdentificacion').innerText = configuracionPaises[paisGuardado];
             
+            // Carga de datos... (resto igual)
             document.getElementById('nombreTasa').value = localStorage.getItem('nombreTasa') || 'Tasa BCV';
             document.getElementById('nombreEmpresa').value = localStorage.getItem('nombreEmpresa') || '';
             document.getElementById('rifEmpresa').value = localStorage.getItem('rifEmpresa') || '';
@@ -128,6 +128,7 @@
     </script>
 </body>
 </html>
+
 
 
 
