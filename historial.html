@@ -295,17 +295,28 @@
             y += 2; doc.line(15, y, 195, y); y += 10; 
             doc.setFont("helvetica", "bold");
             
-            if (porcentajeImpuesto > 0) {
-                const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
-                const granTotalConImpuesto = subtotalUSD + montoImpuesto;
-                doc.text(`SUBTOTAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
-                doc.text(`IMPUESTO (${porcentajeImpuesto}%): ${fmt(montoImpuesto)}`, 120, y); y += 6;
-                doc.text(`TOTAL GENERAL: ${fmt(granTotalConImpuesto)}`, 120, y); y += 6;
+                    const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
+
+        if (porcentajeImpuesto > 0) {
+            const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
+            const granTotalConImpuesto = subtotalUSD + montoImpuesto;
+            doc.text(`SUBTOTAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
+            doc.text(`IMPUESTO (${porcentajeImpuesto}%): ${fmt(montoImpuesto)}`, 120, y); y += 6;
+            doc.text(`TOTAL GENERAL: ${fmt(granTotalConImpuesto)}`, 120, y); 
+            
+            if (!esDolarizado) {
+                y += 6;
                 doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
-            } else {
-                doc.text(`TOTAL GENERAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
+            }
+        } else {
+            doc.text(`TOTAL GENERAL: ${fmt(subtotalUSD)}`, 120, y);
+            
+            if (!esDolarizado) {
+                y += 6;
                 doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
             }
+        }
+
 
             if (observaciones && observaciones.trim() !== "") {
                 const splitNotas = doc.splitTextToSize(observaciones, 180);
