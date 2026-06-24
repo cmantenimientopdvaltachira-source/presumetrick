@@ -20,7 +20,7 @@
     </main>
 
     <script>
-                // CONFIGURACIÓN CENTRALIZADA DE PAÍSES
+        // CONFIGURACIÓN CENTRALIZADA DE PAÍSES
         const configuracionPaises = { 
             'VE': { id: 'RIF', tasaLabel: 'Equivalente a BCV', mon: 'VES' }, 
             'CO': { id: 'NIT', tasaLabel: 'Equivalente a TRM', mon: 'COP' }, 
@@ -35,7 +35,6 @@
         };
         const fmt = (val) => `$${parseFloat(val || 0).toFixed(2)} USD`;
 
-
         document.addEventListener('DOMContentLoaded', mostrarPresupuesto);
 
         function mostrarPresupuesto() {
@@ -43,6 +42,8 @@
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual')) || [];
             const paisUsuario = localStorage.getItem('paisUsuario') || 'VE';
             const etiquetaTasa = configuracionPaises[paisUsuario]?.tasaLabel || 'Equivalente a Tasa';
+            const monedaActual = configuracionPaises[paisUsuario]?.mon || 'Bs.';
+            const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
             
             if (presupuesto.length === 0) {
                 tablaContainer.innerHTML = `<p class="text-center text-gray-400 py-10">No hay partidas agregadas aun.</p>`;
@@ -72,12 +73,6 @@
 
             const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-            let bloqueTotalesHtml = '';
-
-                        const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
-            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
-            const monedaActual = configuracionPaises[paisUsuario]?.mon || 'Bs.';
-            const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
             let bloqueTotalesHtml = '';
 
             if (porcentajeImpuesto > 0) {
@@ -113,7 +108,6 @@
                     </div>
                 `;
             }
-
 
             tablaContainer.innerHTML = `
                 ${htmlContenido}
@@ -217,7 +211,7 @@
             window.open(link, '_blank');
         }
 
-                function generarPDF() {
+        function generarPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             const presupuesto = JSON.parse(localStorage.getItem('presupuestoActual') || '[]');
@@ -313,10 +307,10 @@
             }
             doc.save(`Presupuesto_${cliente.replace(/\s+/g, '_')}.pdf`);
         }
-
     </script>
 </body>
 </html>
+
 
 
 
