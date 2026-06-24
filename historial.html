@@ -189,19 +189,29 @@
             });
 
             mensaje += "--------------------------------------\n";
+                        // Definimos si es dolarizado antes de los if
+            const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
+
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
-                const totalBs = granTotalConImpuesto * tasaValor;
                 mensaje += `*Subtotal:* $${granTotal.toFixed(2)} USD\n`;
                 mensaje += `*Impuesto (${porcentajeImpuesto}%):* $${montoImpuesto.toFixed(2)} USD\n`;
                 mensaje += `*TOTAL GENERAL:* $${granTotalConImpuesto.toFixed(2)} USD\n`;
-                mensaje += `*${etiquetaTasa}:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                
+                if (!esDolarizado) {
+                    const totalBs = granTotalConImpuesto * tasaValor;
+                    mensaje += `*${etiquetaTasa}:* ${monedaActual} ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                }
             } else {
-                const totalBs = granTotal * tasaValor;
                 mensaje += `*TOTAL GENERAL:* $${granTotal.toFixed(2)} USD\n`;
-                mensaje += `*${etiquetaTasa}:* Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                
+                if (!esDolarizado) {
+                    const totalBs = granTotal * tasaValor;
+                    mensaje += `*${etiquetaTasa}:* ${monedaActual} ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
+                }
             }
+
             
             if (observaciones && observaciones.trim() !== "") {
                 mensaje += "\n*Nota General:*\n" + observaciones + "\n";
