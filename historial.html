@@ -74,10 +74,16 @@
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             let bloqueTotalesHtml = '';
 
+                        const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
+            const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
+            const monedaActual = configuracionPaises[paisUsuario]?.mon || 'Bs.';
+            const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
+            let bloqueTotalesHtml = '';
+
             if (porcentajeImpuesto > 0) {
                 const montoImpuesto = granTotal * (porcentajeImpuesto / 100);
                 const granTotalConImpuesto = granTotal + montoImpuesto;
-                const totalBs = granTotalConImpuesto * tasaValor;
+                const totalMonedaLocal = granTotalConImpuesto * tasaValor;
 
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5 text-right">
@@ -86,25 +92,28 @@
                         <div class="text-xs text-white flex justify-between"><span>Impuesto (${porcentajeImpuesto}%):</span> <span class="font-bold">+$${montoImpuesto.toFixed(2)} USD</span></div>
                         <div class="border-t border-emerald-500/40 my-1"></div>
                         <div class="text-base font-black text-white flex justify-between items-center"><span>TOTAL GENERAL:</span> <span class="text-xl">$${granTotalConImpuesto.toFixed(2)} USD</span></div>
+                        ${!esDolarizado ? `
                         <div class="text-xs font-bold text-emerald-100 text-right pt-1">
-                            ${etiquetaTasa}: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                        </div>
+                            ${etiquetaTasa}: ${monedaActual} ${totalMonedaLocal.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>` : ""}
                     </div>
                 `;
             } else {
-                const totalBs = granTotal * tasaValor;
+                const totalMonedaLocal = granTotal * tasaValor;
                 bloqueTotalesHtml = `
                     <div class="bg-emerald-600 rounded-xl p-4 mt-6 shadow-lg space-y-1.5">
                         <div class="flex justify-between items-center text-white">
                             <span class="font-bold uppercase text-xs">Total General:</span>
                             <span class="font-bold text-xl">$${granTotal.toFixed(2)} USD</span>
                         </div>
+                        ${!esDolarizado ? `
                         <div class="text-emerald-100 text-xs border-t border-emerald-500/40 pt-2 text-right font-bold">
-                            ${etiquetaTasa}: Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
-                        </div>
+                            ${etiquetaTasa}: ${monedaActual} ${totalMonedaLocal.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>` : ""}
                     </div>
                 `;
             }
+
 
             tablaContainer.innerHTML = `
                 ${htmlContenido}
