@@ -158,7 +158,10 @@
             const observaciones = document.getElementById('observacionesGenerales').value;
             const tasaValor = parseFloat(localStorage.getItem('tasaBCV')) || 517.96;
             const paisUsuario = localStorage.getItem('paisUsuario') || 'VE';
-            const etiquetaTasa = configuracionPaises[paisUsuario]?.tasaLabel || 'Equivalente a Tasa';
+            
+            const cfg = configuracionPaises[paisUsuario] || { id: 'ID', tasaLabel: 'Tasa', mon: 'Local' };
+            const etiquetaTasa = cfg.tasaLabel;
+            const monedaActual = cfg.mon;
             const porcentajeImpuesto = parseFloat(localStorage.getItem('porcentajeImpuesto')) || 0;
             
             let mensaje = "*PRESUPUESTO FORMAL*\n";
@@ -189,7 +192,6 @@
             });
 
             mensaje += "--------------------------------------\n";
-                        // Definimos si es dolarizado antes de los if
             const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
 
             if (porcentajeImpuesto > 0) {
@@ -211,14 +213,20 @@
                     mensaje += `*${etiquetaTasa}:* ${monedaActual} ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}\n`;
                 }
             }
-
             
             if (observaciones && observaciones.trim() !== "") {
                 mensaje += "\n*Nota General:*\n" + observaciones + "\n";
             }
             mensaje += "\nGenerado por PresuMetrick.";
-            const link = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-            window.open(link, '_blank');
+            
+            const urlWhatsApp = `https://api.whatsapp.com/send?text=${encodeURIComponent(mensaje)}`;
+            const a = document.createElement('a');
+            a.href = urlWhatsApp;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function generarPDF() {
@@ -295,28 +303,27 @@
             y += 2; doc.line(15, y, 195, y); y += 10; 
             doc.setFont("helvetica", "bold");
             
-                    const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
+            const esDolarizado = (paisUsuario === 'EC' || paisUsuario === 'PA');
 
-        if (porcentajeImpuesto > 0) {
-            const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
-            const granTotalConImpuesto = subtotalUSD + montoImpuesto;
-            doc.text(`SUBTOTAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
-            doc.text(`IMPUESTO (${porcentajeImpuesto}%): ${fmt(montoImpuesto)}`, 120, y); y += 6;
-            doc.text(`TOTAL GENERAL: ${fmt(granTotalConImpuesto)}`, 120, y); 
-            
-            if (!esDolarizado) {
-                y += 6;
-                doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
+            if (porcentajeImpuesto > 0) {
+                const montoImpuesto = subtotalUSD * (porcentajeImpuesto / 100);
+                const granTotalConImpuesto = subtotalUSD + montoImpuesto;
+                doc.text(`SUBTOTAL: ${fmt(subtotalUSD)}`, 120, y); y += 6;
+                doc.text(`IMPUESTO (${porcentajeImpuesto}%): ${fmt(montoImpuesto)}`, 120, y); y += 6;
+                doc.text(`TOTAL GENERAL: ${fmt(granTotalConImpuesto)}`, 120, y); 
+                
+                if (!esDolarizado) {
+                    y += 6;
+                    doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(granTotalConImpuesto * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
+                }
+            } else {
+                doc.text(`TOTAL GENERAL: ${fmt(subtotalUSD)}`, 120, y);
+                
+                if (!esDolarizado) {
+                    y += 6;
+                    doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
+                }
             }
-        } else {
-            doc.text(`TOTAL GENERAL: ${fmt(subtotalUSD)}`, 120, y);
-            
-            if (!esDolarizado) {
-                y += 6;
-                doc.text(`${cfg.tasaLabel}: ${cfg.mon} ${(subtotalUSD * tasaValor).toLocaleString('es-VE', {minimumFractionDigits: 2})}`, 120, y);
-            }
-        }
-
 
             if (observaciones && observaciones.trim() !== "") {
                 const splitNotas = doc.splitTextToSize(observaciones, 180);
@@ -331,6 +338,7 @@
     </script>
 </body>
 </html>
+
 
 
 
