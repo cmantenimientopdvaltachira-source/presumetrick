@@ -47,8 +47,14 @@
                     <option value="">Seleccione un equipo...</option>
                     <option value="Motor Eléctrico Baja Tensión">Motor Eléctrico Baja Tensión</option>
                     <option value="Motor Eléctrico Mediana Tensión">Motor Eléctrico Mediana Tensión</option>
+                    <option value="Motor de Alta Tensión">Motor de Alta Tensión</option>
                     <option value="Motor Trifásico Especial">Motor Trifásico Especial</option>
                     <option value="Motor Monofásico">Motor Monofásico</option>
+                    <option value="Motor de Corriente Continua (CC)">Motor de Corriente Continua (CC)</option>
+                    <option value="Motor a Prueba de Explosión / Antideflagrante">Motor a Prueba de Explosión / Antideflagrante</option>
+                    <option value="Motor de Anillos Rozantes">Motor de Anillos Rozantes</option>
+                    <option value="Motor con Freno Electromagnético">Motor con Freno Electromagnético</option>
+                    <option value="Motor para Aplicaciones Específicas (Bombas, Ventiladores, Transportadores)">Motor para Aplicaciones Específicas (Bombas, Ventiladores, Transportadores)</option>
                 </select>
             </div>
 
@@ -59,9 +65,19 @@
                     <option value="">Seleccione una acción...</option>
                     <option value="Mantenimiento preventivo integral (Limpieza, rodamientos y pruebas)">Mantenimiento preventivo integral (Limpieza, rodamientos y pruebas)</option>
                     <option value="Rebobinado de estator por quemadura">Rebobinado de estator por quemadura</option>
-                    <option value="Cambio de rodamientos / Bearings">Cambio de rodamientos / Bearings</option>
+                    <option value="Rebobinado de rotor">Rebobinado de rotor</option>
+                    <option value="Balanceo dinámico de rotor">Balanceo dinámico de rotor</option>
+                    <option value="Cambio de rodamientos">Cambio de rodamientos</option>
                     <option value="Pruebas dinámicas y de aislamiento (Megger)">Pruebas dinámicas y de aislamiento (Megger)</option>
                     <option value="Corrección de alineación y bancada">Corrección de alineación y bancada</option>
+                    <option value="Reparación / cambio de caja de bornes y conexiones">Reparación / cambio de caja de bornes y conexiones</option>
+                    <option value="Reacondicionamiento o cambio de eje, chavetas y acoplamientos">Reacondicionamiento o cambio de eje, chavetas y acoplamientos</option>
+                    <option value="Cambio de sellos, empaques y sistemas de lubricación">Cambio de sellos, empaques y sistemas de lubricación</option>
+                    <option value="Cambio / ajuste de frenos electromagnéticos">Cambio / ajuste de frenos electromagnéticos</option>
+                    <option value="Análisis de vibraciones y termografía predictiva">Análisis de vibraciones y termografía predictiva</option>
+                    <option value="Limpieza y tratamiento de aislamiento">Limpieza y tratamiento de aislamiento</option>
+                    <option value="Ajuste y cambio de sistemas de arranque y protección">Ajuste y cambio de sistemas de arranque y protección</option>
+                    <option value="Instalación y puesta en marcha del equipo">Instalación y puesta en marcha del equipo</option>
                 </select>
             </div>
 
@@ -71,7 +87,7 @@
                 <input type="text" id="input-especificaciones" placeholder="Ej: 50 HP / 440V / 1750 RPM" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500">
             </div>
 
-                        <!-- Cantidad y Precio Unitario -->
+            <!-- Cantidad y Precio Unitario -->
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Cantidad</label>
@@ -82,8 +98,6 @@
                     <input type="number" id="input-precio" step="0.01" placeholder="0.00" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white text-center focus:outline-none focus:border-amber-500">
                 </div>
             </div>
-
-
 
             <!-- Botón Agregar -->
             <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold p-3.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
@@ -139,7 +153,6 @@
 
     <!-- Script de lógica de cotización -->
     <script>
-        // Cargar tasa BCV y lógica básica
         fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/central')
             .then(res => res.json())
             .then(data => {
@@ -216,4 +229,5 @@
     </script>
 </body>
 </html>
+
 
