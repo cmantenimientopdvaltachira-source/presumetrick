@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PresuMetrick - Plantas Eléctricas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-[#0F172A] text-gray-100 min-h-screen flex flex-col antialiased selection:bg-yellow-500 selection:text-slate-900">
+
+    <header class="sticky top-0 z-50 bg-[#1F2937] border-b border-gray-800 px-4 py-4 flex items-center justify-between shadow-lg">
+        <div class="flex items-center gap-2">
+            <a href="index.html" class="bg-gray-800/80 p-2 rounded-xl text-gray-300 hover:text-white transition-colors">
+                <i class="fa-solid fa-arrow-left text-sm"></i>
+            </a>
+            <h1 class="text-sm font-black tracking-wider text-gray-100 uppercase">Plantas El&eacute;ctricas</h1>
+        </div>
+        <div class="bg-sky-600 px-3 py-1 rounded-full shadow-inner flex items-center gap-1.5 border border-sky-500/30">
+            <span id="tasaBCVHeader" class="text-[10px] font-bold text-white tracking-wide">BCV: --</span>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-4 pb-28">
+        
+        <div class="bg-[#1F2937] border border-gray-800 rounded-2xl p-4 shadow-xl space-y-4">
+            <h2 class="text-xs font-bold text-yellow-500 uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-gas-pump"></i> Cotizador de Grupos Electrógenos
+            </h2>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Seleccionar Servicio o Componente</label>
+                    <select id="selectItem" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-yellow-500">
+                        <option value="" disabled selected>Seleccione una opción...</option>
+                        <option value="Mantenimiento Preventivo Menor (Filtros y Aceite)" data-price="80">Mantenimiento Preventivo Menor ($80)</option>
+                        <option value="Mantenimiento Mayor (Filtros, Aceite y coolant)" data-price="150">Mantenimiento Preventivo Mayor ($150)</option>
+                        <option value="Servicio y Calibración de AVR (Regulador)" data-price="90">Calibración / Cambio de AVR ($90)</option>
+                        <option value="Diagnóstico de Tarjeta de Control y Tablero" data-price="60">Diagnóstico de Tablero de Control ($60)</option>
+                        <option value="Limpieza de Sistema de Inyección y Tanque" data-price="120">Limpieza de Sistema de Inyección ($120)</option>
+                        <option value="Sincronización y Prueba de Arranque" data-price="70">Sincronización y Prueba de Arranque ($70)</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Cantidad</label>
+                        <input type="number" id="inputCantidad" min="1" value="1" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-yellow-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Precio Unitario ($)</label>
+                        <input type="number" id="inputPrecio" step="0.01" class="w-full bg-[#0F172A] border border-gray-700 rounded-xl px-3 py-2 text-sm text-gray-200 focus:outline-none focus:border-yellow-500" placeholder="0.00">
+                    </div>
+                </div>
+
+                <button onclick="agregarItem()" class="w-full bg-yellow-600 hover:bg-yellow-500 text-slate-950 font-bold py-2.5 px-4 rounded-xl text-sm transition-all shadow-lg shadow-yellow-600/20 active:scale-[0.98]">
+                    <i class="fa-solid fa-plus mr-1"></i> Agregar a la Cotización
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-[#1F2937] border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+            <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">Partidas Agregadas</h3>
+            <div id="listaItems" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <p class="text-xs text-gray-500 text-center py-4">No hay elementos agregados aún.</p>
+            </div>
+        </div>
+
+        <div class="bg-[#1F2937] border border-gray-800 rounded-2xl p-4 shadow-xl space-y-2">
+            <div class="flex justify-between text-xs text-gray-400">
+                <span>Subtotal:</span>
+                <span id="txtSubtotal" class="font-bold text-gray-200">$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm font-black text-white pt-2 border-t border-gray-800">
+                <span>Total General:</span>
+                <span id="txtTotal" class="text-yellow-500">$0.00</span>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400">
+                <span>Total en Bolívares:</span>
+                <span id="txtTotalBs" class="font-bold text-emerald-400">Bs. 0,00</span>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="fixed bottom-0 left-0 right-0 z-40 bg-[#1F2937] border-t border-gray-800 p-3 max-w-md mx-auto flex gap-2">
+        <button onclick="limpiarCotizacion()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2.5 rounded-xl text-xs font-bold transition-all">
+            <i class="fa-solid fa-trash-can"></i>
+        </button>
+        <button onclick="guardarCotizacion()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-file-pdf"></i> Generar / Guardar Presupuesto
+        </button>
+    </div>
+
+<script>
+    const tasaBCV = parseFloat(localStorage.getItem('tasaBCV') || "517.96");
+    document.getElementById('tasaBCVHeader').innerText = "BCV: " + tasaBCV.toFixed(2).replace('.', ',') + " Bs/$";
+
+    const selectItem = document.getElementById('selectItem');
+    const inputPrecio = document.getElementById('inputPrecio');
+
+    selectItem.addEventListener('change', (e) => {
+        const option = e.target.options[e.target.selectedIndex];
+        const price = option.getAttribute('data-price');
+        if (price) {
+            inputPrecio.value = price;
+        }
+    });
+
+    let itemsCotizacion = [];
+
+    function agregarItem() {
+        const descripcion = selectItem.value || "Servicio General de Plantas Eléctricas";
+        const cantidad = parseFloat(document.getElementById('inputCantidad').value) || 1;
+        const precioUnitario = parseFloat(inputPrecio.value) || 0;
+
+        if (precioUnitario <= 0) {
+            alert("Por favor ingrese un precio válido.");
+            return;
+        }
+
+        const totalItem = cantidad * precioUnitario;
+        itemsCotizacion.push({ descripcion, cantidad, precioUnitario, totalItem });
+        renderizarTabla();
+    }
+
+    function eliminarItem(index) {
+        itemsCotizacion.splice(index, 1);
+        renderizarTabla();
+    }
+
+    function renderizarTabla() {
+        const contenedor = document.getElementById('listaItems');
+        if (itemsCotizacion.length === 0) {
+            contenedor.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">No hay elementos agregados aún.</p>';
+            actualizarTotales();
+            return;
+        }
+
+        let html = '';
+        itemsCotizacion.forEach((item, index) => {
+            html += `
+                <div class="flex items-center justify-between bg-[#0F172A] border border-gray-800 p-2.5 rounded-xl text-xs">
+                    <div>
+                        <p class="font-bold text-gray-200">${item.descripcion}</p>
+                        <p class="text-[10px] text-gray-400">${item.cantidad} x $${item.precioUnitario.toFixed(2)} = <span class="text-yellow-500 font-bold">$${item.totalItem.toFixed(2)}</span></p>
+                    </div>
+                    <button onclick="eliminarItem(${index})" class="text-red-400 hover:text-red-300 p-1">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `;
+        });
+        contenedor.innerHTML = html;
+        actualizarTotales();
+    }
+
+    function actualizarTotales() {
+        let subtotal = itemsCotizacion.reduce((acc, item) => acc + item.totalItem, 0);
+        let totalBs = subtotal * tasaBCV;
+
+        document.getElementById('txtSubtotal').innerText = "$" + subtotal.toFixed(2);
+        document.getElementById('txtTotal').innerText = "$" + subtotal.toFixed(2);
+        document.getElementById('txtTotalBs').innerText = "Bs. " + totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function limpiarCotizacion() {
+        itemsCotizacion = [];
+        renderizarTabla();
+    }
+
+    function guardarCotizacion() {
+        if (itemsCotizacion.length === 0) {
+            alert("Agregue al menos un elemento para guardar la cotización.");
+            return;
+        }
+        alert("Cotización guardada exitosamente (Simulación).");
+    }
+</script>
+
+</body>
+</html>

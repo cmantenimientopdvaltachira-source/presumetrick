@@ -18,8 +18,6 @@
         </div>
         <div class="bg-sky-600 px-3 py-1 rounded-full shadow-inner flex items-center gap-1.5 border border-sky-500/30">
             <span id="tasaBCV" class="text-[10px] font-bold text-white tracking-wide">Cargando tasa...</span>
-
-
         </div>
     </header>
 
@@ -28,13 +26,11 @@
         <div class="space-y-1">
             <h2 class="text-xl font-bold text-white tracking-tight">Bienvenido, Roque</h2>
             <p class="text-xs text-gray-400 leading-relaxed">
-                    Elige el &aacute;rea para comenzar:
-
-
+                Elige el &aacute;rea para comenzar:
             </p>
         </div>
 
-                <div class="grid grid-cols-2 gap-3.5">
+        <div class="grid grid-cols-2 gap-3.5">
             
             <a href="electricidad.html" class="bg-[#1F2937] border-t-2 border-amber-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-amber-400 transition-all active:scale-[0.97]">
                 <i class="fa-solid fa-bolt text-amber-500 text-lg mb-2"></i>
@@ -66,10 +62,28 @@
                 <span class="text-sm font-bold text-gray-200">Hierro Estructural</span>
             </a>
 
+            <!-- Nuevos Módulos Agregados -->
+            <a href="plantas-electricas.html" class="bg-[#1F2937] border-t-2 border-yellow-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-yellow-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-gas-pump text-yellow-500 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Plantas El&eacute;ctricas</span>
+            </a>
+
+            <a href="hidroneumaticos.html" class="bg-[#1F2937] border-t-2 border-cyan-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-cyan-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-water text-cyan-400 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Hidroneum&aacute;ticos</span>
+            </a>
+
+            <a href="contra-incendios.html" class="bg-[#1F2937] border-t-2 border-red-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-red-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-fire-extinguisher text-red-500 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Contra Incendios</span>
+            </a>
+
+            <a href="motores-electricos.html" class="bg-[#1F2937] border-t-2 border-indigo-500 rounded-2xl p-4 flex flex-col items-center text-center justify-center min-h-[100px] shadow-md hover:border-indigo-400 transition-all active:scale-[0.97]">
+                <i class="fa-solid fa-gears text-indigo-400 text-lg mb-2"></i>
+                <span class="text-sm font-bold text-gray-200">Motores El&eacute;ctricos</span>
+            </a>
+
         </div>
-
-
-       
 
     </main>
 
@@ -91,8 +105,8 @@
             <span class="text-[10px]">Mi RIF / Config</span>
         </a>
     </nav>
+
 <script>
-    // Recupera la tasa guardada o pone 517,96 por defecto si aún no has guardado nada
     const tasaGuardada = localStorage.getItem('tasaBCV') || "517.96";
     const spanTasa = document.getElementById('tasaBCV');
     
@@ -101,12 +115,23 @@
     }
 </script>
 
-
-
-
-
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
