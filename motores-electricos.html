@@ -20,8 +20,8 @@
                 <i class="fa-solid fa-gears"></i> Motores Eléctricos
             </h1>
         </div>
-        <div id="badge-tasa" class="bg-sky-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
-            BCV: Cargando...
+        <div class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-semibold px-3 py-1 rounded-full shadow">
+            Módulo Activo
         </div>
     </header>
 
@@ -30,7 +30,7 @@
         
         <!-- Tarjeta de Instrucción -->
         <div class="bg-[#161f31] border border-gray-800 rounded-xl p-4 text-sm text-gray-300">
-            Selecciona el equipo y la actividad de mantenimiento para registrar el servicio técnico.
+            Selecciona el equipo y la actividad para registrar el servicio técnico.
         </div>
 
         <!-- Formulario Nueva Partida -->
@@ -99,40 +99,11 @@
                 </div>
             </div>
 
-            <!-- Botón Agregar -->
+            <!-- Botón Agregar (Fin del flujo del módulo) -->
             <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold p-3.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
                 <i class="fa-solid fa-plus"></i> Agregar al Presupuesto
             </button>
         </div>
-
-        <!-- Partidas Agregadas -->
-        <div class="bg-[#161f31] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-3">
-            <h2 class="text-sm uppercase tracking-wider text-gray-400 font-semibold">Partidas Agregadas</h2>
-            <div id="lista-partidas" class="space-y-2 text-sm text-gray-400 italic">
-                No hay elementos agregados aún.
-            </div>
-        </div>
-
-        <!-- Resumen de Totales -->
-        <div class="bg-[#161f31] border border-gray-800 rounded-2xl p-5 shadow-lg space-y-2">
-            <div class="flex justify-between text-sm text-gray-300">
-                <span>Subtotal:</span>
-                <span id="txt-subtotal" class="font-semibold">$0.00</span>
-            </div>
-            <div class="flex justify-between text-lg font-bold text-amber-500 border-t border-gray-800 pt-2">
-                <span>Total General:</span>
-                <span id="txt-total">$0.00</span>
-            </div>
-            <div class="flex justify-between text-sm text-sky-400">
-                <span>Total en Bolívares:</span>
-                <span id="txt-bolivares" class="font-semibold">Bs. 0,00</span>
-            </div>
-        </div>
-
-        <!-- Botón Guardar / Generar Presupuesto -->
-        <button onclick="guardarPresupuesto()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-4 rounded-2xl transition shadow-lg flex items-center justify-center gap-2 text-base">
-            <i class="fa-solid fa-file-pdf"></i> Generar / Guardar Presupuesto
-        </button>
 
     </main>
 
@@ -156,21 +127,15 @@
         </a>
     </nav>
 
-    <!-- Script de lógica de cotización y guardado -->
+    <!-- Script de lógica -->
     <script>
+        let tasaCambio = 517.96;
         fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/central')
             .then(res => res.json())
             .then(data => {
-                const tasa = data.monitors?.bcv?.price || 517.96;
-                document.getElementById('badge-tasa').innerText = `BCV: ${tasa.toLocaleString('es-VE')} Bs/$`;
-                window.tasaCambio = tasa;
+                tasaCambio = data.monitors?.bcv?.price || 517.96;
             })
-            .catch(() => {
-                window.tasaCambio = 517.96;
-                document.getElementById('badge-tasa').innerText = `BCV: 517,96 Bs/$`;
-            });
-
-        let partidas = [];
+            .catch(() => {});
 
         function agregarPartida() {
             const equipo = document.getElementById('select-equipo').value;
@@ -184,90 +149,36 @@
                 return;
             }
 
-            partidas.push({ equipo, servicio, especificaciones, cantidad, precio, total: cantidad * precio });
-            
-            // Limpiar campos de cantidad y precio para la siguiente partida
-            document.getElementById('input-cantidad').value = '';
-            document.getElementById('input-precio').value = '';
-            document.getElementById('input-especificaciones').value = '';
+            const total = cantidad * precio;
+            const nuevaPartida = { equipo, servicio, especificaciones, cantidad, precio, total };
 
-            actualizarVista();
-        }
-
-        function actualizarVista() {
-            const contenedor = document.getElementById('lista-partidas');
-            if(partidas.length === 0) {
-                contenedor.innerHTML = 'No hay elementos agregados aún.';
-                document.getElementById('txt-subtotal').innerText = '$0.00';
-                document.getElementById('txt-total').innerText = '$0.00';
-                document.getElementById('txt-bolivares').innerText = 'Bs. 0,00';
-                return;
-            }
-
-            let html = '';
-            let subtotal = 0;
-            partidas.forEach((p, idx) => {
-                subtotal += p.total;
-                html += `
-                    <div class="bg-[#0d1322] p-3 rounded-xl border border-gray-800 flex justify-between items-center text-xs">
-                        <div>
-                            <strong class="text-white">${p.equipo}</strong><br>
-                            <span class="text-gray-300">${p.servicio}</span><br>
-                            ${p.especificaciones ? '<span class="text-amber-400">Spec: ' + p.especificaciones + '</span><br>' : ''}
-                            <span class="text-gray-400">Cant: ${p.cantidad} x $${p.precio.toFixed(2)}</span>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-amber-500 font-bold">$${p.total.toFixed(2)}</span><br>
-                            <button onclick="eliminarPartida(${idx})" class="text-red-400 hover:text-red-300 mt-1"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            contenedor.innerHTML = html;
-            document.getElementById('txt-subtotal').innerText = `$${subtotal.toFixed(2)}`;
-            document.getElementById('txt-total').innerText = `$${subtotal.toFixed(2)}`;
-            
-            const tasa = window.tasaCambio || 517.96;
-            const totalBs = subtotal * tasa;
-            document.getElementById('txt-bolivares').innerText = `Bs. ${totalBs.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        }
-
-        function eliminarPartida(idx) {
-            partidas.splice(idx, 1);
-            actualizarVista();
-        }
-
-        function guardarPresupuesto() {
-            if(partidas.length === 0) {
-                alert('Agregue al menos una partida antes de guardar el presupuesto.');
-                return;
-            }
-
-            const subtotal = partidas.reduce((acc, p) => acc + p.total, 0);
-            const tasa = window.tasaCambio || 517.96;
-            
             const nuevoPresupuesto = {
                 id: 'MOT-' + Date.now().toString().slice(-6),
                 modulo: 'Motores Eléctricos',
                 fecha: new Date().toLocaleDateString('es-VE'),
-                partidas: partidas,
-                subtotal: subtotal,
-                total: subtotal,
-                totalBs: subtotal * tasa
+                partidas: [nuevaPartida],
+                subtotal: total,
+                total: total,
+                totalBs: total * tasaCambio
             };
 
-            // Guardar en el historial (localStorage)
             let historial = JSON.parse(localStorage.getItem('presupuestos_historial')) || [];
             historial.unshift(nuevoPresupuesto);
             localStorage.setItem('presupuestos_historial', JSON.stringify(historial));
 
-            alert('¡Presupuesto guardado con éxito en el Historial!');
-            window.location.href = 'historial.html';
+            alert('¡Partida agregada con éxito al Presupuesto / Historial!');
+            
+            // Limpiar formulario
+            document.getElementById('select-equipo').value = '';
+            document.getElementById('select-servicio').value = '';
+            document.getElementById('input-especificaciones').value = '';
+            document.getElementById('input-cantidad').value = '';
+            document.getElementById('input-precio').value = '';
         }
     </script>
 </body>
 </html>
+
 
 
 
