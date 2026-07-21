@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <!-- Botón Agregar (Fin del flujo del módulo) -->
+            <!-- Botón Agregar -->
             <button onclick="agregarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold p-3.5 rounded-xl transition shadow-md flex items-center justify-center gap-2">
                 <i class="fa-solid fa-plus"></i> Agregar al Presupuesto
             </button>
@@ -127,7 +127,7 @@
         </a>
     </nav>
 
-    <!-- Script de lógica -->
+    <!-- Script de lógica sincronizado con el formato que lee Historial -->
     <script>
         let tasaCambio = 517.96;
         fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/central')
@@ -149,24 +149,22 @@
                 return;
             }
 
-            const total = cantidad * precio;
-            const nuevaPartida = { equipo, servicio, especificaciones, cantidad, precio, total };
-
-            const nuevoPresupuesto = {
-                id: 'MOT-' + Date.now().toString().slice(-6),
-                modulo: 'Motores Eléctricos',
-                fecha: new Date().toLocaleDateString('es-VE'),
-                partidas: [nuevaPartida],
-                subtotal: total,
-                total: total,
-                totalBs: total * tasaCambio
+            // Estructura compatible con la que usa refrigeración e historial
+            const itemPresupuesto = {
+                modulo: "MOTORES ELÉCTRICOS",
+                titulo: equipo,
+                descripcion: servicio + (especificaciones ? ` (${especificaciones})` : ''),
+                cantidad: cantidad,
+                precioUnitario: precio,
+                total: cantidad * precio
             };
 
-            let historial = JSON.parse(localStorage.getItem('presupuestos_historial')) || [];
-            historial.unshift(nuevoPresupuesto);
-            localStorage.setItem('presupuestos_historial', JSON.stringify(historial));
+            // Recuperar o inicializar el presupuesto actual en almacenamiento local
+            let presupuestoActual = JSON.parse(localStorage.getItem('presupuesto_actual')) || [];
+            presupuestoActual.push(itemPresupuesto);
+            localStorage.setItem('presupuesto_actual', JSON.stringify(presupuestoActual));
 
-            alert('¡Partida agregada con éxito al Presupuesto / Historial!');
+            alert('¡Partida agregada con éxito al Presupuesto!');
             
             // Limpiar formulario
             document.getElementById('select-equipo').value = '';
@@ -178,6 +176,7 @@
     </script>
 </body>
 </html>
+
 
 
 
