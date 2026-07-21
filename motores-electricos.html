@@ -10,7 +10,7 @@
         body { background-color: #0d1322; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
     </style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen pb-28">
 
     <!-- Header Superior -->
     <header class="bg-[#111827] border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
@@ -54,7 +54,7 @@
                     <option value="Motor a Prueba de Explosión / Antideflagrante">Motor a Prueba de Explosión / Antideflagrante</option>
                     <option value="Motor de Anillos Rozantes">Motor de Anillos Rozantes</option>
                     <option value="Motor con Freno Electromagnético">Motor con Freno Electromagnético</option>
-                    <option value="Motor para Aplicaciones Específicas (Bombas, Ventiladores, Transportadores)">Motor para Aplicaciones Específicas (Bombas, Ventiladores, Transportadores)</option>
+                    <option value="Motor para Aplicaciones Específicas">Motor para Aplicaciones Específicas (Bombas, Ventiladores, Transportadores)</option>
                 </select>
             </div>
 
@@ -129,6 +129,11 @@
             </div>
         </div>
 
+        <!-- Botón Guardar / Generar Presupuesto -->
+        <button onclick="guardarPresupuesto()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-4 rounded-2xl transition shadow-lg flex items-center justify-center gap-2 text-base">
+            <i class="fa-solid fa-file-pdf"></i> Generar / Guardar Presupuesto
+        </button>
+
     </main>
 
     <!-- Barra Inferior de Acciones -->
@@ -151,7 +156,7 @@
         </a>
     </nav>
 
-    <!-- Script de lógica de cotización -->
+    <!-- Script de lógica de cotización y guardado -->
     <script>
         fetch('https://pydolarvenezuela-api.vercel.app/api/v1/dollar/central')
             .then(res => res.json())
@@ -180,6 +185,12 @@
             }
 
             partidas.push({ equipo, servicio, especificaciones, cantidad, precio, total: cantidad * precio });
+            
+            // Limpiar campos de cantidad y precio para la siguiente partida
+            document.getElementById('input-cantidad').value = '';
+            document.getElementById('input-precio').value = '';
+            document.getElementById('input-especificaciones').value = '';
+
             actualizarVista();
         }
 
@@ -226,8 +237,37 @@
             partidas.splice(idx, 1);
             actualizarVista();
         }
+
+        function guardarPresupuesto() {
+            if(partidas.length === 0) {
+                alert('Agregue al menos una partida antes de guardar el presupuesto.');
+                return;
+            }
+
+            const subtotal = partidas.reduce((acc, p) => acc + p.total, 0);
+            const tasa = window.tasaCambio || 517.96;
+            
+            const nuevoPresupuesto = {
+                id: 'MOT-' + Date.now().toString().slice(-6),
+                modulo: 'Motores Eléctricos',
+                fecha: new Date().toLocaleDateString('es-VE'),
+                partidas: partidas,
+                subtotal: subtotal,
+                total: subtotal,
+                totalBs: subtotal * tasa
+            };
+
+            // Guardar en el historial (localStorage)
+            let historial = JSON.parse(localStorage.getItem('presupuestos_historial')) || [];
+            historial.unshift(nuevoPresupuesto);
+            localStorage.setItem('presupuestos_historial', JSON.stringify(historial));
+
+            alert('¡Presupuesto guardado con éxito en el Historial!');
+            window.location.href = 'historial.html';
+        }
     </script>
 </body>
 </html>
+
 
 
