@@ -71,11 +71,18 @@
                 <input type="text" id="input-especificaciones" placeholder="Ej: 50 HP / 440V / 1750 RPM" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500">
             </div>
 
-            <!-- Cantidad -->
-<input type="number" id="input-cantidad" min="1" placeholder="0" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white text-center focus:outline-none focus:border-amber-500">
+                        <!-- Cantidad y Precio Unitario -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Cantidad</label>
+                    <input type="number" id="input-cantidad" min="1" placeholder="0" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white text-center focus:outline-none focus:border-amber-500">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Precio Unitario ($)</label>
+                    <input type="number" id="input-precio" step="0.01" placeholder="0.00" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white text-center focus:outline-none focus:border-amber-500">
+                </div>
+            </div>
 
-<!-- Precio Unitario -->
-<input type="number" id="input-precio" step="0.01" placeholder="0.00" class="w-full bg-[#0d1322] border border-gray-700 rounded-xl p-3 text-white text-center focus:outline-none focus:border-amber-500">
 
 
             <!-- Botón Agregar -->
