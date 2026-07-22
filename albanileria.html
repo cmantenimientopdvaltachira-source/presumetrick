@@ -7,18 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-slate-900">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-900">
 
     <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-4 flex items-center justify-between shadow-lg">
         <div class="flex items-center gap-3">
-            <a href="index.html" class="text-slate-400 hover:text-emerald-500 transition-colors p-1">
+            <a href="index.html" class="text-slate-400 hover:text-amber-500 transition-colors p-1">
                 <i class="fa-solid fa-arrow-left text-xl"></i>
             </a>
-            <h1 class="text-xl font-bold tracking-tight text-emerald-500">
+            <h1 class="text-xl font-bold tracking-tight text-amber-500">
                 <i class="fa-solid fa-trowel-bricks mr-1"></i> Albañilería
             </h1>
         </div>
-        <span class="bg-emerald-500/10 text-emerald-500 text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-500/20">
+        <span class="bg-amber-500/10 text-amber-500 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-500/20">
             Módulo Activo
         </span>
     </header>
@@ -33,12 +33,12 @@
 
         <div class="bg-slate-800/80 border border-slate-700/50 rounded-2xl p-5 shadow-xl space-y-4">
             <h2 class="text-base font-semibold text-slate-200 border-b border-slate-700 pb-2">
-                <i class="fa-solid fa-calculator text-emerald-500 mr-2"></i>Nuevo Concepto
+                <i class="fa-solid fa-calculator text-amber-500 mr-2"></i>Nuevo Concepto
             </h2>
 
             <div class="space-y-1.5">
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Tipo de Trabajo</label>
-                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                <select id="tipo-trabajo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     <option>Levantamiento de Pared en Bloque</option>
                     <option>Friso (revoque) de paredes</option>
                     <option>Encamisado y acabado de paredes</option>
@@ -63,11 +63,11 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Cantidad</label>
-                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                    <input type="number" id="cantidad-input" step="0.01" placeholder="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
                 <div class="space-y-1.5">
                     <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Unidad</label>
-                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                    <select id="unidad-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                         <option>m2</option>
                         <option>m3</option>
                         <option>m lineal</option>
@@ -81,11 +81,11 @@
                 <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider">Precio Unitario ($)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 text-sm">$</span>
-                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                    <input type="number" id="precio-input" step="0.01" placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-3 text-sm text-slate-200 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                 </div>
             </div>
 
-            <button type="button" onclick="guardarPartida()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 text-sm">
+            <button type="button" onclick="guardarPartida()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-amber-500/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 text-sm">
                 <i class="fa-solid fa-plus text-base"></i> Agregar al Presupuesto
             </button>
         </div>
@@ -93,15 +93,15 @@
 
     <nav class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 px-6 py-2 shadow-2xl">
         <div class="max-w-md mx-auto flex justify-between items-center text-center">
-            <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-500 transition-colors py-1 px-3">
+            <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400 hover:text-amber-500 transition-colors py-1 px-3">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] font-medium tracking-wide">Panel</span>
             </a>
-            <div class="flex flex-col items-center gap-1 text-emerald-500 py-1 px-3 border-b-2 border-emerald-500">
+            <div class="flex flex-col items-center gap-1 text-amber-500 py-1 px-3 border-b-2 border-amber-500">
                 <i class="fa-solid fa-trowel-bricks text-lg"></i>
                 <span class="text-[10px] font-bold tracking-wide">Albañilería</span>
             </div>
-            <a href="perfil.html" class="flex flex-col items-center gap-1 text-slate-400 hover:text-emerald-500 transition-colors py-1 px-3">
+            <a href="perfil.html" class="flex flex-col items-center gap-1 text-slate-400 hover:text-amber-500 transition-colors py-1 px-3">
                 <i class="fa-solid fa-gear text-lg"></i>
                 <span class="text-[10px] font-medium tracking-wide">Config</span>
             </a>
@@ -119,7 +119,7 @@ function guardarPartida() {
     const tipoTrabajo = document.getElementById('tipo-trabajo').value; 
     const cantidad = parseFloat(document.getElementById('cantidad-input').value) || 0;
     const precioUnitario = parseFloat(document.getElementById('precio-input').value) || 0;
-    const unidadSeleccionada = document.getElementById('unidad-select').value; // Capturamos la unidad
+    const unidadSeleccionada = document.getElementById('unidad-select').value;
 
     if (cantidad <= 0 || precioUnitario <= 0) {
         alert('Por favor, ingresa una cantidad y un precio unitario válidos.');
@@ -132,7 +132,7 @@ function guardarPartida() {
         especificaciones: 'N/A',
         servicio: tipoTrabajo,
         cantidad: cantidad,
-        unidad: unidadSeleccionada, // Guardamos la unidad
+        unidad: unidadSeleccionada,
         precioUnitario: precioUnitario,
         totalUSD: cantidad * precioUnitario
     };
@@ -146,10 +146,10 @@ function guardarPartida() {
 
     alert('¡Partida de Albañilería agregada al presupuesto con éxito!');
 }
-
 </script>
 </body>
 </html>
+
 
 
 
